@@ -1,8 +1,15 @@
+module.exports = function(app) {
+  var User = mongoose.model('User');
 
-/*
- * GET home page.
- */
+  /*
+   * GET home page.
+   */
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Alfa Jango Client Dashboard' });
+  app.get('/', function(req, res, mongoose){
+    res.render('index', {
+      title: 'Alfa Jango Client Dashboard',
+      users: User.find({})
+    });
+  });
+
 };

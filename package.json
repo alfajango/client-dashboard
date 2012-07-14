@@ -9,6 +9,8 @@
     "express": "3.0.0beta6",
     "jade": "*",
     "mongodb": "1.1.0-beta",
-    "mongoose": ""
+    "mongoose": "",
+    "underscore": "",
+    "yaml-config": ""
   }
 }
