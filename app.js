@@ -8,6 +8,7 @@ var express = require('express'),
   fs = require('fs'),
   flash = require('connect-flash');
 
+utils = require('./lib/utils');
 auth = require('./authentication');
 
 // Load configurations
@@ -42,7 +43,7 @@ app.configure('development', function(){
 require('./db-connect');
 
 // Load models
-require('./schemas.js');
+require('./schemas.js')(app);
 
 var models_path = './models',
     models_files = fs.readdirSync(models_path);

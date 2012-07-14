@@ -2,3 +2,13 @@ extends layout
 
 block content
   h1 Admin
+
+  h2 Clients
+  ul
+    each client in clients
+      li= client.name
+
+  h2 Users
+  ul
+    each user in users
+      li= user.email

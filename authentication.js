@@ -40,3 +40,9 @@ exports.ensureAuthenticated = function(req, res, next) {
   req.flash('warn', "You must login first");
   res.redirect('/login')
 }
+
+exports.ensureAdmin = function(req, res, next) {
+  if (req.user.admin) { return next(); }
+  req.flash('warn', "Unauthorized");
+  res.redirect('/')
+}

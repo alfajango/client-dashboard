@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function(app) {
 
   var schemas = {
     Deploy: new Schema({
