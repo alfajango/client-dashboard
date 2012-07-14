@@ -11,6 +11,8 @@
     "mongodb": "1.1.0-beta",
     "mongoose": "",
     "underscore": "",
-    "yaml-config": ""
+    "yaml-config": "",
+    "passport": "",
+    "passport-local": ""
   }
 }
