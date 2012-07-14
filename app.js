@@ -40,7 +40,16 @@ app.configure('development', function(){
 
 // Connect to db and load models
 require('./db-connect');
+
+// Load models
 require('./schemas.js')(mongoose);
+
+var models_path = './models',
+    models_files = fs.readdirSync(models_path);
+
+models_files.forEach(function(file) {
+  require(models_path + '/' + file);
+});
 
 // Load routes
 var routes_path = './routes',

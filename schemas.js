@@ -1,6 +1,4 @@
 module.exports = function(mongoose) {
-  var Schema = mongoose.Schema,
-      ObjectId = Schema.ObjectId;
 
   var schemas = {
     Deploy: new Schema({
@@ -40,14 +38,6 @@ module.exports = function(mongoose) {
       deploys:          [this.Deploy]
     }),
 
-    User: new Schema({
-      id:               ObjectId,
-      email:            String,
-      salt:             String,
-      hashedPassword:  String,
-      invoiceAmount:   Number
-    }),
-
     ClientService: new Schema({
       name:             String,
       uri:              String,
@@ -58,7 +48,8 @@ module.exports = function(mongoose) {
       name:             String,
       users:            [this.User],
       clientServices:  [this.ClientService],
-      projects:         [this.Project]
+      projects:         [this.Project],
+      invoiceAmount:    Number
     })
   };
 
