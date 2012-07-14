@@ -1,4 +1,7 @@
 module.exports = function(app) {
+  app.get('/login', function(req, res) {
+    res.render('auth_login', {title: 'Login page'});
+  });
 
   // POST /login
   //   Use passport.authenticate() as route middleware to authenticate the
@@ -15,4 +18,9 @@ module.exports = function(app) {
       res.redirect('/');
     }
   );
+
+  app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+  });
 };
