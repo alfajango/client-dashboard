@@ -1,4 +1,4 @@
-module.exports = function(mongoose) {
+module.exports = function() {
 
   var schemas = {
     Deploy: new Schema({

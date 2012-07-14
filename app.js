@@ -44,7 +44,7 @@ app.configure('development', function(){
 require('./db-connect');
 
 // Load models
-require('./schemas.js')(mongoose);
+require('./schemas.js');
 
 var models_path = './models',
     models_files = fs.readdirSync(models_path);
