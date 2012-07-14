@@ -12,7 +12,7 @@ module.exports = function(app) {
   //   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
   //
   app.post(
-    '/login', 
+    '/login',
     passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
     function(req, res) {
       res.redirect('/');

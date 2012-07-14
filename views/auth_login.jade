@@ -2,3 +2,10 @@ extends layout
 
 block content
   h1 Login
+  form(action="", method="POST")
+    label Email
+      input(type="text", name="email")
+    label Password
+      input(type="password", name="password")
+
+    input(type="submit", value="Login")

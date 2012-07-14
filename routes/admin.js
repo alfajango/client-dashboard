@@ -8,6 +8,7 @@ module.exports = function(app) {
   });
 
   app.post('/admin/create_user', function(req, res) {
+    // Create User
     res.redirect('/admin/create_user');
   });
 
@@ -16,6 +17,7 @@ module.exports = function(app) {
   });
 
   app.post('/admin/create_client', function(req, res) {
+    // Create Client
     res.redirect('/admin');
   });
 };
