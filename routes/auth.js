@@ -18,7 +18,14 @@ module.exports = function(app) {
     '/login',
     passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
     function(req, res) {
-      res.redirect('/');
+      var redirectPath;
+      if (req.session.origPath) {
+        redirectPath = req.session.origPath;
+        delete req.session['origPath'];
+      } else {
+        redirectPath = '/';
+      }
+      res.redirect(redirectPath);
     }
   );
 

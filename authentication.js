@@ -37,6 +37,7 @@ passport.deserializeUser(function(id, done) {
 //   login page.
 exports.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
+  req.session.origPath = req.url;
   req.flash('warn', "You must login first");
   res.redirect('/login')
 }
