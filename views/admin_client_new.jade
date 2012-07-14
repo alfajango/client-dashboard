@@ -1,10 +1,12 @@
 extends layout
 
 block content
-  h1 Create Client
+  h1 #{theClient ? "Update" : "Create"} Client
 
-  form(action="/admin/client", method="POST")
+  form(action="/admin/clients" + (theClient ? ('/' + theClient.id) : ""), method="POST")
+    if theClient
+      input(type="hidden", name="_method", value="PUT")
     label name
-      input(type="text", name="client[name]")
+      input(type="text", name="client[name]", value=(theClient ? theClient.name : ""))
 
-    input(type="submit", value="Create")
+    input(type="submit", value=(theClient ? "Update" : "Create"))

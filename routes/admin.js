@@ -29,12 +29,14 @@ module.exports = function(app) {
 
   app.param('id', function(req, res, next, id){
     var model;
-    if ( req.url.indexOf("admin/user") != -1 ) {
+    if ( req.url.indexOf("admin/users") != -1 ) {
       model = User;
-    } else if (req.url.indexOf("admin/client") != -1 ) {
+    } else if (req.url.indexOf("admin/clients") != -1 ) {
       model = Client;
-    } else {
+    } else if (req.url.indexOf("admin/projects") != -1 ) {
       model = Project;
+    } else {
+      next()
     }
 
     model
@@ -61,7 +63,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/admin/user', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+  app.post('/admin/users', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     new User(req.body.user).save( function(err, user) {
       if (err) {
         res.render('admin_user_new', {
@@ -86,7 +88,7 @@ module.exports = function(app) {
     });
   });
 
-  app.put('/admin/user/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+  app.put('/admin/users/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     User.update({_id: req.resource.id}, req.body.user, function(err, numAffected) {
       if (err) {
         Client.find({}, function(err, clients) {
@@ -111,16 +113,41 @@ module.exports = function(app) {
   app.get('/admin/clients/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     res.render('admin_client_new', {
       title: 'Admin',
-      message: req.flash()
+      message: req.flash(),
+      theClient: null
     });
   });
 
-  app.post('/admin/client', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+  app.post('/admin/clients', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     new Client(req.body.client).save( function(err, client) {
       if (err) {
         res.render('admin_client_new', {
           title: 'Admin',
-          message: { error: 'Client could not be saved: ' + err }
+          message: { error: 'Client could not be saved: ' + err },
+          theClient: req.resource
+        });
+      } else {
+        req.flash('info', "Success!");
+        res.redirect('/admin');
+      }
+    });
+  });
+
+  app.get('/admin/clients/:id/edit', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    res.render('admin_client_new', {
+      title: 'Edit Client',
+      message: req.flash(),
+      theClient: req.resource
+    });
+  });
+
+  app.put('/admin/clients/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    Client.update({_id: req.resource.id}, req.body.client, function(err, numAffected) {
+      if (err) {
+        res.render('admin_client_new', {
+          title: 'Edit Client',
+          message: "Couldn't save client: " + err,
+          theClient: req.resource
         });
       } else {
         req.flash('info', "Success!");

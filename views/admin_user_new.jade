@@ -2,7 +2,7 @@ extends layout
 
 block content
   h1 #{user ? "Edit" : "Create"} User
-  form(action="/admin/user" + (user ? ('/' + user.id) : ""), method="POST")
+  form(action="/admin/users" + (user ? ('/' + user.id) : ""), method="POST")
     if user
       input(type="hidden", name="_method", value="PUT")
     label Email
