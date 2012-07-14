@@ -27,9 +27,12 @@ module.exports = function(app) {
 
   });
 
-  app.get('/admin/create_user', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+  // Admin users
+  //----------------------------
+
+  app.get('/admin/users/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     Client.find({}, function(err, clients) {
-      res.render('admin_create_user', {
+      res.render('admin_user_new', {
         title: 'Admin',
         message: req.flash(),
         clients: clients
@@ -37,10 +40,10 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/admin/create_user', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+  app.post('/admin/user', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     new User(req.body.user).save( function(err, user) {
       if (err) {
-        res.render('admin_create_user', {
+        res.render('admin_user_new', {
           title: 'Admin',
           message: { error: 'User could not be saved: ' + err }
         });
@@ -51,17 +54,20 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/admin/create_client', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    res.render('admin_create_client', {
+  //Admin clients
+  //----------------------------
+
+  app.get('/admin/clients/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    res.render('admin_client_new', {
       title: 'Admin',
       message: req.flash()
     });
   });
 
-  app.post('/admin/create_client', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+  app.post('/admin/client', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     new Client(req.body.client).save( function(err, client) {
       if (err) {
-        res.render('admin_create_client', {
+        res.render('admin_client_new', {
           title: 'Admin',
           message: { error: 'Client could not be saved: ' + err }
         });

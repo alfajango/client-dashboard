@@ -3,7 +3,7 @@ extends layout
 block content
   h1 Create Client
 
-  form(action="", method="POST")
+  form(action="/admin/client", method="POST")
     label name
       input(type="text", name="client[name]")
 

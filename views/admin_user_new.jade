@@ -2,7 +2,7 @@ extends layout
 
 block content
   h1 Create User
-  form(action="", method="POST")
+  form(action="/admin/user", method="POST")
     label Email
       input(type="text", name="user[email]")
     label Password
