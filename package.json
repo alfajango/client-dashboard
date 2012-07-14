@@ -13,6 +13,7 @@
     "underscore": "",
     "yaml-config": "",
     "passport": "",
-    "passport-local": ""
+    "passport-local": "",
+    "password-hash": ""
   }
 }

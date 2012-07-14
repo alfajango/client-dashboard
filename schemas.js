@@ -4,9 +4,9 @@ module.exports = function(mongoose) {
 
   var schemas = {
     Deploy: new Schema({
-      created_at:       Date,
+      createdAt:       Date,
       environment:      String,
-      commit_sha:       String,
+      commitSha:       String,
       changes:          String
     }),
 
@@ -17,8 +17,8 @@ module.exports = function(mongoose) {
     }),
 
     Status: new Schema({
-      created_at:       Date,
-      last_checked_at:  Date,
+      createdAt:       Date,
+      lastCheckedAt:  Date,
       state:            String,
       type:             String
     }),
@@ -27,7 +27,7 @@ module.exports = function(mongoose) {
       number:           Number,
       title:            String,
       status:           String,
-      deploy_id:        ObjectId,
+      deployId:        ObjectId,
       progress:         Number
     }),
 
@@ -44,8 +44,8 @@ module.exports = function(mongoose) {
       id:               ObjectId,
       email:            String,
       salt:             String,
-      hashed_password:  String,
-      invoice_amount:   Number
+      hashedPassword:  String,
+      invoiceAmount:   Number
     }),
 
     ClientService: new Schema({
@@ -57,7 +57,7 @@ module.exports = function(mongoose) {
     Client: new Schema({
       name:             String,
       users:            [this.User],
-      client_services:  [this.ClientService],
+      clientServices:  [this.ClientService],
       projects:         [this.Project]
     })
   };
