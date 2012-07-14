@@ -6,10 +6,12 @@ module.exports = function(app) {
    */
 
   app.get('/', function(req, res, mongoose){
-    res.render('index', {
-      title: 'Alfa Jango Client Dashboard',
-      users: User.find({}),
-      message: req.flash()
+    User.find({}, function(err, users) {
+      res.render('index', {
+        title: 'Alfa Jango Client Dashboard',
+        users: users,
+        message: req.flash()
+      });
     });
   });
 

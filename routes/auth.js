@@ -12,7 +12,7 @@ module.exports = function(app) {
   //   login page.  Otherwise, the primary route function function will be called,
   //   which, in this example, will redirect the user to the home page.
   //
-  //   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
+  //   curl -v -d "email=bob@example.com&password=secret" http://127.0.0.1:3000/login
   //
   app.post(
     '/login',

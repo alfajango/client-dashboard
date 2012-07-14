@@ -8,14 +8,15 @@ var UserSchema = new Schema({
     validate: [validatePresenceOf, 'an email is required'],
     index: { unique: true }
   },
-  hashedPassword:   String
+  hashedPassword:   String,
+  admin:            Boolean
 });
 
 UserSchema.virtual('password')
   .set(function(password) {
     this._password = password;
-    this.hashed_password = passwordHash.generate(password);
+    this.hashedPassword = passwordHash.generate(password);
   })
   .get(function() { return this._password; });
 
-mongoose.model('User', UserSchema);
+exports = module.exports = User = mongoose.model('User', UserSchema);

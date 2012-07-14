@@ -9,9 +9,6 @@ var express = require('express'),
   auth = require('./authorization'),
   flash = require('connect-flash');
 
-// Load underscore globally
-_ = require('underscore');
-
 // Load configurations
 var config_file = require('yaml-config')
 exports = module.exports = config = config_file.readConfig('./config.yaml')
