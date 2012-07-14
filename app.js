@@ -6,7 +6,8 @@
 var express = require('express'),
   http = require('http'),
   fs = require('fs'),
-  auth = require('./authorization');
+  auth = require('./authorization'),
+  flash = require('connect-flash');
 
 // Load underscore globally
 _ = require('underscore');
@@ -27,10 +28,11 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser()); 
   app.use(express.session({ secret: 'my app secret' }));
-  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(flash());
+  app.use(app.router);
 });
 
 // Load environment-specific config
