@@ -6,8 +6,9 @@
 var express = require('express'),
   http = require('http'),
   fs = require('fs'),
-  auth = require('./authorization'),
   flash = require('connect-flash');
+
+auth = require('./authorization');
 
 // Load configurations
 var config_file = require('yaml-config')

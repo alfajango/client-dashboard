@@ -5,7 +5,7 @@ module.exports = function(app) {
    * GET home page.
    */
 
-  app.get('/', function(req, res, mongoose){
+  app.get('/', auth.ensureAuthenticated, function(req, res, mongoose){
     User.find({}, function(err, users) {
       res.render('index', {
         title: 'Alfa Jango Client Dashboard',
