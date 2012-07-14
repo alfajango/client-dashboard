@@ -2,3 +2,9 @@ extends layout
 
 block content
   h1 Create Client
+
+  form(action="", method="POST")
+    label name
+      input(type="text", name="client[name]")
+
+    input(type="submit", value="Create")

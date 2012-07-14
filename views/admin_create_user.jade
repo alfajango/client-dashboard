@@ -2,3 +2,14 @@ extends layout
 
 block content
   h1 Create User
+  form(action="", method="POST")
+    label Email
+      input(type="text", name="user[email]")
+    label Password
+      input(type="text", name="user[password]")
+    label Client
+      select(name="user[projects]")
+        each client in clients
+          option(value=client._id)= client.name
+
+    input(type="submit", value="Create")
