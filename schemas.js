@@ -38,16 +38,8 @@ module.exports = function(app) {
       deploys:          [this.Deploy]
     }),
 
-    ClientService: new Schema({
-      name:             String,
-      uri:              String,
-      token:            String
-    }),
-
     Client: new Schema({
       name:             String,
-      users:            [this.User],
-      clientServices:  [this.ClientService],
       projects:         [this.Project],
       invoiceAmount:    Number
     })

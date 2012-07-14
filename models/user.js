@@ -3,13 +3,17 @@ function validatePresenceOf(value) {
 }
 
 var UserSchema = new Schema({
-  email:            {
+  email: {
     type: String,
     validate: [validatePresenceOf, 'an email is required'],
     index: { unique: true }
   },
-  hashedPassword:   String,
-  admin:            Boolean
+  hashedPassword: String,
+  admin: Boolean,
+  client: {
+    type: ObjectId,
+    ref: 'Client'
+  }
 });
 
 UserSchema.virtual('password')

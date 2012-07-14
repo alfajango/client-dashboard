@@ -43,14 +43,14 @@ app.configure('development', function(){
 require('./db-connect');
 
 // Load models
-require('./schemas.js')(app);
-
 var models_path = './models',
     models_files = fs.readdirSync(models_path);
 
 models_files.forEach(function(file) {
   require(models_path + '/' + file);
 });
+
+require('./schemas.js')(app);
 
 // Load routes
 var routes_path = './routes',

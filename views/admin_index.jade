@@ -4,11 +4,19 @@ block content
   h1 Admin
 
   h2 Clients
+  a(href="/admin/clients/new") Add
   ul
     each client in clients
-      li= client.name
+      li
+        = client.name
+        | -
+        a(href="/admin/clients/#{client.id}/edit") Edit
 
   h2 Users
+  a(href="/admin/users/new") Add
   ul
     each user in users
-      li= user.email
+      li
+        = user.email
+        | -
+        a(href="/admin/users/#{user.id}/edit") Edit

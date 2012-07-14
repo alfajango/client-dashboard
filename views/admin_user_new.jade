@@ -1,15 +1,17 @@
 extends layout
 
 block content
-  h1 Create User
-  form(action="/admin/user", method="POST")
+  h1 #{user ? "Edit" : "Create"} User
+  form(action="/admin/user" + (user ? ('/' + user.id) : ""), method="POST")
+    if user
+      input(type="hidden", name="_method", value="PUT")
     label Email
-      input(type="text", name="user[email]")
+      input(type="text", name="user[email]", value=(user ? user.email : ""))
     label Password
-      input(type="text", name="user[password]")
+      input(type="password", name="user[password]", value=(user ? user.password : ""))
     label Client
-      select(name="user[projects]")
+      select(name="user[client]")
         each client in clients
-          option(value=client._id)= client.name
+          option(value=client.id, selected=(user && user.client == client.id ? "selected" : false))= client.name
 
-    input(type="submit", value="Create")
+    input(type="submit", value=(user ? "Update" : "Create"))
