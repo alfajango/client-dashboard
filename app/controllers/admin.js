@@ -7,7 +7,16 @@ module.exports = function(app) {
     utils.when(
       function(done) {
         User.find({}, function(err, collection) {
-          users = collection;
+          // Sort users by client
+          users = _.reduce(collection, function(memo, user) {
+            var client = user.client || 'not assigned';
+            if (memo[client]) {
+              memo[client].push(user);
+            } else {
+              memo[client] = [user];
+            }
+            return memo;
+          }, {});
           done();
         });
       },
@@ -95,10 +104,10 @@ module.exports = function(app) {
       }
       user.save( function(err) {
         if (err) {
-          Client.find({}, function(err, clients) {
+          Client.find({}, function(clientErr, clients) {
             res.render('admin/user_new', {
               title: 'Edit User',
-              message: "Couldn't save user: " + err,
+              message: { error: "User could not be saved: " + err },
               clients: clients,
               user: req.resource
             });
@@ -151,7 +160,7 @@ module.exports = function(app) {
       if (err) {
         res.render('admin/client_new', {
           title: 'Edit Client',
-          message: "Couldn't save client: " + err,
+          message: { error: "Couldn't save client: " + err },
           theClient: req.resource
         });
       } else {

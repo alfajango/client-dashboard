@@ -10,6 +10,7 @@ var express = require('express'),
 
 utils = require(__dirname + '/lib/utils');
 auth = require(__dirname + '/lib/authentication');
+_ = require('underscore');
 
 // Load configurations
 var config_file = require('yaml-config')
