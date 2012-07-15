@@ -1,6 +1,6 @@
 module.exports = function(app) {
   app.get('/login', function(req, res) {
-    res.render('auth_login', {
+    res.render('auth/login', {
       title: 'Login page',
       message: req.flash()
     });

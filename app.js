@@ -8,8 +8,8 @@ var express = require('express'),
   fs = require('fs'),
   flash = require('connect-flash');
 
-utils = require('./lib/utils');
-auth = require('./authentication');
+utils = require(__dirname + '/lib/utils');
+auth = require(__dirname + '/lib/authentication');
 
 // Load configurations
 var config_file = require('yaml-config')
@@ -19,8 +19,9 @@ var app = express();
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
-  app.set('views', __dirname + '/views');
+  app.set('views', __dirname + '/app/views');
   app.set('view engine', 'jade');
+  app.set('view options', { layout: __dirname + '/app/views/layouts/application' });
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -40,24 +41,24 @@ app.configure('development', function(){
 });
 
 // Connect to db and load models
-require('./db-connect');
+require(__dirname + '/lib/db-connect');
 
 // Load models
-var models_path = './models',
-    models_files = fs.readdirSync(models_path);
+var model_path = __dirname + '/app/models',
+    model_files = fs.readdirSync(model_path);
 
-models_files.forEach(function(file) {
-  require(models_path + '/' + file);
+model_files.forEach(function(file) {
+  require(model_path + '/' + file);
 });
 
-require('./schemas.js')(app);
+require(__dirname + '/app/models/models.js')(app);
 
 // Load routes
-var routes_path = './routes',
-    routes_files = fs.readdirSync(routes_path);
+var controller_path = __dirname + '/app/controllers',
+    controller_files = fs.readdirSync(controller_path);
 
-routes_files.forEach(function(file) {
-  require(routes_path + '/' + file)(app);
+controller_files.forEach(function(file) {
+  require(controller_path + '/' + file)(app);
 });
 
 http.createServer(app).listen(app.get('port'), function(){

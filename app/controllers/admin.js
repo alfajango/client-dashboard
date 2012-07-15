@@ -18,7 +18,7 @@ module.exports = function(app) {
         });
       }
     ).then(function() {
-      res.render('admin_index', {
+      res.render('admin/index', {
         title: 'Admin',
         message: req.flash(),
         users: users,
@@ -54,7 +54,7 @@ module.exports = function(app) {
 
   app.get('/admin/users/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     Client.find({}, function(err, clients) {
-      res.render('admin_user_new', {
+      res.render('admin/user_new', {
         title: 'Admin',
         message: req.flash(),
         clients: clients,
@@ -66,7 +66,7 @@ module.exports = function(app) {
   app.post('/admin/users', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     new User(req.body.user).save( function(err, user) {
       if (err) {
-        res.render('admin_user_new', {
+        res.render('admin/user_new', {
           title: 'Admin',
           message: { error: 'User could not be saved: ' + err }
         });
@@ -79,7 +79,7 @@ module.exports = function(app) {
 
   app.get('/admin/users/:id/edit', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     Client.find({}, function(err, clients) {
-      res.render('admin_user_new', {
+      res.render('admin/user_new', {
         title: 'Edit User',
         message: req.flash(),
         clients: clients,
@@ -96,7 +96,7 @@ module.exports = function(app) {
       user.save( function(err) {
         if (err) {
           Client.find({}, function(err, clients) {
-            res.render('admin_user_new', {
+            res.render('admin/user_new', {
               title: 'Edit User',
               message: "Couldn't save user: " + err,
               clients: clients,
@@ -116,7 +116,7 @@ module.exports = function(app) {
   //----------------------------
 
   app.get('/admin/clients/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    res.render('admin_client_new', {
+    res.render('admin/client_new', {
       title: 'Admin',
       message: req.flash(),
       theClient: null
@@ -126,7 +126,7 @@ module.exports = function(app) {
   app.post('/admin/clients', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     new Client(req.body.client).save( function(err, client) {
       if (err) {
-        res.render('admin_client_new', {
+        res.render('admin/client_new', {
           title: 'Admin',
           message: { error: 'Client could not be saved: ' + err },
           theClient: req.resource
@@ -139,7 +139,7 @@ module.exports = function(app) {
   });
 
   app.get('/admin/clients/:id/edit', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    res.render('admin_client_new', {
+    res.render('admin/client_new', {
       title: 'Edit Client',
       message: req.flash(),
       theClient: req.resource
@@ -149,7 +149,7 @@ module.exports = function(app) {
   app.put('/admin/clients/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     Client.update({_id: req.resource.id}, req.body.client, function(err, numAffected) {
       if (err) {
-        res.render('admin_client_new', {
+        res.render('admin/client_new', {
           title: 'Edit Client',
           message: "Couldn't save client: " + err,
           theClient: req.resource

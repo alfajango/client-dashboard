@@ -7,7 +7,7 @@ module.exports = function(app) {
 
   app.get('/', auth.ensureAuthenticated, function(req, res, mongoose){
     User.find({}, function(err, users) {
-      res.render('index', {
+      res.render('home/index', {
         title: 'Alfa Jango Client Dashboard',
         users: users,
         message: req.flash(),
