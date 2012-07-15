@@ -41,7 +41,7 @@ module.exports = function(app) {
 
     model
       .findById(id)
-      .run( function(err,foundModel) {
+      .exec( function(err,foundModel) {
         if (err) { return next(err); }
         if (!foundModel) { return next(new Error('Failed to load resource: ' + id)); }
         req.resource = foundModel;
@@ -89,20 +89,25 @@ module.exports = function(app) {
   });
 
   app.put('/admin/users/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    User.update({_id: req.resource.id}, req.body.user, function(err, numAffected) {
-      if (err) {
-        Client.find({}, function(err, clients) {
-          res.render('admin_user_new', {
-            title: 'Edit User',
-            message: "Couldn't save user: " + err,
-            clients: clients,
-            user: req.resource
-          });
-        });
-      } else {
-        req.flash('info', "Success!");
-        res.redirect('/admin');
+    User.findById(req.resource.id, function(err, user) {
+      for (attr in req.body.user) {
+        user[attr] = req.body.user[attr];
       }
+      user.save( function(err) {
+        if (err) {
+          Client.find({}, function(err, clients) {
+            res.render('admin_user_new', {
+              title: 'Edit User',
+              message: "Couldn't save user: " + err,
+              clients: clients,
+              user: req.resource
+            });
+          });
+        } else {
+          req.flash('info', "Success!");
+          res.redirect('/admin');
+        }
+      });
     });
   });
 

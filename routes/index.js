@@ -10,7 +10,8 @@ module.exports = function(app) {
       res.render('index', {
         title: 'Alfa Jango Client Dashboard',
         users: users,
-        message: req.flash()
+        message: req.flash(),
+        admin: req.user.admin
       });
     });
   });

@@ -2,6 +2,7 @@ extends layout
 
 block content
   h1= title
+  if admin
+    a(href="/admin") Admin
   p Welcome to #{title}
-  a(href="/login") Login
   p Users: #{parseInt(users.length)}
