@@ -15,7 +15,7 @@ block content
     each client in clients
       tr
         td
-          a(href="/?client=#{client.id}")= client.name
+          a(href="/?client_id=#{client.id}")= client.name
           a(href="/admin/clients/#{client.id}/edit") Edit
 
         td
