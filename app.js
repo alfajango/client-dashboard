@@ -6,7 +6,8 @@
 var express = require('express'),
   http = require('http'),
   fs = require('fs'),
-  flash = require('connect-flash');
+  flash = require('connect-flash'),
+  MongoStore = require('connect-mongodb');
 
 utils = require(__dirname + '/lib/utils');
 auth = require(__dirname + '/lib/authentication');
@@ -18,6 +19,9 @@ exports = module.exports = config = config_file.readConfig('./config.yaml')
 
 var app = express();
 
+// Connect to db and load models
+require(__dirname + '/lib/db-connect');
+
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/app/views');
@@ -28,7 +32,15 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser()); 
-  app.use(express.session({ secret: 'my app secret' }));
+  app.use(express.session({
+    secret:'my app secret',
+    maxAge: new Date(Date.now() + 3600000),
+    store: new MongoStore(
+      {db:mongoose.connection.db},
+      function(err){
+        if (err) { console.log(err); };
+      })
+  }));
   app.use(express.static(__dirname + '/public'));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -40,9 +52,6 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
-
-// Connect to db and load models
-require(__dirname + '/lib/db-connect');
 
 // Load models
 var model_path = __dirname + '/app/models',

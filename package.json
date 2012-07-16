@@ -16,6 +16,7 @@
     "passport-local": "",
     "password-hash": "",
     "connect-flash": "",
-    "jake": ""
+    "jake": "",
+    "connect-mongodb": ""
   }
 }
