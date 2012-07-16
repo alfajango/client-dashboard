@@ -6,20 +6,35 @@ block content
   h2 Clients
   a(href="/admin/clients/new") Add Client
   a(href="/admin/users/new") Add User
-  ul
-    each client in clients
-      li
-        = client.name
-        | -
-        a(href="/admin/clients/#{client.id}/edit") Edit
 
-        - if (users[client.id])
-          ul
-            - for user in users[client.id]
-              li
-                = user.email
-                | -
-                a(href="/admin/users/#{user.id}/edit") Edit
+  table
+    tr
+      th Client
+      th Projects
+      th Users
+    each client in clients
+      tr
+        td
+          a(href="/?client=#{client.id}")= client.name
+          a(href="/admin/clients/#{client.id}/edit") Edit
+
+        td
+          - if (client.projects)
+            ul
+              - for project in client.projects
+                li
+                  = project.name
+                  | -
+                  a(href="/admin/clients/#{client.id}/projects/#{project._id}/edit") Edit
+
+        td
+          - if (users[client.id])
+            ul
+              - for user in users[client.id]
+                li
+                  = user.email
+                  | -
+                  a(href="/admin/users/#{user.id}/edit") Edit
 
   - if (users['not assigned'])
     h2 Unassigned Users
@@ -29,3 +44,4 @@ block content
           = user.email
           | -
           a(href="/admin/users/#{user.id}/edit") Edit
+

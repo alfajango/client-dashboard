@@ -1,52 +1,53 @@
 module.exports = function(app) {
 
-  var schemas = {
-    Deploy: new Schema({
-      createdAt:       Date,
-      environment:      String,
-      commitSha:       String,
-      changes:          String
-    }),
+var DeploySchema = new Schema({
+  createdAt:        Date,
+  environment:      String,
+  commitSha:        String,
+  changes:          String
+});
 
-    Exception: new Schema({
-      title:            String,
-      affecting:        String,
-      occurrences:      Number
-    }),
+var ExceptionSchema = new Schema({
+  title:            String,
+  affecting:        String,
+  occurrences:      Number
+});
 
-    Status: new Schema({
-      createdAt:       Date,
-      lastCheckedAt:  Date,
-      state:            String,
-      type:             String
-    }),
+var StatusSchema = new Schema({
+  createdAt:        Date,
+  lastCheckedAt:    Date,
+  state:            String,
+  type:             String
+});
 
-    Issue: new Schema({
-      number:           Number,
-      title:            String,
-      status:           String,
-      deployId:        ObjectId,
-      progress:         Number
-    }),
+var IssueSchema = new Schema({
+  number:           Number,
+  title:            String,
+  status:           String,
+  deployId:         ObjectId,
+  progress:         Number
+});
 
-    Project: new Schema({
-      name:             String,
-      issues:           [this.Issue],
-      url:              String,
-      statuses:         [this.Status],
-      exceptions:       [this.Exception],
-      deploys:          [this.Deploy]
-    }),
+var ProjectSchema = new Schema({
+  name:             String,
+  issues:           [IssueSchema],
+  url:              String,
+  statuses:         [StatusSchema],
+  exceptions:       [ExceptionSchema],
+  deploys:          [DeploySchema]
+});
 
-    Client: new Schema({
-      name:             String,
-      projects:         [this.Project],
-      invoiceAmount:    Number
-    })
-  };
+var ClientSchema = new Schema({
+  name:             String,
+  projects:         [ProjectSchema],
+  invoiceAmount:    Number
+});
 
-  for(var model in schemas) {
-    mongoose.model(model, schemas[model]);
-  }
+mongoose.model('Deploy', DeploySchema);
+mongoose.model('Exception', ExceptionSchema);
+mongoose.model('Status', StatusSchema);
+mongoose.model('Issue', IssueSchema);
+mongoose.model('Project', ProjectSchema);
+mongoose.model('Client', ClientSchema);
 
 };

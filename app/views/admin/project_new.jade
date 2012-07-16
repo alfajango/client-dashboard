@@ -1,0 +1,14 @@
+extends ../layouts/application
+
+block content
+  h1 #{project ? "Update" : "Create"} Project for #{theClient.name}
+
+  form(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
+    if project
+      input(type="hidden", name="_method", value="PUT")
+    label name
+      input(type="text", name="project[name]", value=(project ? project.name : ""))
+    label url
+      input(type="text", name="project[url]", value=(project ? project.url : ""))
+
+    input(type="submit", value=(project ? "Update" : "Create"))

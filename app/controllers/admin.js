@@ -21,10 +21,11 @@ module.exports = function(app) {
         });
       },
       function(done) {
-        Client.find({}, function(err, collection) {
-          clients = collection;
-          done();
-        });
+        Client.find({})
+          .exec( function(err, collection) {
+            clients = collection;
+            done();
+          });
       }
     ).then(function() {
       res.render('admin/index', {
@@ -37,28 +38,30 @@ module.exports = function(app) {
   });
 
   app.param('id', function(req, res, next, id){
-    var model;
+    var model, isClient;
     if ( req.url.indexOf("admin/users") != -1 ) {
       model = User;
     } else if (req.url.indexOf("admin/clients") != -1 ) {
+      // TODO: Is there some way to get "Client" from model instance?
+      isClient = true;
       model = Client;
-    } else if (req.url.indexOf("admin/projects") != -1 ) {
-      model = Project;
     } else {
       next()
     }
 
     model
-      .findById(id)
-      .exec( function(err,foundModel) {
+      .findById(id, function(err,foundModel) {
         if (err) { return next(err); }
         if (!foundModel) { return next(new Error('Failed to load resource: ' + id)); }
         req.resource = foundModel;
+        if (isClient && req.params.project_id) {
+          req.project = foundModel.projects.id(req.params.project_id);
+        }
         next();
       });
   });
 
-  // Admin users
+  // Users
   //----------------------------
 
   app.get('/admin/users/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
@@ -121,7 +124,7 @@ module.exports = function(app) {
   });
 
 
-  //Admin clients
+  // Clients
   //----------------------------
 
   app.get('/admin/clients/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
@@ -162,6 +165,64 @@ module.exports = function(app) {
           title: 'Edit Client',
           message: { error: "Couldn't save client: " + err },
           theClient: req.resource
+        });
+      } else {
+        req.flash('info', "Success!");
+        res.redirect('/admin');
+      }
+    });
+  });
+
+  // Projects
+  //----------------------------
+
+  app.get('/admin/clients/:id/projects/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    res.render('admin/project_new', {
+      title: 'Admin',
+      message: req.flash(),
+      theClient: req.resource,
+      project: null
+    });
+  });
+
+  app.post('/admin/clients/:id/projects', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    var project = new Project(req.body.project);
+    req.resource.projects.push(req.body.project);
+    req.resource.save( function(err) {
+      if (err) {
+        res.render('admin/project_new', {
+          title: 'Admin',
+          message: { error: 'Project could not be saved: ' + err },
+          theClient: req.resource,
+          project: req.project
+        });
+      } else {
+        req.flash('info', "Success!");
+        res.redirect('/admin');
+      }
+    });
+  });
+
+  app.get('/admin/clients/:id/projects/:project_id/edit', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    res.render('admin/project_new', {
+      title: 'Edit Project',
+      message: req.flash(),
+      theClient: req.resource,
+      project: req.project
+    });
+  });
+
+  app.put('/admin/clients/:id/projects/:project_id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    for (attr in req.body.project) {
+      req.project[attr] = req.body.project[attr];
+    }
+    req.resource.save(function(err) {
+      if (err) {
+        res.render('admin/project_new', {
+          title: 'Edit Project',
+          message: { error: "Project could not be saved: " + err },
+          theClient: req.resource,
+          project: req.project
         });
       } else {
         req.flash('info', "Success!");

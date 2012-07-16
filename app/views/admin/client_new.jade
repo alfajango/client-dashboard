@@ -10,3 +10,6 @@ block content
       input(type="text", name="client[name]", value=(theClient ? theClient.name : ""))
 
     input(type="submit", value=(theClient ? "Update" : "Create"))
+
+  if theClient
+    a(href='/admin/clients/' + theClient.id + '/projects/new') Add Project
