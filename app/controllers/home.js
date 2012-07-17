@@ -33,10 +33,13 @@ module.exports = function(app) {
    */
 
   app.get('/', auth.ensureAuthenticated, ensureClient, function(req, res){
-    res.render('home/index', {
-      title: req.project.name + ' Dashboard',
-      message: req.flash(),
-      admin: req.user.admin
+    req.project.fetchServices( function(data) {
+      res.render('home/index', {
+        title: req.project.name + ' Dashboard',
+        message: req.flash(),
+        admin: req.user.admin,
+        serviceData: data
+      });
     });
   });
 

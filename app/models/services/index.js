@@ -1,1 +1,1 @@
-exports.redmine_service = require("./redmine_service.js");
+exports.redmine = require("./redmine.js");

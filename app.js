@@ -54,9 +54,9 @@ app.configure('development', function(){
 });
 
 // Load models
-require(__dirname + '/app/models');
+var models = require(__dirname + '/app/models');
 // Load controllers, passing `app` context
-require(__dirname + '/app/controllers')(app);
+var controllers = require(__dirname + '/app/controllers')(app);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
