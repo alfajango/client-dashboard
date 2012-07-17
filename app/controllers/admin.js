@@ -1,5 +1,6 @@
 var Client = mongoose.model('Client');
 var Project = mongoose.model('Project');
+var Service = mongoose.model('Service');
 
 module.exports = function(app) {
   app.get('/admin', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
@@ -56,6 +57,9 @@ module.exports = function(app) {
         req.resource = foundModel;
         if (isClient && req.params.project_id) {
           req.project = foundModel.projects.id(req.params.project_id);
+          if (req.params.service_id) {
+            req.service = req.project.services.id(req.params.service_id);
+          }
         }
         next();
       });
@@ -223,6 +227,68 @@ module.exports = function(app) {
           message: { error: "Project could not be saved: " + err },
           theClient: req.resource,
           project: req.project
+        });
+      } else {
+        req.flash('info', "Success!");
+        res.redirect('/admin');
+      }
+    });
+  });
+
+  // Services
+  //----------------------------
+
+  app.get('/admin/clients/:id/projects/:project_id/services/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    res.render('admin/service_new', {
+      title: 'New Service',
+      message: req.flash(),
+      theClient: req.resource,
+      project: req.project,
+      service: null
+    });
+  });
+
+  app.post('/admin/clients/:id/projects/:project_id/services', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    var service = new Service(req.body.service);
+    req.project.services.push(service);
+    req.resource.save( function(err) {
+      if (err) {
+        res.render('admin/service_new', {
+          title: 'New Service',
+          message: { error: 'Service could not be saved: ' + err },
+          theClient: req.resource,
+          project: req.project,
+          service: null
+        });
+      } else {
+        req.flash('info', "Success!");
+        res.redirect('/admin');
+      }
+    });
+  });
+
+  app.get('/admin/clients/:id/projects/:project_id/services/:service_id/edit', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    res.render('admin/service_new', {
+      title: 'Edit Service',
+      message: req.flash(),
+      theClient: req.resource,
+      project: req.project,
+      service: req.service
+    });
+  });
+
+  app.put('/admin/clients/:id/projects/:project_id/services/:service_id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    for (attr in req.body.service) {
+      req.service[attr] = req.body.service[attr];
+    }
+    req.resource.save(function(err) {
+      if (err) {
+        res.render('admin/service_new', {
+          title: 'Edit Service',
+          message: { error: "Service could not be saved: " + err },
+          theClient: req.resource,
+          project: req.project,
+          service: req.service
         });
       } else {
         req.flash('info', "Success!");

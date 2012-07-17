@@ -1,0 +1,18 @@
+extends ../layouts/application
+
+block content
+  h1 #{service ? "Update" : "Create"} Service for #{project.name}
+
+  form(action='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services' + (service ? ('/' + service.id) : ""), method="POST")
+    if service
+      input(type="hidden", name="_method", value="PUT")
+    label name
+      input(type="text", name="service[name]", value=(service ? service.name : ""))
+    label url
+      input(type="text", name="service[url]", value=(service ? service.url : ""))
+    label identifier
+      input(type="text", name="service[identifier]", value=(service ? service.identifier : ""))
+    label token
+      input(type="text", name="service[token]", value=(service ? service.token : ""))
+
+    input(type="submit", value=(service ? "Update" : "Create"))

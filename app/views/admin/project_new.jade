@@ -12,3 +12,6 @@ block content
       input(type="text", name="project[url]", value=(project ? project.url : ""))
 
     input(type="submit", value=(project ? "Update" : "Create"))
+
+  if project
+    a(href='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services/new') Add Service

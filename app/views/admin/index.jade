@@ -27,6 +27,14 @@ block content
                   | -
                   a(href="/admin/clients/#{client.id}/projects/#{project._id}/edit") Edit
 
+                  - if (project.services)
+                    ul
+                      - for service in project.services
+                        li
+                          = service.name
+                          | -
+                          a(href="/admin/clients/#{client.id}/projects/#{project.id}/services/#{service.id}/edit") Edit
+
         td
           - if (users[client.id])
             ul

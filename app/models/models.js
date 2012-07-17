@@ -28,13 +28,14 @@ var IssueSchema = new Schema({
 
 var ServiceSchema = new Schema({
   name:             String,
+  url:              String,
   identifier:       String,
   token:            String
 });
 
 var ProjectSchema = new Schema({
   name:             String,
-  projectServices:  [ServiceSchema],
+  services:         [ServiceSchema],
   issues:           [IssueSchema],
   url:              String,
   statuses:         [StatusSchema],
