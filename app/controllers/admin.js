@@ -67,7 +67,7 @@ module.exports = function(app) {
   app.get('/admin/users/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     Client.find({}, function(err, clients) {
       res.render('admin/user_new', {
-        title: 'Admin',
+        title: 'New User',
         message: req.flash(),
         clients: clients,
         user: null
@@ -79,7 +79,7 @@ module.exports = function(app) {
     new User(req.body.user).save( function(err, user) {
       if (err) {
         res.render('admin/user_new', {
-          title: 'Admin',
+          title: 'New User',
           message: { error: 'User could not be saved: ' + err }
         });
       } else {
@@ -129,7 +129,7 @@ module.exports = function(app) {
 
   app.get('/admin/clients/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     res.render('admin/client_new', {
-      title: 'Admin',
+      title: 'New Client',
       message: req.flash(),
       theClient: null
     });
@@ -139,7 +139,7 @@ module.exports = function(app) {
     new Client(req.body.client).save( function(err, client) {
       if (err) {
         res.render('admin/client_new', {
-          title: 'Admin',
+          title: 'New Client',
           message: { error: 'Client could not be saved: ' + err },
           theClient: req.resource
         });
@@ -178,7 +178,7 @@ module.exports = function(app) {
 
   app.get('/admin/clients/:id/projects/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     res.render('admin/project_new', {
-      title: 'Admin',
+      title: 'New Project',
       message: req.flash(),
       theClient: req.resource,
       project: null
@@ -191,10 +191,10 @@ module.exports = function(app) {
     req.resource.save( function(err) {
       if (err) {
         res.render('admin/project_new', {
-          title: 'Admin',
+          title: 'New Project',
           message: { error: 'Project could not be saved: ' + err },
           theClient: req.resource,
-          project: req.project
+          project: null
         });
       } else {
         req.flash('info', "Success!");
