@@ -187,7 +187,7 @@ module.exports = function(app) {
 
   app.post('/admin/clients/:id/projects', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     var project = new Project(req.body.project);
-    req.resource.projects.push(req.body.project);
+    req.resource.projects.push(project);
     req.resource.save( function(err) {
       if (err) {
         res.render('admin/project_new', {
