@@ -1,5 +1,3 @@
-module.exports = function(app) {
-
 var DeploySchema = new Schema({
   createdAt:        Date,
   environment:      String,
@@ -28,8 +26,15 @@ var IssueSchema = new Schema({
   progress:         Number
 });
 
+var ServiceSchema = new Schema({
+  name:             String,
+  identifier:       String,
+  token:            String
+});
+
 var ProjectSchema = new Schema({
   name:             String,
+  projectServices:  [ServiceSchema],
   issues:           [IssueSchema],
   url:              String,
   statuses:         [StatusSchema],
@@ -47,7 +52,6 @@ mongoose.model('Deploy', DeploySchema);
 mongoose.model('Exception', ExceptionSchema);
 mongoose.model('Status', StatusSchema);
 mongoose.model('Issue', IssueSchema);
+mongoose.model('Service', ServiceSchema);
 mongoose.model('Project', ProjectSchema);
 mongoose.model('Client', ClientSchema);
-
-};

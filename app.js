@@ -54,22 +54,9 @@ app.configure('development', function(){
 });
 
 // Load models
-var model_path = __dirname + '/app/models',
-    model_files = fs.readdirSync(model_path);
-
-model_files.forEach(function(file) {
-  require(model_path + '/' + file);
-});
-
-require(__dirname + '/app/models/models.js')(app);
-
-// Load routes
-var controller_path = __dirname + '/app/controllers',
-    controller_files = fs.readdirSync(controller_path);
-
-controller_files.forEach(function(file) {
-  require(controller_path + '/' + file)(app);
-});
+require(__dirname + '/app/models');
+// Load controllers, passing `app` context
+require(__dirname + '/app/controllers')(app);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
