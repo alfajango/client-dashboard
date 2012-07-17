@@ -17,6 +17,7 @@
     "password-hash": "",
     "connect-flash": "",
     "jake": "",
-    "connect-mongodb": ""
+    "connect-mongodb": "",
+    "socket.io": ""
   }
 }
