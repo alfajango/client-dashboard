@@ -15,8 +15,19 @@ var ProjectSchema = new Schema({
 });
 
 ProjectSchema.methods.fetchServices = function(callback) {
-  this.services.forEach( function(service) {
-    service.fetch(callback);
+  var responses = {count: 0}, services = this.services;
+  var fillResponse = function(data) {
+    _.extend(responses, data);
+    responses.count += 1;
+
+    // All services have run and completed
+    if (responses.count == services.length) {
+      callback(responses);
+    }
+  }
+
+  services.forEach( function(service) {
+    service.fetch(fillResponse);
   });
 };
 

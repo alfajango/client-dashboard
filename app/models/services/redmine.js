@@ -6,6 +6,7 @@ exports.fetch = function(service, callback) {
     host: service.url,
     port: 80,
     path: '/projects/' + service.identifier + '/issues.json',
+    query: 'status_id=open&limit=100',
     headers: {
       'Accept': 'application/json',
       'X-Redmine-API-Key': service.token
@@ -19,12 +20,13 @@ exports.fetch = function(service, callback) {
         data += chunk;
       });
       res.on('end', function(){
-        callback(data);
+        var resData = JSON.parse(data);
+        callback({redmine: resData});
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback();
+    callback({redmine: null});
   });
 };
 
