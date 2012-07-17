@@ -6,17 +6,29 @@ block content
     a(href="/admin") Admin
   p Welcome to #{title}
 
-  h2 Issues
-  table
-    tr
-      th Name
-      th Status
-      th % Done
-    each issue in serviceData.redmine.issues
+  if serviceData.redmine
+    h2 Issues
+    table
       tr
-        td
-          = issue.subject
-        td
-          = issue.status.name
-        td
-          = issue.done_ratio
+        th Name
+        th Status
+        th % Done
+      each issue in serviceData.redmine.issues
+        tr
+          td
+            = issue.subject
+          td
+            = issue.status.name
+          td
+            = issue.done_ratio
+
+  if serviceData.cashboard
+    h2 Invoice Amount
+    ul
+      each line_item in serviceData.cashboard
+        li
+          = line_item.title
+          | -
+          = line_item.price_actual
+          | -
+          = line_item.is_complete

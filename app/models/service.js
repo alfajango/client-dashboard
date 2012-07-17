@@ -4,6 +4,7 @@ var ServiceSchema = new Schema({
   name:             String,
   url:              String,
   identifier:       String,
+  user:             String,
   token:            String
 });
 
