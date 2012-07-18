@@ -18,6 +18,18 @@ _ = require('underscore');
 var config_file = require('yaml-config')
 exports = module.exports = config = config_file.readConfig('./config.yaml')
 
+// Load environment-specific config
+app.configure('development', function(){
+  app.use(express.errorHandler());
+});
+
+app.configure('production', function(){
+  // TODO: Figure out a way to load config.yaml through EJS,
+  // so this can be added there for production environment,
+  // instead of just overriding it like this.
+  config.db.uri = ENV['MONGOHQ_URL'];
+});
+
 // Connect to db and load models
 require(__dirname + '/lib/db-connect');
 
@@ -45,11 +57,6 @@ app.configure(function(){
   app.use(passport.session());
   app.use(flash());
   app.use(app.router);
-});
-
-// Load environment-specific config
-app.configure('development', function(){
-  app.use(express.errorHandler());
 });
 
 var server = app.listen(app.get('port'), function() {
