@@ -21,13 +21,13 @@ block head
       } else if (data.errbit) {
         var rows = "";
         $.each(data.errbit, function(i, exception) {
-          rows += '<li>';
-          rows += exception.title;
-          rows += ' - ' + exception.updated;
-          rows += ' - ' + exception.env;
-          rows += '</li>';
+          rows += '<tr>';
+          rows += '<td>' + exception.title + '</td>';
+          rows += '<td>' + exception.updated + '</td>';
+          rows += '<td>' + exception.env + '</td>';
+          rows += '</tr>';
         });
-        $('#errbit').html(rows);
+        $('#errbit tbody').html(rows);
       }
     });
 
@@ -55,8 +55,14 @@ block content
 
   - if (project.hasService('errbit'))
     h2 Unresolved Exceptions
-    ul#errbit
-      li Loading...
+    table.table.table-bordered#errbit
+      thead
+        tr
+          th Exception
+          th Latest time encountered
+          th Environment
+      tbody
+        td(span=3) Loading...
 
   - if (project.hasService('cashboard'))
     h2 Invoice Amount
