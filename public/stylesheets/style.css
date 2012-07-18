@@ -2,3 +2,7 @@ body {
   /* Account for fixed navbar */
   padding-top: 60px;
 }
+
+#admin-table li {
+  clear: both;
+}

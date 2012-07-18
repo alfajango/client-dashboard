@@ -1,18 +1,18 @@
 extends ../layouts/application
 
 block content
-  h1 #{project ? "Update" : "Create"} Project for #{theClient.name}
+  h1 #{theClient.name} / #{project ? "Update" : "Create"} Project
 
   form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
     fieldset
       if project
         input(type="hidden", name="_method", value="PUT")
       .control-group
-        label.control-label name
+        label.control-label Name
         .controls
           input(type="text", name="project[name]", value=(project ? project.name : ""))
       .control-group
-        label.control-label url
+        label.control-label URL
         .controls
           input(type="text", name="project[url]", value=(project ? project.url : ""))
 
@@ -23,4 +23,4 @@ block content
   if project
     a.btn(href='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services/new')
       i.icon-plus
-      Add Service
+      |  Add Service

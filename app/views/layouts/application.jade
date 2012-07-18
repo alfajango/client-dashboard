@@ -7,12 +7,36 @@ html
     link(rel='stylesheet', href='/vendor/bootstrap/css/bootstrap.min.css')
     script(src='/socket.io/socket.io.js')
     script(src='/javascripts/jquery-1.7.2.min.js')
+    script(src='/vendor/bootstrap/js/bootstrap.min.js')
     block head
   body
     div.navbar.navbar-fixed-top
       div.navbar-inner
         div.container
-          a.brand(href="#") Alfa Jango Client Dashboard
+          if currentUser.admin
+            a.brand(href="/admin") Alfa Jango Client Dashboard
+          else
+            a.brand(href="/") Alfa Jango Client Dashboard
+          ul.nav.pull-right
+            if currentUser.admin
+              li.dropdown
+                a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
+                  | Admin
+                  b.caret
+                ul.dropdown-menu
+                  li
+                    a(href="/admin") Homepage
+                  li
+                    a(href="/admin/clients/new")
+                      i.icon-plus
+                      |  Add Client
+                  li
+                    a(href="/admin/users/new")
+                      i.icon-plus
+                      |  Add User
+            li
+              a(href='/logout') Logout
+          block menu
 
     .main-content
       div.container

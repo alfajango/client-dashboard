@@ -39,7 +39,6 @@ module.exports = function(app, server) {
     res.render('home/index', {
       title: req.project.name + ' Dashboard',
       message: req.flash(),
-      admin: req.user.admin,
       theClient: req.client,
       project: req.project,
       serviceData: {}

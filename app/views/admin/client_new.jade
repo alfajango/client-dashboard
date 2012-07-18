@@ -8,7 +8,7 @@ block content
       if theClient
         input(type="hidden", name="_method", value="PUT")
       .control-group
-        label.control-label name
+        label.control-label Name
         .controls
           input(type="text", name="client[name]", value=(theClient ? theClient.name : ""))
 
@@ -19,4 +19,4 @@ block content
   if theClient
     a.btn(href='/admin/clients/' + theClient.id + '/projects/new')
       i.icon-plus
-      Add Project
+      |  Add Project

@@ -42,8 +42,6 @@ block head
 
 block content
   h1= title
-  if admin
-    a(href="/admin") Admin
   p Welcome to #{title}
 
   - if (project.hasService('redmine'))

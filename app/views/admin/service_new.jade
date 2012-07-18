@@ -1,30 +1,30 @@
 extends ../layouts/application
 
 block content
-  h1 #{service ? "Update" : "Create"} Service for #{project.name}
+  h1 #{theClient.name} / #{project.name} / #{service ? "Update" : "Create"} Service
 
   form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services' + (service ? ('/' + service.id) : ""), method="POST")
     fieldset
       if service
         input(type="hidden", name="_method", value="PUT")
       .control-group
-        label.control-label name
+        label.control-label Name
         .controls
           input(type="text", name="service[name]", value=(service ? service.name : ""))
       .control-group
-        label.control-label url
+        label.control-label Endpoint URL
         .controls
           input(type="text", name="service[url]", value=(service ? service.url : ""))
       .control-group
-        label.control-label identifier
+        label.control-label Project Identifier
         .controls
           input(type="text", name="service[identifier]", value=(service ? service.identifier : ""))
       .control-group
-        label.control-label user
+        label.control-label Service User
         .controls
           input(type="text", name="service[user]", value=(service ? service.user : ""))
       .control-group
-        label.control-label token
+        label.control-label Service Token
         .controls
           input(type="text", name="service[token]", value=(service ? service.token : ""))
 
