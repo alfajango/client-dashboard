@@ -8,7 +8,8 @@ var express = require('express'),
   fs = require('fs'),
   flash = require('connect-flash'),
   MongoStore = require('connect-mongodb'),
-  app = express();
+  app = express(),
+  middleware = require(__dirname + '/lib/middleware');
 
 utils = require(__dirname + '/lib/utils');
 auth = require(__dirname + '/lib/authentication');
@@ -39,6 +40,7 @@ app.configure(function(){
   app.set('views', __dirname + '/app/views');
   app.set('view engine', 'jade');
   app.set('view options', { layout: __dirname + '/app/views/layouts/application' });
+  app.use(middleware.setLocals);
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
