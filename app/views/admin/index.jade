@@ -43,6 +43,6 @@ block content
       - for user in users['not assigned']
         li
           = user.email
-          | -
+          |  - 
           a.btn.btn-mini(href="/admin/users/#{user.id}/edit") Edit
 

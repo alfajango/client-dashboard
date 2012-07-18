@@ -3,8 +3,11 @@ var Client = mongoose.model('Client');
 module.exports = function(app) {
   var ensureClient = function(req, res, next) {
     var clientQuery;
-    if (req.user.admin) {
+    if (req.user.admin && req.query.client_id) {
       clientQuery = Client.findById(req.query.client_id);
+    } else if (req.user.admin) {
+      req.flash('warn', "Choose a client");
+      res.redirect('/admin');
     } else {
       clientQuery = Client.findById(req.user.client);
     }
