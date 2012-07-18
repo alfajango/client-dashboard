@@ -42,8 +42,8 @@ block content
   p Welcome to #{title}
 
   - if (project.hasService('redmine'))
-    h2 Issues
-    table#redmine
+    h2 Current Issues
+    table.table.table-bordered#redmine
       thead
         tr
           th Name
@@ -60,7 +60,7 @@ block content
 
   - if (project.hasService('cashboard'))
     h2 Invoice Amount
-    table#cashboard
+    table.table.table-bordered#cashboard
       tr
         th Uninvoiced Time
         td#invoice Loading...

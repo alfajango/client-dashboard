@@ -3,11 +3,14 @@ extends ../layouts/application
 block content
   h1 Admin
 
-  h2 Clients
-  a(href="/admin/clients/new") Add Client
-  a(href="/admin/users/new") Add User
+  a.btn(href="/admin/clients/new")
+    i.icon-plus
+    Add Client
+  a.btn(href="/admin/users/new")
+    i.icon-plus
+    Add User
 
-  table
+  table.table.table-bordered
     tr
       th Client
       th Projects
@@ -16,7 +19,7 @@ block content
       tr
         td
           a(href="/?client_id=#{client.id}")= client.name
-          a(href="/admin/clients/#{client.id}/edit") Edit
+          a.btn.btn-mini(href="/admin/clients/#{client.id}/edit") Edit
 
         td
           - if (client.projects)
@@ -25,7 +28,7 @@ block content
                 li
                   = project.name
                   | -
-                  a(href="/admin/clients/#{client.id}/projects/#{project._id}/edit") Edit
+                  a.btn.btn-mini(href="/admin/clients/#{client.id}/projects/#{project._id}/edit") Edit
 
                   - if (project.services)
                     ul
@@ -33,7 +36,7 @@ block content
                         li
                           = service.name
                           | -
-                          a(href="/admin/clients/#{client.id}/projects/#{project.id}/services/#{service.id}/edit") Edit
+                          a.btn.btn-mini(href="/admin/clients/#{client.id}/projects/#{project.id}/services/#{service.id}/edit") Edit
 
         td
           - if (users[client.id])
@@ -42,7 +45,7 @@ block content
                 li
                   = user.email
                   | -
-                  a(href="/admin/users/#{user.id}/edit") Edit
+                  a.btn.btn-mini(href="/admin/users/#{user.id}/edit") Edit
 
   - if (users['not assigned'])
     h2 Unassigned Users
@@ -51,5 +54,5 @@ block content
         li
           = user.email
           | -
-          a(href="/admin/users/#{user.id}/edit") Edit
+          a.btn.btn-mini(href="/admin/users/#{user.id}/edit") Edit
 

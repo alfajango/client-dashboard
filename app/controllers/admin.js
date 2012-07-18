@@ -87,7 +87,7 @@ module.exports = function(app) {
           message: { error: 'User could not be saved: ' + err }
         });
       } else {
-        req.flash('info', "Success!");
+        req.flash('success', "Success!");
         res.redirect('/admin');
       }
     });
@@ -120,7 +120,7 @@ module.exports = function(app) {
             });
           });
         } else {
-          req.flash('info', "Success!");
+          req.flash('success', "Success!");
           res.redirect('/admin');
         }
       });
@@ -148,7 +148,7 @@ module.exports = function(app) {
           theClient: req.resource
         });
       } else {
-        req.flash('info', "Success!");
+        req.flash('success', "Success!");
         res.redirect('/admin');
       }
     });
@@ -171,7 +171,7 @@ module.exports = function(app) {
           theClient: req.resource
         });
       } else {
-        req.flash('info', "Success!");
+        req.flash('success', "Success!");
         res.redirect('/admin');
       }
     });
@@ -201,7 +201,7 @@ module.exports = function(app) {
           project: null
         });
       } else {
-        req.flash('info', "Success!");
+        req.flash('success', "Success!");
         res.redirect('/admin');
       }
     });
@@ -229,7 +229,7 @@ module.exports = function(app) {
           project: req.project
         });
       } else {
-        req.flash('info', "Success!");
+        req.flash('success', "Success!");
         res.redirect('/admin');
       }
     });
@@ -261,7 +261,7 @@ module.exports = function(app) {
           service: null
         });
       } else {
-        req.flash('info', "Success!");
+        req.flash('success', "Success!");
         res.redirect('/admin');
       }
     });
@@ -291,7 +291,7 @@ module.exports = function(app) {
           service: req.service
         });
       } else {
-        req.flash('info', "Success!");
+        req.flash('success', "Success!");
         res.redirect('/admin');
       }
     });

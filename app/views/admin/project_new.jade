@@ -3,15 +3,24 @@ extends ../layouts/application
 block content
   h1 #{project ? "Update" : "Create"} Project for #{theClient.name}
 
-  form(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
-    if project
-      input(type="hidden", name="_method", value="PUT")
-    label name
-      input(type="text", name="project[name]", value=(project ? project.name : ""))
-    label url
-      input(type="text", name="project[url]", value=(project ? project.url : ""))
+  form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
+    fieldset
+      if project
+        input(type="hidden", name="_method", value="PUT")
+      .control-group
+        label.control-label name
+        .controls
+          input(type="text", name="project[name]", value=(project ? project.name : ""))
+      .control-group
+        label.control-label url
+        .controls
+          input(type="text", name="project[url]", value=(project ? project.url : ""))
 
-    input(type="submit", value=(project ? "Update" : "Create"))
+      .control-group
+        .controls
+          input.btn(type="submit", value=(project ? "Update" : "Create"))
 
   if project
-    a(href='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services/new') Add Service
+    a.btn(href='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services/new')
+      i.icon-plus
+      Add Service

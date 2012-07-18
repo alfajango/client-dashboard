@@ -2,16 +2,26 @@ extends ../layouts/application
 
 block content
   h1 #{user ? "Edit" : "Create"} User
-  form(action="/admin/users" + (user ? ('/' + user.id) : ""), method="POST")
-    if user
-      input(type="hidden", name="_method", value="PUT")
-    label Email
-      input(type="text", name="user[email]", value=(user ? user.email : ""))
-    label Password
-      input(type="password", name="user[password]", value=(user ? user.password : ""))
-    label Client
-      select(name="user[client]")
-        each client in clients
-          option(value=client.id, selected=(user && user.client == client.id ? "selected" : false))= client.name
 
-    input(type="submit", value=(user ? "Update" : "Create"))
+  form.well.form-horizontal(action="/admin/users" + (user ? ('/' + user.id) : ""), method="POST")
+    fieldset
+      if user
+        input(type="hidden", name="_method", value="PUT")
+      .control-group
+        label.control-label Email
+        .controls
+          input(type="text", name="user[email]", value=(user ? user.email : ""))
+      .control-group
+        label.control-label Password
+        .controls
+          input(type="password", name="user[password]", value=(user ? user.password : ""))
+      .control-group
+        label.control-label Client
+        .controls
+          select(name="user[client]")
+            each client in clients
+              option(value=client.id, selected=(user && user.client == client.id ? "selected" : false))= client.name
+
+      .control-group
+        .controls
+          input.btn(type="submit", value=(user ? "Update" : "Create"))
