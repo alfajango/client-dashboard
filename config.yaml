@@ -1,9 +1,12 @@
 development:
   db:
     uri: "mongodb://localhost/client_dashboard_dev"
+  app_secret: 'my app secret'
 staging:
   db:
     uri: "mongodb://localhost/client_dashboard_staging"
+  app_secret: 'my app secret'
 production:
   db:
     uri: 
+  app_secret: 

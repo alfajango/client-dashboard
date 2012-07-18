@@ -28,6 +28,7 @@ app.configure('production', function(){
   // so this can be added there for production environment,
   // instead of just overriding it like this.
   config.db.uri = ENV['MONGOHQ_URL'];
+  config.app_secret = ENV['APP_SECRET'];
 });
 
 // Connect to db and load models
@@ -44,7 +45,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser()); 
   app.use(express.session({
-    secret:'my app secret',
+    secret: config.app_secret,
     maxAge: new Date(Date.now() + 3600000),
     store: new MongoStore(
       {db:mongoose.connection.db},
