@@ -2,10 +2,18 @@ extends ../layouts/application
 
 block content
   h1 Login
-  form(action="", method="POST")
-    label Email
-      input(type="text", name="email")
-    label Password
-      input(type="password", name="password")
+  form.well.form-horizontal(action="", method="POST")
+    fieldset
+      .control-group
+        label.control-label Email
+        .controls
+          input(type="text", name="email")
+      .control-group
+        label.control-label Password
+        .controls
+          input(type="password", name="password")
 
-    input(type="submit", value="Login")
+    fieldset
+      .control-group
+        .controls
+          input.btn(type="submit", value="Login")
