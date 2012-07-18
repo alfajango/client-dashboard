@@ -20,6 +20,7 @@ block head
           rows += '</tr>';
         });
         $('#redmine tbody').html(rows);
+        $('#redmine-title').append('<span class="badge">' + data.redmine.length + '</span>');
       } else if (data.cashboard) {
         $('#invoice').html(data.cashboard.invoice);
         $('#expenses').html(data.cashboard.expenses);
@@ -33,6 +34,7 @@ block head
           rows += '</tr>';
         });
         $('#errbit tbody').html(rows);
+        $('#errbit-title').append('<span class="badge badge-warning">' + data.errbit.length + '</span>');
       }
     });
 
@@ -45,7 +47,7 @@ block content
   p Welcome to #{title}
 
   - if (project.hasService('redmine'))
-    h2 Current Issues
+    h2#redmine-title Current Issues
     table.table.table-bordered#redmine
       thead
         tr
@@ -61,7 +63,7 @@ block content
               img(src="/images/ajax-loader.gif")
 
   - if (project.hasService('errbit'))
-    h2 Unresolved Exceptions
+    h2#errbit-title Unresolved Exceptions
     table.table.table-bordered#errbit
       thead
         tr
