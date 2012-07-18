@@ -51,19 +51,19 @@ module.exports = function(app) {
 
   // TODO: Namespace the return object per user,
   // so we don't get crossed messages!
-  //io.sockets.on('connection', function(socket) {
-    //socket.on('service', function(data) {
-      //Client.findById(data.client, function(err, client) {
-        //if (client) {
-          //var project = client.projects.id(data.project),
-              //service = project.services.filter( function(x) { return x.name == data.service } )[0];
+  io.sockets.on('connection', function(socket) {
+    socket.on('service', function(data) {
+      Client.findById(data.client, function(err, client) {
+        if (client) {
+          var project = client.projects.id(data.project),
+              service = project.services.filter( function(x) { return x.name == data.service } )[0];
 
-          //service.fetch( function(response) {
-            //socket.emit('serviceResponse', response);
-          //});
-        //}
-      //});
-    //});
-  //});
+          service.fetch( function(response) {
+            socket.emit('serviceResponse', response);
+          });
+        }
+      });
+    });
+  });
 
 };
