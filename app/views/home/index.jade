@@ -9,9 +9,14 @@ block head
         var rows = "";
         $.each(data.redmine, function(i, issue) {
           rows += '<tr>';
+          rows += '<td>' + issue.id + '</td>';
           rows += '<td>' + issue.subject + '</td>';
           rows += '<td>' + issue.status + '</td>';
-          rows += '<td>' + issue.progress + '</td>';
+          rows += '<td>';
+          if (issue.progress > 0) {
+            rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
+          }
+          rows += '</td>';
           rows += '</tr>';
         });
         $('#redmine tbody').html(rows);
@@ -46,7 +51,8 @@ block content
     table.table.table-bordered#redmine
       thead
         tr
-          th Name
+          th Ticket
+          th Description
           th Status
           th % Done
       tbody

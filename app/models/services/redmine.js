@@ -1,5 +1,14 @@
 var http = require('http');
 
+var statusOrder = {
+  'Estimate Needed': 0,
+  'Awaiting Approval': 1,
+  'Queued': 2,
+  'In Progress': 3,
+  'Pushed to Staging': 4,
+  'Pushed to Production': 5
+}
+
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
   var redmine = this;
@@ -37,7 +46,15 @@ exports.fetch = function(service, callback) {
 exports.translate = function(data) {
   var issues = data.issues.map(function(x) {
     return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio };
-  });
+  })
+    .sort(function(a, b) {
+      var firstOrder = statusOrder[a.status] - statusOrder[b.status];
+      if (firstOrder === 0) {
+        return a.id - b.id;
+      } else {
+        return firstOrder;
+      }
+    });
   return {redmine: issues};
 };
 
