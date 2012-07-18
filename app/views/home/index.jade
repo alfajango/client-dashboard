@@ -1,34 +1,59 @@
 extends ../layouts/application
 
+block head
+  script
+    var socket = io.connect('http://localhost:3000');
+
+    socket.on('serviceResponse', function(data) {
+      if (data.redmine) {
+        var rows = "";
+        $.each(data.redmine, function(i, issue) {
+          rows += '<tr>';
+          rows += '<td>' + issue.subject + '</td>';
+          rows += '<td>' + issue.status + '</td>';
+          rows += '<td>' + issue.progress + '</td>';
+          rows += '</tr>';
+        });
+        $('#redmine tbody').html(rows);
+      } else if (data.cashboard) {
+        var rows = "";
+        $.each(data.cashboard, function(i, line_item) {
+          rows += '<li>';
+          rows += line_item.title;
+          rows += ' - ' + line_item.price;
+          rows += ' - ' + line_item.complete;
+          rows += '</li>';
+        });
+        $('#cashboard').html(rows);
+      }
+    });
+
+  - if (project.hasService('redmine'))
+    script
+      socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: 'redmine'});
+  - if (project.hasService('cashboard'))
+    script
+      socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: 'cashboard'});
+
 block content
   h1= title
   if admin
     a(href="/admin") Admin
   p Welcome to #{title}
 
-  if serviceData.redmine
+  - if (project.hasService('redmine'))
     h2 Issues
-    table
-      tr
-        th Name
-        th Status
-        th % Done
-      each issue in serviceData.redmine.issues
+    table#redmine
+      thead
         tr
-          td
-            = issue.subject
-          td
-            = issue.status.name
-          td
-            = issue.done_ratio
+          th Name
+          th Status
+          th % Done
+      tbody
+        tr
+          td(span='3') Loading...
 
-  if serviceData.cashboard
+  - if (project.hasService('cashboard'))
     h2 Invoice Amount
-    ul
-      each line_item in serviceData.cashboard
-        li
-          = line_item.title
-          | -
-          = line_item.price_actual
-          | -
-          = line_item.is_complete
+    ul#cashboard
+      li Loading...

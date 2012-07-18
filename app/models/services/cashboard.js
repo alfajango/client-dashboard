@@ -5,6 +5,8 @@ var https = require('https');
 
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
+  var cashboard = this;
+
   var auth = 'Basic ' + new Buffer(service.user + ':' + service.token).toString('base64');
   var options = {
     host: service.url || 'api.cashboardapp.com',
@@ -23,18 +25,23 @@ exports.fetch = function(service, callback) {
         data += chunk;
       });
       res.on('end', function(){
-        var resData = JSON.parse(data);
-        callback({cashboard: resData});
+        var resData = JSON.parse(data),
+            out = cashboard.translate(resData);
+        callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({cashboard: null});
+    callback({cashboard: []});
   });
 };
 
 // Translate fetched response to db store format
-exports.translate = function() {
+exports.translate = function(data) {
+  var line_items = data.map(function(x) {
+    return { title: x.title, price: x.price_actual, complete: x.is_complete };
+  });
+  return {cashboard: line_items};
 };
 
 // Write fetched results to db

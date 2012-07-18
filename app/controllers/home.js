@@ -1,6 +1,8 @@
 var Client = mongoose.model('Client');
 
-module.exports = function(app) {
+module.exports = function(app, server) {
+  var io = require('socket.io').listen(server);
+
   var ensureClient = function(req, res, next) {
     var clientQuery;
     if (req.user.admin) {
@@ -12,6 +14,7 @@ module.exports = function(app) {
       if (err) {
         console.log(err);
       } else {
+        req.client = client;
         if (client.projects.length) {
           if (client.projects.length === 1) {
             req.project = client.projects[0];
@@ -33,17 +36,34 @@ module.exports = function(app) {
    */
 
   app.get('/', auth.ensureAuthenticated, ensureClient, function(req, res){
-    req.project.fetchServices( function(data) {
-      res.render('home/index', {
-        title: req.project.name + ' Dashboard',
-        message: req.flash(),
-        admin: req.user.admin,
-        serviceData: data
-      });
+    res.render('home/index', {
+      title: req.project.name + ' Dashboard',
+      message: req.flash(),
+      admin: req.user.admin,
+      theClient: req.client,
+      project: req.project,
+      serviceData: {}
     });
   });
 
   app.get('/choose', auth.ensureAuthenticated, function(req, res) {
+  });
+
+  // TODO: Namespace the return object per user,
+  // so we don't get crossed messages!
+  io.sockets.on('connection', function(socket) {
+    socket.on('service', function(data) {
+      Client.findById(data.client, function(err, client) {
+        if (client) {
+          var project = client.projects.id(data.project),
+              service = project.services.filter( function(x) { return x.name == data.service } )[0];
+
+          service.fetch( function(response) {
+            socket.emit('serviceResponse', response);
+          });
+        }
+      });
+    });
   });
 
 };

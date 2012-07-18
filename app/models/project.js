@@ -31,4 +31,12 @@ ProjectSchema.methods.fetchServices = function(callback) {
   });
 };
 
+ProjectSchema.methods.serviceNames = function() {
+  return this.services.map( function(x) { return x.name } );
+};
+
+ProjectSchema.methods.hasService = function(name) {
+  return this.serviceNames().indexOf(name) !== -1;
+};
+
 mongoose.model('Project', ProjectSchema);

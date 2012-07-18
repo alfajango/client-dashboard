@@ -7,7 +7,8 @@ var express = require('express'),
   http = require('http'),
   fs = require('fs'),
   flash = require('connect-flash'),
-  MongoStore = require('connect-mongodb');
+  MongoStore = require('connect-mongodb'),
+  app = express();
 
 utils = require(__dirname + '/lib/utils');
 auth = require(__dirname + '/lib/authentication');
@@ -16,8 +17,6 @@ _ = require('underscore');
 // Load configurations
 var config_file = require('yaml-config')
 exports = module.exports = config = config_file.readConfig('./config.yaml')
-
-var app = express();
 
 // Connect to db and load models
 require(__dirname + '/lib/db-connect');
@@ -53,11 +52,11 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+var server = app.listen(app.get('port'), function() {
+  console.log("Express server listening on port " + app.get('port'));
+});
+
 // Load models
 var models = require(__dirname + '/app/models');
 // Load controllers, passing `app` context
-var controllers = require(__dirname + '/app/controllers')(app);
-
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
+var controllers = require(__dirname + '/app/controllers')(app, server);
