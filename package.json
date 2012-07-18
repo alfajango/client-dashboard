@@ -18,6 +18,7 @@
     "connect-flash": "",
     "jake": "",
     "connect-mongodb": "",
-    "socket.io": ""
+    "socket.io": "",
+    "feedparser": ""
   }
 }

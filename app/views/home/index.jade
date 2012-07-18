@@ -25,15 +25,22 @@ block head
           rows += '</li>';
         });
         $('#cashboard').html(rows);
+      } else if (data.errbit) {
+        var rows = "";
+        $.each(data.errbit, function(i, exception) {
+          rows += '<li>';
+          rows += exception.title;
+          rows += ' - ' + exception.updated;
+          rows += ' - ' + exception.env;
+          rows += '</li>';
+        });
+        $('#errbit').html(rows);
       }
     });
 
-  - if (project.hasService('redmine'))
+  each service in project.services
     script
-      socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: 'redmine'});
-  - if (project.hasService('cashboard'))
-    script
-      socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: 'cashboard'});
+      socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: "#{service.name}"});
 
 block content
   h1= title
@@ -52,6 +59,11 @@ block content
       tbody
         tr
           td(span='3') Loading...
+
+  - if (project.hasService('errbit'))
+    h2 Unresolved Exceptions
+    ul#errbit
+      li Loading...
 
   - if (project.hasService('cashboard'))
     h2 Invoice Amount
