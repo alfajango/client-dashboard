@@ -16,15 +16,8 @@ block head
         });
         $('#redmine tbody').html(rows);
       } else if (data.cashboard) {
-        var rows = "";
-        $.each(data.cashboard, function(i, line_item) {
-          rows += '<li>';
-          rows += line_item.title;
-          rows += ' - ' + line_item.price;
-          rows += ' - ' + line_item.complete;
-          rows += '</li>';
-        });
-        $('#cashboard').html(rows);
+        $('#invoice').html(data.cashboard.invoice);
+        $('#expenses').html(data.cashboard.expenses);
       } else if (data.errbit) {
         var rows = "";
         $.each(data.errbit, function(i, exception) {
@@ -67,5 +60,10 @@ block content
 
   - if (project.hasService('cashboard'))
     h2 Invoice Amount
-    ul#cashboard
-      li Loading...
+    table#cashboard
+      tr
+        th Uninvoiced Time
+        td#invoice Loading...
+      tr
+        th Uninvoiced Expenses
+        td#expenses Loading...

@@ -1,6 +1,3 @@
-// THIS WORKS, BUT DESIRED VALUE IS NOT YET AVAILABLE VIA API.
-// SEE http://forum.getcashboard.com/forums/7/topics/2341
-// CURRENTLY RETURNS ALL LINE ITEMS FOR PROJECT, WHICH ISN'T WHAT WE WANT.
 var https = require('https');
 
 // Fetch issues from service endpoint
@@ -11,7 +8,7 @@ exports.fetch = function(service, callback) {
   var options = {
     host: service.url || 'api.cashboardapp.com',
     port: 443,
-    path: '/line_items.json?project_id=' + service.identifier,
+    path: '/projects/' + service.identifier + '.json',
     headers: {
       'Accept': 'application/json',
       'Authorization': auth
@@ -19,6 +16,7 @@ exports.fetch = function(service, callback) {
   };
 
   var req = https.get(options, function(res) {
+    console.log(res.statusCode);
     if (res.statusCode == 200) {
       var data = "";
       res.on('data', function(chunk) {
@@ -38,10 +36,12 @@ exports.fetch = function(service, callback) {
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
-  var line_items = data.map(function(x) {
-    return { title: x.title, price: x.price_actual, complete: x.is_complete };
-  });
-  return {cashboard: line_items};
+  return {
+    cashboard: {
+      invoice: data.uninvoiced_item_cost,
+      expenses: data.uninvoiced_expense_cost
+    }
+  };
 };
 
 // Write fetched results to db
