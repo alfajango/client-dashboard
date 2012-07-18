@@ -2,7 +2,7 @@ extends ../layouts/application
 
 block head
   script
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect(location.protocol + '//' + location.host);
 
     socket.on('serviceResponse', function(data) {
       if (data.redmine) {
