@@ -35,6 +35,13 @@ block content
               - for user in users[client.id]
                 li
                   = user.email
+                  |  
+                  if user.admin
+                    span.label.label-info admin
+                    |  
+                  if user.id == currentUser.id
+                    span.label.label-warning you
+                    |  
                   a.btn.btn-mini.pull-right(href="/admin/users/#{user.id}/edit") Edit
 
   - if (users['not assigned'])
@@ -46,6 +53,10 @@ block content
           |  
           if user.admin
             span.label.label-info admin
-          |  - 
+            |  
+          if user.id == currentUser.id
+            span.label.label-warning you
+            |  
+          | - 
           a.btn.btn-mini(href="/admin/users/#{user.id}/edit") Edit
 
