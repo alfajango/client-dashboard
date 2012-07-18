@@ -80,11 +80,23 @@ module.exports = function(app) {
   });
 
   app.post('/admin/users', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    new User(req.body.user).save( function(err, user) {
+    // TODO: Figure out how to do this with mongoose setters,
+    // couldn't get it working.
+    if (req.body.user.client == "") {
+      req.body.user.client = null;
+    }
+
+    // Keep this referenced so, so we can have typed values on error render
+    var user = new User(req.body.user);
+    user.save( function(err, savedUser) {
       if (err) {
-        res.render('admin/user_new', {
-          title: 'New User',
-          message: { error: 'User could not be saved: ' + err }
+        Client.find({}, function(clientErr, clients) {
+          res.render('admin/user_new', {
+            title: 'New User',
+            message: { error: 'User could not be saved: ' + err },
+            clients: clients,
+            user: user
+          });
         });
       } else {
         req.flash('success', "Success!");
@@ -105,6 +117,9 @@ module.exports = function(app) {
   });
 
   app.put('/admin/users/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    if (req.body.user.client == "") {
+      req.body.user.client = null;
+    }
     User.findById(req.resource.id, function(err, user) {
       for (attr in req.body.user) {
         user[attr] = req.body.user[attr];

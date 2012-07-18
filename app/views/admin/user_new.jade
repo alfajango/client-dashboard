@@ -19,8 +19,15 @@ block content
         label.control-label Client
         .controls
           select(name="user[client]")
+            option(value="")
             each client in clients
               option(value=client.id, selected=(user && user.client == client.id ? "selected" : false))= client.name
+      .control-group
+        label.control-label
+        .controls
+          label.checkbox Admin
+            input(type="hidden", name="user[admin]", value=false)
+            input(type="checkbox", name="user[admin]", checked=((user && user.admin) ? "checked" : false))
 
       .control-group
         .controls

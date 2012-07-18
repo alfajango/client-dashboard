@@ -43,6 +43,9 @@ block content
       - for user in users['not assigned']
         li
           = user.email
+          |  
+          if user.admin
+            span.label.label-info admin
           |  - 
           a.btn.btn-mini(href="/admin/users/#{user.id}/edit") Edit
 
