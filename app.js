@@ -27,8 +27,8 @@ app.configure('production', function(){
   // TODO: Figure out a way to load config.yaml through EJS,
   // so this can be added there for production environment,
   // instead of just overriding it like this.
-  config.db.uri = ENV['MONGOHQ_URL'];
-  config.app_secret = ENV['APP_SECRET'];
+  config.db.uri = process.env.MONGOHQ_URL;
+  config.app_secret = process.env.APP_SECRET;
 });
 
 // Connect to db and load models
