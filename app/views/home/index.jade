@@ -55,7 +55,10 @@ block content
           th % Done
       tbody
         tr
-          td(span='3') Loading...
+          td(colspan=4)
+            .loading.large
+              | Loading 
+              img(src="/images/ajax-loader.gif")
 
   - if (project.hasService('errbit'))
     h2 Unresolved Exceptions
@@ -66,14 +69,23 @@ block content
           th Latest time encountered
           th Environment
       tbody
-        td(span=3) Loading...
+        td(colspan=3)
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
 
   - if (project.hasService('cashboard'))
     h2 Invoice Amount
     table.table.table-bordered#cashboard
       tr
         th Uninvoiced Time
-        td#invoice Loading...
+        td#invoice
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
       tr
         th Uninvoiced Expenses
-        td#expenses Loading...
+        td#expenses
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")

@@ -6,3 +6,18 @@ body {
 #admin-table li {
   clear: both;
 }
+
+.loading {
+  text-align: center;
+  color: #64953B;
+  font-size: 16px;
+  line-height: 16px;
+}
+.loading.large {
+  padding: 20px;
+  font-size: 31px;
+  line-height: 31px;
+}
+.loading img {
+  vertical-align: top;
+}
