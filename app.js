@@ -64,7 +64,16 @@ var server = app.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'));
 });
 
+io = require('socket.io').listen(server);
+
+// Needed for Heroku, which does not yet support websockets,
+// must use long polling.
+io.configure(function() {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
+});
+
 // Load models
 var models = require(__dirname + '/app/models');
 // Load controllers, passing `app` context
-var controllers = require(__dirname + '/app/controllers')(app, server);
+var controllers = require(__dirname + '/app/controllers')(app);

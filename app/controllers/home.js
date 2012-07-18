@@ -1,8 +1,6 @@
 var Client = mongoose.model('Client');
 
-module.exports = function(app, server) {
-  var io = require('socket.io').listen(server);
-
+module.exports = function(app) {
   var ensureClient = function(req, res, next) {
     var clientQuery;
     if (req.user.admin) {
