@@ -34,7 +34,7 @@ block head
           rows += '</tr>';
         });
         $('#errbit tbody').html(rows);
-        $('#errbit-title').append('<span class="badge badge-warning">' + data.errbit.length + '</span>');
+        $('#errbit-title').append('<span class="badge ' + (data.errbit.length === 0 ? 'badge-success' : 'badge-warning') + '">' + data.errbit.length + '</span>');
       }
     });
 
