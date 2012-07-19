@@ -69,16 +69,28 @@ i.refresh-ok {
   display: none;
 }
 
-.error-description-td {
+.errbit-description-td {
   width: 290px;
 }
 
-.error-description {
+.errbit-description {
   display: none;
   clear: both;
 }
 
-.error-url {
+.errbit-url {
   max-width: 260px;
   overflow: auto;
+}
+
+.redmine-ticket-td {
+  width: 50px;
+}
+
+.redmine-status-td {
+  width: 150px;
+}
+.redmine-status-td .progress {
+  margin-bottom: 0;
+  height: 8px;
 }

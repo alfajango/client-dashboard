@@ -28,8 +28,7 @@ block head
             rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
             rows += '<td>' + issue.id + '</td>';
             rows += '<td>' + issue.subject + '</td>';
-            rows += '<td>' + issue.status + '</td>';
-            rows += '<td>';
+            rows += '<td class="redmine-status-td">' + issue.status;
             if (issue.progress > 0) {
               rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
             }
@@ -37,9 +36,9 @@ block head
             rows += '</tr>';
           });
         } else if (data.error) {
-          rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div></td></tr>'
+          rows += '<tr><td colspan=3><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div></td></tr>'
         } else {
-          rows += '<tr><td colspan=4><div class="alert alert-success">No current tasks</div></td></tr>';
+          rows += '<tr><td colspan=3><div class="alert alert-success">No current tasks</div></td></tr>';
         }
         $('#redmine tbody').html(rows);
         $('#redmine tr').tooltip({placement: 'bottom'});
@@ -59,7 +58,7 @@ block head
         if (data.errbit.length > 0) {
           $.each(data.errbit, function(i, exception) {
             rows += '<tr>';
-            rows += '<td class="error-description-td"><button class="btn btn-mini pull-right error-description-toggle">&hellip;</button><div class="error-url">' + (exception.url && exception.url !== "{}" ? exception.url : 'n/a') + '</div><br class="clear" /><div class="error-description"><pre>' + exception.error_class + '\n' + JSON.stringify(exception.messages) + '</pre></div></td>';
+            rows += '<td class="errbit-description-td"><button class="btn btn-mini pull-right errbit-description-toggle">&hellip;</button><div class="errbit-url">' + (exception.url && exception.url !== "{}" ? exception.url : 'n/a') + '</div><br class="clear" /><div class="errbit-description"><pre>' + exception.error_class + '\n' + JSON.stringify(exception.messages) + '</pre></div></td>';
             rows += '<td>' + exception.env + '</td>';
             rows += '<td>' + exception.count + '</td>';
             rows += '<td>' + (humaneDate(exception.last_occurrence) || exception.last_occurrence) + '</td>';
@@ -93,8 +92,8 @@ block head
       $this.addClass('disabled').text('Refreshing...');
       emitters[service]();
     });
-    $(document).delegate('.error-description-toggle', 'click', function(e) {
-      $(this).siblings('.error-description').slideToggle();
+    $(document).delegate('.errbit-description-toggle', 'click', function(e) {
+      $(this).siblings('.errbit-description').slideToggle();
     });
 
 block header
@@ -117,13 +116,12 @@ block content
     table.table.table-bordered#redmine
       thead
         tr
-          th Ticket
+          th.redmine-ticket-td Ticket
           th Description
-          th Status
-          th % Done
+          th.redmine-status-td Status
       tbody
         tr
-          td(colspan=4)
+          td(colspan=3)
             .loading.large
               | Loading 
               img(src="/images/ajax-loader.gif")
@@ -140,7 +138,7 @@ block content
         table.table.table-bordered#errbit
           thead
             tr
-              th.error-description-td Error on
+              th.errbit-description-td Error on
               th Environment
               th Occurrences
               th Last Occurrence
