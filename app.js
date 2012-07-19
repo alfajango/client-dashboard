@@ -13,6 +13,11 @@ utils = require(__dirname + '/lib/utils');
 _ = require('underscore');
 auth = require(__dirname + '/lib/authentication');
 
+process.on('uncaughtException', function (err) {
+  console.error(err);
+  console.log("Node NOT Exiting...");
+});
+
 var server = app.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'));
 });
