@@ -72,3 +72,8 @@ i.refresh-ok {
 .error-description {
   display: none;
 }
+
+#errbit td {
+  max-width: 320px;
+  overflow: auto;
+}
