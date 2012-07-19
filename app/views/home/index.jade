@@ -42,11 +42,11 @@ block head
         $('#redmine tbody').html(rows);
         $('#redmine tr').tooltip({placement: 'bottom'});
         $('#redmine-title .badge').html(data.redmine.length);
-        $('.refresh-service[data-service="redmine"]').html('Refresh');
+        $('.refresh-service[data-service="redmine"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
       } else if (data.cashboard) {
         $('#invoice').html('$' + addCommas(data.cashboard.invoice));
         $('#expenses').html('$' + addCommas(data.cashboard.expenses));
-        $('.refresh-service[data-service="cashboard"]').html('Refresh');
+        $('.refresh-service[data-service="cashboard"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
       } else if (data.errbit) {
         var rows = "";
         if (data.errbit.length > 0) {
@@ -66,7 +66,7 @@ block head
           .html(data.errbit.length)
           .removeClass('badge-success').removeClass('badge-warning')
           .addClass(data.errbit.length === 0 ? 'badge-success' : 'badge-warning');
-        $('.refresh-service[data-service="errbit"]').html('Refresh');
+        $('.refresh-service[data-service="errbit"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
       }
     });
 
@@ -81,7 +81,7 @@ block head
     $(document).delegate('.refresh-service', 'click', function(e) {
       var $this = $(this),
           service = $this.data('service');
-      $this.text('Refreshing...');
+      $this.addClass('disabled').text('Refreshing...');
       emitters[service]();
     });
 
@@ -97,6 +97,7 @@ block content
 
   - if (project.hasService('redmine'))
     button.btn.pull-right.refresh-service('data-service'='redmine') Refresh
+    i.icon-ok.pull-right.refresh-ok
     h2#redmine-title
       | Current Tasks 
       span.badge
@@ -116,6 +117,7 @@ block content
 
   - if (project.hasService('errbit'))
     button.btn.pull-right.refresh-service('data-service'='errbit') Refresh
+    i.icon-ok.pull-right.refresh-ok
     h2#errbit-title
       | Unresolved Errors 
       span.badge
@@ -136,6 +138,7 @@ block content
     .row-fluid
       .span6
         button.btn.pull-right.refresh-service('data-service'='cashboard') Refresh
+        i.icon-ok.pull-right.refresh-ok
         h2 Invoice Amount
         table.table.table-bordered#cashboard
           tr

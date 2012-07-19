@@ -61,3 +61,10 @@ h2 .badge {
 #invoice, #expenses {
   text-align: right;
 }
+i.refresh-ok {
+  position: relative;
+  top: 7px;
+  right: 10px;
+  color: #00A50C;
+  display: none;
+}
