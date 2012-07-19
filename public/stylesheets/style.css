@@ -57,3 +57,7 @@ h2 .badge {
 .recently-updated td {
   background: #e8f7ff;
 }
+
+#invoice, #expenses {
+  text-align: right;
+}

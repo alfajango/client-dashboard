@@ -110,16 +110,18 @@ block content
 
   - if (project.hasService('cashboard'))
     h2 Invoice Amount
-    table.table.table-bordered#cashboard
-      tr
-        th Uninvoiced Time Amount
-        td#invoice
-          .loading
-            | Loading 
-            img(src="/images/ajax-loader-small.gif")
-      tr
-        th Uninvoiced Expenses
-        td#expenses
-          .loading
-            | Loading 
-            img(src="/images/ajax-loader-small.gif")
+    .row-fluid
+      .span6
+        table.table.table-bordered#cashboard
+          tr
+            th Uninvoiced Time
+            td#invoice.right-align
+              .loading
+                | Loading 
+                img(src="/images/ajax-loader-small.gif")
+          tr
+            th Uninvoiced Expenses
+            td#expenses.right-align
+              .loading
+                | Loading 
+                img(src="/images/ajax-loader-small.gif")
