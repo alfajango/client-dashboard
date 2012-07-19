@@ -38,7 +38,7 @@ module.exports = function(app) {
 
   app.get('/', auth.ensureAuthenticated, ensureClient, function(req, res){
     res.render('home/index', {
-      title: req.project.name + ' Dashboard',
+      title: req.project.name + ' Status',
       message: req.flash(),
       theClient: req.client,
       project: req.project,

@@ -42,9 +42,15 @@ block head
     script
       socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: "#{service.name}"});
 
-block content
+block header
+  - if (project.imageURL)
+    .pull-right
+      img(src=project.imageURL, height="60px")
+
   h1= title
-  p Welcome to #{title}
+  p Welcome to #{project.name}'s real-time tech status dashboard
+
+block content
 
   - if (project.hasService('redmine'))
     h2#redmine-title Current Issues

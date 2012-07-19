@@ -29,9 +29,9 @@ block content
 
         td
           - if (client.projects)
-            ul
+            ul.project-ul
               - for project in client.projects
-                li
+                li.project-li(style="background: #{project.headerBG}; color: #{project.headerColor};")
                   = project.name
                   .pull-right
                     .btn-group

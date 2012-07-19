@@ -11,7 +11,10 @@ var ProjectSchema = new Schema({
   url:              String,
   statuses:         [StatusSchema],
   exceptions:       [ExceptionSchema],
-  deploys:          [DeploySchema]
+  deploys:          [DeploySchema],
+  headerBG:         String,
+  headerColor:      String,
+  imageURL:         String
 });
 
 ProjectSchema.methods.fetchServices = function(callback) {

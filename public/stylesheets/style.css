@@ -1,8 +1,23 @@
 body {
-  /* Account for fixed navbar */
-  padding-top: 60px;
 }
 
+.header {
+  background: #9ff27a;
+  padding: 55px 0 10px;
+}
+
+.main-content {
+  /* Account for fixed navbar */
+  padding-top: 20px;
+}
+
+#admin-table ul.project-ul {
+  margin-left: 0;
+}
+#admin-table li.project-li {
+  padding: 15px;
+  list-style-position: inside;
+}
 #admin-table li {
   clear: both;
 }

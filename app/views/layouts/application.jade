@@ -14,9 +14,9 @@ html
       div.navbar-inner
         div.container
           if currentUser.admin
-            a.brand(href="/admin") Alfa Jango Client Dashboard
+            a.brand(href="/admin") Tech Dashboard by Alfa Jango
           else
-            a.brand(href="/") Alfa Jango Client Dashboard
+            a.brand(href="/") Tech Dashboard by Alfa Jango
           ul.nav.pull-right
             if currentUser.admin
               li.dropdown
@@ -39,6 +39,10 @@ html
             li
               a(href='/logout') Logout
           block menu
+
+    .header(style=(typeof(project) != 'undefined' ? "background: #{project.headerBG}; color: #{project.headerColor};" : ""))
+      .container
+        block header
 
     .main-content
       div.container

@@ -7,14 +7,31 @@ block content
     fieldset
       if project
         input(type="hidden", name="_method", value="PUT")
+
       .control-group
         label.control-label Name
         .controls
           input(type="text", name="project[name]", value=(project ? project.name : ""))
+
       .control-group
         label.control-label URL
         .controls
           input(type="text", name="project[url]", value=(project ? project.url : ""))
+
+      .control-group
+        label.control-label Header Background (CSS value)
+        .controls
+          input(type="text", name="project[headerBG]", value=(project ? project.headerBG : ""))
+
+      .control-group
+        label.control-label Header Text Color (CSS value)
+        .controls
+          input(type="text", name="project[headerColor]", value=(project ? project.headerColor : ""))
+
+      .control-group
+        label.control-label Image URL
+        .controls
+          input(type="text", name="project[imageURL]", value=(project ? project.imageURL : ""))
 
       .control-group
         .controls
