@@ -36,6 +36,8 @@ block head
             rows += '</td>';
             rows += '</tr>';
           });
+        } else if (data.error) {
+          rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div></td></tr>'
         } else {
           rows += '<tr><td colspan=4><div class="alert alert-success">No current tasks</div></td></tr>';
         }
@@ -44,20 +46,27 @@ block head
         $('#redmine-title .badge').html(data.redmine.length);
         $('.refresh-service[data-service="redmine"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
       } else if (data.cashboard) {
-        $('#invoice').html('$' + addCommas(data.cashboard.invoice));
-        $('#expenses').html('$' + addCommas(data.cashboard.expenses));
-        $('.refresh-service[data-service="cashboard"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
+        if (data.error) {
+          $('#invoice').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div>');
+          $('#expenses').html('');
+        } else {
+          $('#invoice').html('$' + addCommas(data.cashboard.invoice));
+          $('#expenses').html('$' + addCommas(data.cashboard.expenses));
+          $('.refresh-service[data-service="cashboard"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
+        }
       } else if (data.errbit) {
         var rows = "";
         if (data.errbit.length > 0) {
           $.each(data.errbit, function(i, exception) {
             rows += '<tr>';
-            rows += '<td>' + exception.title + '</td>';
+            rows += '<td>' + exception.url + '<button class="btn btn-mini pull-right error-description-toggle">&hellip;</button><div class="error-description"><pre>' + exception.error_class + '\n' + JSON.stringify(exception.messages) + '</pre></div></td>';
             rows += '<td>' + exception.env + '</td>';
             rows += '<td>' + exception.count + '</td>';
             rows += '<td>' + (humaneDate(exception.last_occurrence) || exception.last_occurrence) + '</td>';
             rows += '</tr>';
           });
+        } else if (data.error) {
+          rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving errors</div></td></tr>'
         } else {
           rows += '<tr><td colspan=4><div class="alert alert-success">No unresolved errors <i class="icon-thumbs-up"></i></div></td></tr>';
         }
@@ -83,6 +92,9 @@ block head
           service = $this.data('service');
       $this.addClass('disabled').text('Refreshing...');
       emitters[service]();
+    });
+    $(document).delegate('.error-description-toggle', 'click', function(e) {
+      $(this).siblings('.error-description').slideToggle();
     });
 
 block header
@@ -116,29 +128,30 @@ block content
               | Loading 
               img(src="/images/ajax-loader.gif")
 
-  - if (project.hasService('errbit'))
-    .pull-right
-      i.icon-ok.refresh-ok.pull-left
-      button.btn.refresh-service('data-service'='errbit') Refresh
-    h2#errbit-title
-      | Unresolved Errors 
-      span.badge
-    table.table.table-bordered#errbit
-      thead
-        tr
-          th Error
-          th Environment
-          th Occurrences
-          th Last Occurrence
-      tbody
-        td(colspan=4)
-          .loading.large
-            | Loading 
-            img(src="/images/ajax-loader.gif")
+  .row-fluid
+    .span8
+      - if (project.hasService('errbit'))
+        .pull-right
+          i.icon-ok.refresh-ok.pull-left
+          button.btn.refresh-service('data-service'='errbit') Refresh
+        h2#errbit-title
+          | Unresolved Errors 
+          span.badge
+        table.table.table-bordered#errbit
+          thead
+            tr
+              th Error on
+              th Environment
+              th Occurrences
+              th Last Occurrence
+          tbody
+            td(colspan=4)
+              .loading.large
+                | Loading 
+                img(src="/images/ajax-loader.gif")
 
-  - if (project.hasService('cashboard'))
-    .row-fluid
-      .span6
+    .span4
+      - if (project.hasService('cashboard'))
         .pull-right
           i.icon-ok.refresh-ok.pull-left
           button.btn.refresh-service('data-service'='cashboard') Refresh
@@ -156,3 +169,4 @@ block content
               .loading
                 | Loading 
                 img(src="/images/ajax-loader-small.gif")
+

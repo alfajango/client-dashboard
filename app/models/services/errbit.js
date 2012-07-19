@@ -20,21 +20,33 @@ exports.fetch = function(service, callback) {
         data += chunk;
       });
       res.on('end', function(){
-        var resData = JSON.parse(data),
-            out = errbit.translate(resData);
+        try {
+          var resData = JSON.parse(data),
+              out = errbit.translate(resData);
+        } catch (err) {
+          console.log("Got a parsing error: " + err.message);
+          out = {errbit: [], error: err.message};
+        }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({errbit: []});
+    callback({errbit: [], error: e.message});
   });
 };
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
   var entries = data.map(function(x) {
-    return { title: x.title, last_occurrence: new Date(x.last_occurrence), env: x.env, count: x.count };
+    return {
+      messages: x.messages,
+      error_class: x.error_class,
+      url: x.url,
+      last_occurrence: new Date(x.last_occurrence),
+      env: x.env,
+      count: x.count
+    };
   });
   return {errbit: entries};
 };

@@ -68,3 +68,7 @@ i.refresh-ok {
   color: #00A50C;
   display: none;
 }
+
+.error-description {
+  display: none;
+}
