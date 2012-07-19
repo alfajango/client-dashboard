@@ -26,8 +26,8 @@ block head
         $('#redmine tbody').html(rows);
         $('#redmine-title').append('<span class="badge">' + data.redmine.length + '</span>');
       } else if (data.cashboard) {
-        $('#invoice').html(data.cashboard.invoice);
-        $('#expenses').html(data.cashboard.expenses);
+        $('#invoice').html('$' + data.cashboard.invoice);
+        $('#expenses').html('$' + data.cashboard.expenses);
       } else if (data.errbit) {
         var rows = "";
         if (data.errbit.length > 0) {
