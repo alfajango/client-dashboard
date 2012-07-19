@@ -10,7 +10,9 @@ block content
       .control-group
         label.control-label Name
         .controls
-          input(type="text", name="service[name]", value=(service ? service.name : ""))
+          select(name="service[name]")
+            each serviceOption in ["Redmine", "Errbit", "Cashboard"]
+              option(value="#{serviceOption.toLowerCase()}", selected=(service && service.name == serviceOption.toLowerCase() ? "selected" : false))= serviceOption
       .control-group
         label.control-label Endpoint URL
         .controls
