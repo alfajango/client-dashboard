@@ -2,7 +2,7 @@ body {
 }
 
 .header {
-  background: #9ff27a;
+  background: #defce1;
   padding: 20px 0 10px;
 }
 @media (min-width: 980px) {
@@ -52,4 +52,8 @@ h2 .badge {
   margin-left: 5px;
   position: relative;
   top: -2px;
+}
+
+.recently-updated td {
+  background: #e8f7ff;
 }

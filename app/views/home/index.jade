@@ -19,9 +19,12 @@ block head
     socket.on('serviceResponse', function(data) {
       if (data.redmine) {
         var rows = "";
+        var now = new Date(),
+            yesterday = now - (1000 * 60 * 60 * 24);
         if (data.redmine.length > 0) {
           $.each(data.redmine, function(i, issue) {
-            rows += '<tr>';
+            var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
+            rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
             rows += '<td>' + issue.id + '</td>';
             rows += '<td>' + issue.subject + '</td>';
             rows += '<td>' + issue.status + '</td>';
@@ -36,6 +39,7 @@ block head
           rows += '<tr><td colspan=4><div class="alert alert-success">No current issue tickets</div></td></tr>';
         }
         $('#redmine tbody').html(rows);
+        $('#redmine tr').tooltip({placement: 'bottom'});
         $('#redmine-title').append('<span class="badge">' + data.redmine.length + '</span>');
       } else if (data.cashboard) {
         $('#invoice').html('$' + addCommas(data.cashboard.invoice));
@@ -46,9 +50,9 @@ block head
           $.each(data.errbit, function(i, exception) {
             rows += '<tr>';
             rows += '<td>' + exception.title + '</td>';
-            rows += '<td>' + exception.last_occurrence + '</td>';
-            rows += '<td>' + exception.count + '</td>';
             rows += '<td>' + exception.env + '</td>';
+            rows += '<td>' + exception.count + '</td>';
+            rows += '<td>' + (humaneDate(exception.last_occurrence) || exception.last_occurrence) + '</td>';
             rows += '</tr>';
           });
         } else {
@@ -96,8 +100,8 @@ block content
         tr
           th Exception
           th Environment
-          th Last Occurrence
           th Occurrences
+          th Last Occurrence
       tbody
         td(colspan=4)
           .loading.large
