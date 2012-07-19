@@ -2,6 +2,18 @@ extends ../layouts/application
 
 block head
   script
+    function addCommas(nStr) {
+      nStr += '';
+      x = nStr.split('.');
+      x1 = x[0];
+      x2 = x.length > 1 ? '.' + x[1] : '';
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      }
+      return x1 + x2;
+    }
+
     var socket = io.connect(location.protocol + '//' + location.host);
 
     socket.on('serviceResponse', function(data) {
@@ -26,8 +38,8 @@ block head
         $('#redmine tbody').html(rows);
         $('#redmine-title').append('<span class="badge">' + data.redmine.length + '</span>');
       } else if (data.cashboard) {
-        $('#invoice').html('$' + data.cashboard.invoice);
-        $('#expenses').html('$' + data.cashboard.expenses);
+        $('#invoice').html('$' + addCommas(data.cashboard.invoice));
+        $('#expenses').html('$' + addCommas(data.cashboard.expenses));
       } else if (data.errbit) {
         var rows = "";
         if (data.errbit.length > 0) {
