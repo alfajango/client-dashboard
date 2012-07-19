@@ -23,6 +23,7 @@ module.exports = function(app) {
       },
       function(done) {
         Client.find({})
+          .sort('name', 1)
           .exec( function(err, collection) {
             clients = collection;
             done();
