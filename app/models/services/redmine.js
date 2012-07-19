@@ -47,7 +47,7 @@ exports.fetch = function(service, callback) {
 // Translate fetched response to db store format
 exports.translate = function(data) {
   var issues = data.issues.map(function(x) {
-    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio };
+    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on) };
   })
     .sort(function(a, b) {
       var firstOrder = statusOrder[a.status] - statusOrder[b.status];

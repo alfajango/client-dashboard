@@ -34,7 +34,7 @@ exports.fetch = function(service, callback) {
 // Translate fetched response to db store format
 exports.translate = function(data) {
   var entries = data.map(function(x) {
-    return { title: x.title, last_occurrence: x.last_occurrence, env: x.env, count: x.count };
+    return { title: x.title, last_occurrence: new Date(x.last_occurrence), env: x.env, count: x.count };
   });
   return {errbit: entries};
 };

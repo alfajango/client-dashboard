@@ -16,7 +16,6 @@ exports.fetch = function(service, callback) {
   };
 
   var req = https.get(options, function(res) {
-    console.log(res.statusCode);
     if (res.statusCode == 200) {
       var data = "";
       res.on('data', function(chunk) {
