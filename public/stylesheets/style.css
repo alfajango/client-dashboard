@@ -1,3 +1,5 @@
+/* Global styles */
+
 body {
 }
 
@@ -22,6 +24,8 @@ body {
   padding-top: 20px;
 }
 
+/* Admin styles */
+
 #admin-table ul.project-ul {
   margin-left: 0;
 }
@@ -32,6 +36,14 @@ body {
 #admin-table li {
   clear: both;
 }
+
+#project-colors-preview {
+  float: right;
+  width: 50%;
+  padding: 15px;
+}
+
+/* Dashboard styles */
 
 .loading {
   text-align: center;

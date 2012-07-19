@@ -1,9 +1,30 @@
 extends ../layouts/application
 
+block head
+  script
+    var updateProjectColorsPreview = function() {
+      var $target = $('#project-colors-preview'),
+          name = $('input[name="project[name]"]').val(),
+          bgColor = $('input[name="project[headerBG]"]').val(),
+          color = $('input[name="project[headerColor]"]').val(),
+          image = $('input[name="project[imageURL]"]').val();
+
+      $target
+        .css({'background-color': bgColor, 'color': color})
+        .html('<h1>' + name + ' Status</h1><img src="' + image + '" />');
+    };
+
+    $(document).ready( function() {
+      updateProjectColorsPreview();
+    });
+
+    $(document).delegate('input', 'change, keyup', updateProjectColorsPreview);
+
 block content
   h1 #{theClient.name} / #{project ? "Update" : "Create"} Project
 
   form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
+    #project-colors-preview
     fieldset
       if project
         input(type="hidden", name="_method", value="PUT")
