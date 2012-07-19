@@ -43,7 +43,7 @@ block head
         $('#redmine tbody').html(rows);
         $('#redmine tr').tooltip({placement: 'bottom'});
         $('#redmine-title .badge').html(data.redmine.length);
-        $('.refresh-service[data-service="redmine"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
+        $('.refresh-service[data-service="redmine"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
       } else if (data.cashboard) {
         if (data.error) {
           $('#invoice').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div>');
@@ -51,7 +51,7 @@ block head
         } else {
           $('#invoice').html('$' + addCommas(data.cashboard.invoice));
           $('#expenses').html('$' + addCommas(data.cashboard.expenses));
-          $('.refresh-service[data-service="cashboard"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
+          $('.refresh-service[data-service="cashboard"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
         }
       } else if (data.errbit) {
         var rows = "";
@@ -74,7 +74,7 @@ block head
           .html(data.errbit.length)
           .removeClass('badge-success').removeClass('badge-warning')
           .addClass(data.errbit.length === 0 ? 'badge-success' : 'badge-warning');
-        $('.refresh-service[data-service="errbit"]').removeClass('disabled').text('Refresh').siblings('.refresh-ok').show().delay('250').fadeOut();
+        $('.refresh-service[data-service="errbit"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
       }
     });
 
@@ -109,7 +109,8 @@ block content
   - if (project.hasService('redmine'))
     .pull-right
       i.icon-ok.refresh-ok.pull-left
-      button.btn.refresh-service('data-service'='redmine') Refresh
+      button.btn.btn-small.refresh-service('data-service'='redmine')
+        i.icon-retweet
     h2#redmine-title
       | Current Tasks 
       span.badge
@@ -131,7 +132,8 @@ block content
       - if (project.hasService('errbit'))
         .pull-right
           i.icon-ok.refresh-ok.pull-left
-          button.btn.refresh-service('data-service'='errbit') Refresh
+          button.btn.btn-small.refresh-service('data-service'='errbit')
+            i.icon-retweet
         h2#errbit-title
           | Unresolved Errors 
           span.badge
@@ -152,7 +154,8 @@ block content
       - if (project.hasService('cashboard'))
         .pull-right
           i.icon-ok.refresh-ok.pull-left
-          button.btn.refresh-service('data-service'='cashboard') Refresh
+          button.btn.btn-small.refresh-service('data-service'='cashboard')
+            i.icon-retweet
         h2 Invoice Amount
         table.table.table-bordered#cashboard
           tr
