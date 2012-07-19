@@ -69,11 +69,16 @@ i.refresh-ok {
   display: none;
 }
 
-.error-description {
-  display: none;
+.error-description-td {
+  width: 290px;
 }
 
-#errbit td {
-  max-width: 320px;
+.error-description {
+  display: none;
+  clear: both;
+}
+
+.error-url {
+  max-width: 260px;
   overflow: auto;
 }

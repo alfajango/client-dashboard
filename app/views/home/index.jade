@@ -59,7 +59,7 @@ block head
         if (data.errbit.length > 0) {
           $.each(data.errbit, function(i, exception) {
             rows += '<tr>';
-            rows += '<td>' + (exception.url && exception.url !== "{}" ? exception.url : 'n/a') + '<button class="btn btn-mini pull-right error-description-toggle">&hellip;</button><div class="error-description"><pre>' + exception.error_class + '\n' + JSON.stringify(exception.messages) + '</pre></div></td>';
+            rows += '<td class="error-description-td"><button class="btn btn-mini pull-right error-description-toggle">&hellip;</button><div class="error-url">' + (exception.url && exception.url !== "{}" ? exception.url : 'n/a') + '</div><br class="clear" /><div class="error-description"><pre>' + exception.error_class + '\n' + JSON.stringify(exception.messages) + '</pre></div></td>';
             rows += '<td>' + exception.env + '</td>';
             rows += '<td>' + exception.count + '</td>';
             rows += '<td>' + (humaneDate(exception.last_occurrence) || exception.last_occurrence) + '</td>';
@@ -140,7 +140,7 @@ block content
         table.table.table-bordered#errbit
           thead
             tr
-              th Error on
+              th.error-description-td Error on
               th Environment
               th Occurrences
               th Last Occurrence
