@@ -7,18 +7,22 @@ block head
     socket.on('serviceResponse', function(data) {
       if (data.redmine) {
         var rows = "";
-        $.each(data.redmine, function(i, issue) {
-          rows += '<tr>';
-          rows += '<td>' + issue.id + '</td>';
-          rows += '<td>' + issue.subject + '</td>';
-          rows += '<td>' + issue.status + '</td>';
-          rows += '<td>';
-          if (issue.progress > 0) {
-            rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
-          }
-          rows += '</td>';
-          rows += '</tr>';
-        });
+        if (data.redmine.length > 0) {
+          $.each(data.redmine, function(i, issue) {
+            rows += '<tr>';
+            rows += '<td>' + issue.id + '</td>';
+            rows += '<td>' + issue.subject + '</td>';
+            rows += '<td>' + issue.status + '</td>';
+            rows += '<td>';
+            if (issue.progress > 0) {
+              rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
+            }
+            rows += '</td>';
+            rows += '</tr>';
+          });
+        } else {
+          rows += '<tr><td colspan=4><div class="alert alert-success">No current issue tickets</div></td></tr>';
+        }
         $('#redmine tbody').html(rows);
         $('#redmine-title').append('<span class="badge">' + data.redmine.length + '</span>');
       } else if (data.cashboard) {
@@ -26,13 +30,17 @@ block head
         $('#expenses').html(data.cashboard.expenses);
       } else if (data.errbit) {
         var rows = "";
-        $.each(data.errbit, function(i, exception) {
-          rows += '<tr>';
-          rows += '<td>' + exception.title + '</td>';
-          rows += '<td>' + exception.updated + '</td>';
-          rows += '<td>' + exception.env + '</td>';
-          rows += '</tr>';
-        });
+        if (data.errbit.length > 0) {
+          $.each(data.errbit, function(i, exception) {
+            rows += '<tr>';
+            rows += '<td>' + exception.title + '</td>';
+            rows += '<td>' + exception.updated + '</td>';
+            rows += '<td>' + exception.env + '</td>';
+            rows += '</tr>';
+          });
+        } else {
+          rows += '<tr><td colspan=3><div class="alert alert-success">No unresolved exceptions <i class="icon-thumbs-up"></i></div></td></tr>';
+        }
         $('#errbit tbody').html(rows);
         $('#errbit-title').append('<span class="badge ' + (data.errbit.length === 0 ? 'badge-success' : 'badge-warning') + '">' + data.errbit.length + '</span>');
       }
