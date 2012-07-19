@@ -4,6 +4,7 @@ var statusOrder = {
   'Estimate Needed': 0,
   'Awaiting Approval': 1,
   'Queued': 2,
+  'New': 2,
   'In Progress': 3,
   'Pushed to Staging': 4,
   'Pushed to Production': 5
