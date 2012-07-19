@@ -96,8 +96,9 @@ block header
 block content
 
   - if (project.hasService('redmine'))
-    button.btn.pull-right.refresh-service('data-service'='redmine') Refresh
-    i.icon-ok.pull-right.refresh-ok
+    .pull-right
+      i.icon-ok.refresh-ok.pull-left
+      button.btn.refresh-service('data-service'='redmine') Refresh
     h2#redmine-title
       | Current Tasks 
       span.badge
@@ -116,8 +117,9 @@ block content
               img(src="/images/ajax-loader.gif")
 
   - if (project.hasService('errbit'))
-    button.btn.pull-right.refresh-service('data-service'='errbit') Refresh
-    i.icon-ok.pull-right.refresh-ok
+    .pull-right
+      i.icon-ok.refresh-ok.pull-left
+      button.btn.refresh-service('data-service'='errbit') Refresh
     h2#errbit-title
       | Unresolved Errors 
       span.badge
@@ -137,8 +139,9 @@ block content
   - if (project.hasService('cashboard'))
     .row-fluid
       .span6
-        button.btn.pull-right.refresh-service('data-service'='cashboard') Refresh
-        i.icon-ok.pull-right.refresh-ok
+        .pull-right
+          i.icon-ok.refresh-ok.pull-left
+          button.btn.refresh-service('data-service'='cashboard') Refresh
         h2 Invoice Amount
         table.table.table-bordered#cashboard
           tr
