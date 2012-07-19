@@ -15,6 +15,7 @@ block head
     }
 
     var socket = io.connect(location.protocol + '//' + location.host);
+    var emitters = {};
 
     socket.on('serviceResponse', function(data) {
       if (data.redmine) {
@@ -40,10 +41,12 @@ block head
         }
         $('#redmine tbody').html(rows);
         $('#redmine tr').tooltip({placement: 'bottom'});
-        $('#redmine-title').append('<span class="badge">' + data.redmine.length + '</span>');
+        $('#redmine-title .badge').html(data.redmine.length);
+        $('.refresh-service[data-service="redmine"]').html('Refresh');
       } else if (data.cashboard) {
         $('#invoice').html('$' + addCommas(data.cashboard.invoice));
         $('#expenses').html('$' + addCommas(data.cashboard.expenses));
+        $('.refresh-service[data-service="cashboard"]').html('Refresh');
       } else if (data.errbit) {
         var rows = "";
         if (data.errbit.length > 0) {
@@ -59,13 +62,28 @@ block head
           rows += '<tr><td colspan=4><div class="alert alert-success">No unresolved errors <i class="icon-thumbs-up"></i></div></td></tr>';
         }
         $('#errbit tbody').html(rows);
-        $('#errbit-title').append('<span class="badge ' + (data.errbit.length === 0 ? 'badge-success' : 'badge-warning') + '">' + data.errbit.length + '</span>');
+        $('#errbit-title .badge')
+          .html(data.errbit.length)
+          .removeClass('badge-success').removeClass('badge-warning')
+          .addClass(data.errbit.length === 0 ? 'badge-success' : 'badge-warning');
+        $('.refresh-service[data-service="errbit"]').html('Refresh');
       }
     });
 
   each service in project.services
     script
-      socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: "#{service.name}"});
+      emitters["#{service.name}"] = function() {
+        socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: "#{service.name}"});
+      };
+      emitters["#{service.name}"]();
+
+  script
+    $(document).delegate('.refresh-service', 'click', function(e) {
+      var $this = $(this),
+          service = $this.data('service');
+      $this.text('Refreshing...');
+      emitters[service]();
+    });
 
 block header
   - if (project.imageURL)
@@ -78,7 +96,10 @@ block header
 block content
 
   - if (project.hasService('redmine'))
-    h2#redmine-title Current Tasks
+    button.btn.pull-right.refresh-service('data-service'='redmine') Refresh
+    h2#redmine-title
+      | Current Tasks 
+      span.badge
     table.table.table-bordered#redmine
       thead
         tr
@@ -94,7 +115,10 @@ block content
               img(src="/images/ajax-loader.gif")
 
   - if (project.hasService('errbit'))
-    h2#errbit-title Unresolved Errors
+    button.btn.pull-right.refresh-service('data-service'='errbit') Refresh
+    h2#errbit-title
+      | Unresolved Errors 
+      span.badge
     table.table.table-bordered#errbit
       thead
         tr
@@ -109,9 +133,10 @@ block content
             img(src="/images/ajax-loader.gif")
 
   - if (project.hasService('cashboard'))
-    h2 Invoice Amount
     .row-fluid
       .span6
+        button.btn.pull-right.refresh-service('data-service'='cashboard') Refresh
+        h2 Invoice Amount
         table.table.table-bordered#cashboard
           tr
             th Uninvoiced Time
