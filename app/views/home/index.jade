@@ -36,7 +36,7 @@ block head
             rows += '</tr>';
           });
         } else {
-          rows += '<tr><td colspan=4><div class="alert alert-success">No current issue tickets</div></td></tr>';
+          rows += '<tr><td colspan=4><div class="alert alert-success">No current tasks</div></td></tr>';
         }
         $('#redmine tbody').html(rows);
         $('#redmine tr').tooltip({placement: 'bottom'});
@@ -56,7 +56,7 @@ block head
             rows += '</tr>';
           });
         } else {
-          rows += '<tr><td colspan=4><div class="alert alert-success">No unresolved exceptions <i class="icon-thumbs-up"></i></div></td></tr>';
+          rows += '<tr><td colspan=4><div class="alert alert-success">No unresolved errors <i class="icon-thumbs-up"></i></div></td></tr>';
         }
         $('#errbit tbody').html(rows);
         $('#errbit-title').append('<span class="badge ' + (data.errbit.length === 0 ? 'badge-success' : 'badge-warning') + '">' + data.errbit.length + '</span>');
