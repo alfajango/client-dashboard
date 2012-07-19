@@ -22,14 +22,19 @@ exports.fetch = function(service, callback) {
         data += chunk;
       });
       res.on('end', function(){
+        try {
         var resData = JSON.parse(data),
             out = cashboard.translate(resData);
+        } catch (err) {
+          console.log("Got a parsing error: " + err.message);
+          out = {cashboard: [], error: err.message};
+        }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({cashboard: []});
+    callback({cashboard: [], error: e.message});
   });
 };
 

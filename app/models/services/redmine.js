@@ -33,14 +33,19 @@ exports.fetch = function(service, callback) {
         data += chunk;
       });
       res.on('end', function(){
+        try {
         var resData = JSON.parse(data),
             out = redmine.translate(resData);
+        } catch (err) {
+          console.log("Got a parsing error: " + err.message);
+          out = {redmine: [], error: err.message};
+        }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({redmine: []});
+    callback({redmine: [], error: e.message});
   });
 };
 
