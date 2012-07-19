@@ -12,7 +12,20 @@ block content
       tr
         td
           a(href="/?client_id=#{client.id}")= client.name
-          a.btn.btn-mini.pull-right(href="/admin/clients/#{client.id}/edit") Edit
+          .pull-right
+            .btn-group
+              a.btn.btn-mini.dropdown-toggle('data-toggle'='dropdown', href='#')
+                | Edit 
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href="/admin/clients/#{client.id}/edit")
+                    i.icon-edit
+                    |  Edit Client
+                li
+                  a(href="/admin/clients/#{client.id}/projects/new")
+                    i.icon-plus
+                    |  Add Project
 
         td
           - if (client.projects)
@@ -20,7 +33,20 @@ block content
               - for project in client.projects
                 li
                   = project.name
-                  a.btn.btn-mini.pull-right(href="/admin/clients/#{client.id}/projects/#{project._id}/edit") Edit
+                  .pull-right
+                    .btn-group
+                      a.btn.btn-mini.dropdown-toggle('data-toggle'='dropdown', href='#')
+                        | Edit 
+                        span.caret
+                      ul.dropdown-menu
+                        li
+                          a(href="/admin/clients/#{client.id}/projects/#{project._id}/edit")
+                            i.icon-edit
+                            |  Edit Project
+                        li
+                          a(href="/admin/clients/#{client.id}/projects/#{project.id}/services/new")
+                            i.icon-plus
+                            |  Add Service
 
                   - if (project.services)
                     ul
