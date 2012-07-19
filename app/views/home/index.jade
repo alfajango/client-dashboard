@@ -46,12 +46,13 @@ block head
           $.each(data.errbit, function(i, exception) {
             rows += '<tr>';
             rows += '<td>' + exception.title + '</td>';
-            rows += '<td>' + exception.updated + '</td>';
+            rows += '<td>' + exception.last_occurrence + '</td>';
+            rows += '<td>' + exception.count + '</td>';
             rows += '<td>' + exception.env + '</td>';
             rows += '</tr>';
           });
         } else {
-          rows += '<tr><td colspan=3><div class="alert alert-success">No unresolved exceptions <i class="icon-thumbs-up"></i></div></td></tr>';
+          rows += '<tr><td colspan=4><div class="alert alert-success">No unresolved exceptions <i class="icon-thumbs-up"></i></div></td></tr>';
         }
         $('#errbit tbody').html(rows);
         $('#errbit-title').append('<span class="badge ' + (data.errbit.length === 0 ? 'badge-success' : 'badge-warning') + '">' + data.errbit.length + '</span>');
@@ -94,10 +95,11 @@ block content
       thead
         tr
           th Exception
-          th Latest time encountered
           th Environment
+          th Last Occurrence
+          th Occurrences
       tbody
-        td(colspan=3)
+        td(colspan=4)
           .loading.large
             | Loading 
             img(src="/images/ajax-loader.gif")

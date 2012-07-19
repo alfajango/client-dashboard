@@ -1,6 +1,4 @@
 var http = require('http');
-var FeedParser = require('feedparser'),
-    parser = new FeedParser();
 
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
@@ -9,9 +7,9 @@ exports.fetch = function(service, callback) {
   var options = {
     host: service.url,
     port: 80,
-    path: '/apps/' + service.identifier + '.atom?api_key=' + service.token,
+    path: '/apps/' + service.identifier + '.json?api_key=' + service.token,
     headers: {
-      'Accept': 'application/atom+xml'
+      'Accept': 'application/json'
     }
   };
 
@@ -22,10 +20,9 @@ exports.fetch = function(service, callback) {
         data += chunk;
       });
       res.on('end', function(){
-        parser.parseString(data, function(err, meta, exceptions) {
-          var out = errbit.translate(exceptions);
-          callback(out);
-        });
+        var resData = JSON.parse(data),
+            out = errbit.translate(resData);
+        callback(out);
       });
     }
   }).on('error', function(e) {
@@ -37,7 +34,7 @@ exports.fetch = function(service, callback) {
 // Translate fetched response to db store format
 exports.translate = function(data) {
   var entries = data.map(function(x) {
-    return { id: x.id, updated: x.date, title: x.title, env: x.author };
+    return { title: x.title, last_occurrence: x.last_occurrence, env: x.env, count: x.count };
   });
   return {errbit: entries};
 };
