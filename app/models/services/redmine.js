@@ -4,10 +4,11 @@ var statusOrder = {
   'Estimate Needed': 0,
   'Awaiting Approval': 1,
   'Queued': 2,
-  'New': 2,
-  'In Progress': 3,
-  'Pushed to Staging': 4,
-  'Pushed to Production': 5
+  'New': 3,
+  'In Progress': 4,
+  'Feedback': 5,
+  'Pushed to Staging': 6,
+  'Pushed to Production': 7
 }
 
 // Fetch issues from service endpoint
