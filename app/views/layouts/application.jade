@@ -40,7 +40,7 @@ html
               a(href='/logout') Logout
           block menu
 
-    .header(style=(typeof(project) != 'undefined' ? "background: #{project.headerBG}; color: #{project.headerColor};" : ""))
+    .header(style=(typeof(project) != 'undefined' && project ? "background: #{project.headerBG}; color: #{project.headerColor};" : ""))
       .container
         block header
 
