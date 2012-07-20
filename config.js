@@ -24,6 +24,7 @@ module.exports = function(app, options) {
     // instead of just overriding it like this.
     config.db.uri = process.env.MONGOHQ_URL;
     config.app_secret = process.env.APP_SECRET;
+    config.analytics_account = process.env.ANALYTICS_ACCOUNT
   });
 
   // Connect to db and load models
