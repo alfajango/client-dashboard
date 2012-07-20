@@ -9,7 +9,7 @@ var statusOrder = {
   'Feedback': 5,
   'Pushed to Staging': 6,
   'Pushed to Production': 7
-}
+};
 
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {

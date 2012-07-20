@@ -1,5 +1,10 @@
 var http = require('http');
 
+var envOrder = {
+  'production': 0,
+  'staging': 1
+};
+
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
   var errbit = this;
@@ -47,7 +52,15 @@ exports.translate = function(data) {
       env: x.env,
       count: x.count
     };
-  });
+  })
+    .sort(function(a, b) {
+      var firstOrder = envOrder[a.env] - envOrder[b.env];
+      if (firstOrder === 0) {
+        return b.last_occurrence - a.last_occurrence;
+      } else {
+        return firstOrder;
+      }
+    });
   return {errbit: entries};
 };
 
