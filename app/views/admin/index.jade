@@ -7,7 +7,6 @@ block content
     tr
       th Client
       th Projects
-      th Users
     each client in clients
       tr
         td
@@ -26,6 +25,20 @@ block content
                   a(href="/admin/clients/#{client.id}/projects/new")
                     i.icon-plus
                     |  Add Project
+
+          - if (users[client.id])
+            ul
+              - for user in users[client.id]
+                li
+                  = user.email
+                  |  
+                  if user.admin
+                    span.label.label-info admin
+                    |  
+                  if user.id == currentUser.id
+                    span.label.label-warning you
+                    |  
+                  a.btn.btn-mini.pull-right(href="/admin/users/#{user.id}/edit") Edit
 
         td
           - if (client.projects)
@@ -54,21 +67,6 @@ block content
                         li
                           = service.name
                           a.btn.btn-mini.pull-right(href="/admin/clients/#{client.id}/projects/#{project.id}/services/#{service.id}/edit") Edit
-
-        td
-          - if (users[client.id])
-            ul
-              - for user in users[client.id]
-                li
-                  = user.email
-                  |  
-                  if user.admin
-                    span.label.label-info admin
-                    |  
-                  if user.id == currentUser.id
-                    span.label.label-warning you
-                    |  
-                  a.btn.btn-mini.pull-right(href="/admin/users/#{user.id}/edit") Edit
 
   - if (users['not assigned'])
     h2 Unassigned Users
