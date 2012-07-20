@@ -67,9 +67,14 @@ body {
   clear: both;
 }
 
-#project-colors-preview {
+#project-preview {
   float: right;
-  width: 50%;
+  width: 60%;
+}
+#project-preview .navbar {
+  margin: 0;
+}
+#project-colors-preview {
   padding: 15px;
 }
 

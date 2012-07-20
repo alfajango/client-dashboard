@@ -7,11 +7,14 @@ block head
           name = $('input[name="project[name]"]').val(),
           bgColor = $('input[name="project[headerBG]"]').val(),
           color = $('input[name="project[headerColor]"]').val(),
-          image = $('input[name="project[imageURL]"]').val();
+          image = $('input[name="project[imageURL]"]').val(),
+          $brand = $('#project-preview a.brand');
 
       $target
         .css({'background-color': bgColor, 'color': color})
-        .html('<h1>' + name + ' Status</h1><p>Welcome to awesomeness</p><img src="' + image + '" />');
+        .html('<img class="pull-right" src="' + image + '" /><h1>' + name + ' Status</h1><p>Welcome to awesomeness</p>');
+      $brand
+        .css({color: bgColor});
     };
 
     $(document).ready( function() {
@@ -24,7 +27,12 @@ block content
   h1 #{theClient.name} / #{project ? "Update" : "Create"} Project
 
   form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
-    #project-colors-preview
+    #project-preview
+      div.navbar
+        div.navbar-inner
+          div.container
+            a.brand(href='#') Tech Dashboard by Alfa Jango
+      #project-colors-preview
     fieldset
       if project
         input(type="hidden", name="_method", value="PUT")
