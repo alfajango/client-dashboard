@@ -46,7 +46,7 @@ block head
         $('.refresh-service[data-service="redmine"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
       } else if (data.cashboard) {
         if (data.error) {
-          $('#invoice').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div>');
+          $('#invoice').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>');
           $('#expenses').html('');
         } else {
           $('#invoice').html('$' + addCommas(data.cashboard.invoice));
