@@ -4,8 +4,14 @@ body {
 }
 
 .header {
-  background: #defce1;
+  background: #78B347;
   padding: 20px 0 10px;
+}
+.header h1 {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+}
+.header p {
+  font-size: 16px;
 }
 @media (min-width: 980px) {
   .header {
@@ -19,9 +25,32 @@ body {
   }
 }
 
+.navbar {
+  border-bottom: solid 1px #78B347;
+}
+.navbar a.brand {
+  color: #78B347;
+  text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.25);
+}
 .main-content {
   /* Account for fixed navbar */
   padding-top: 20px;
+}
+
+#login {
+  margin-top: 30%;
+  padding: 0;
+}
+#login-header {
+  padding: 15px 25px;
+  border-bottom: solid 1px #fff;
+}
+#login-fields {
+  border-top: solid 1px #ddd;
+  padding: 20px 25px;
+}
+#login-header h1 {
+  font-size: 20px;
 }
 
 /* Admin styles */

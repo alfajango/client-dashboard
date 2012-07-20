@@ -1,19 +1,23 @@
 extends ../layouts/application
 
 block content
-  h1 Login
-  form.well.form-horizontal(action="", method="POST")
-    fieldset
-      .control-group
-        label.control-label Email
-        .controls
-          input(type="text", name="email")
-      .control-group
-        label.control-label Password
-        .controls
-          input(type="password", name="password")
+  .row
+    .span4.offset4
+      form.well#login(action="", method="POST")
+        #login-header
+          h1 Login to Tech Dashboard
+        #login-fields
+          fieldset
+            .control-group
+              label.control-label Email
+              .controls
+                input(type="text", name="email")
+            .control-group
+              label.control-label Password
+              .controls
+                input(type="password", name="password")
 
-    fieldset
-      .control-group
-        .controls
-          input.btn(type="submit", value="Login")
+          fieldset
+            .control-group
+              .controls
+                input.btn.btn-success(type="submit", value="Login")

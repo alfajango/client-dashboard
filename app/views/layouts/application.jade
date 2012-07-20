@@ -15,7 +15,7 @@ html
       div.navbar-inner
         div.container
           if currentUser.admin
-            a.brand(href="/admin") Tech Dashboard by Alfa Jango
+            a.brand(href="/admin", style=(typeof(project) != 'undefined' && project ? "color: #{project.headerBG};" : "")) Tech Dashboard by Alfa Jango
           else
             a.brand(href="/") Tech Dashboard by Alfa Jango
           a.btn.btn-navbar('data-toggle'='collapse', 'data-target'='.nav-collapse')
@@ -42,8 +42,9 @@ html
                       a(href="/admin/users/new")
                         i.icon-plus
                         |  Create User
-              li
-                a(href='/logout') Logout
+              if currentUser.id
+                li
+                  a(href='/logout') Logout
           block menu
 
     .header(style=(typeof(project) != 'undefined' && project ? "background: #{project.headerBG}; color: #{project.headerColor};" : ""))
