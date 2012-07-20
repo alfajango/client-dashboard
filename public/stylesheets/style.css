@@ -7,11 +7,14 @@ body {
   background: #78B347;
   padding: 20px 0 10px;
 }
-.header h1 {
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+.header h1,
+#project-colors-preview h1 {
+  text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.5);
 }
-.header p {
+.header p,
+#project-colors-preview p {
   font-size: 16px;
+  color: #333;
 }
 @media (min-width: 980px) {
   .header {
@@ -26,7 +29,6 @@ body {
 }
 
 .navbar {
-  border-bottom: solid 1px #78B347;
 }
 .navbar a.brand {
   color: #78B347;
