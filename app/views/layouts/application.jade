@@ -25,11 +25,24 @@ html
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
 
+    - if (typeof(project) != 'undefined' && project)
+      style
+        .header {
+          background-color: #{project.headerBG};
+          color: #{project.headerColor};
+        }
+        .navbar .navbar-inner {
+          background-color: #{project.navbarBG};
+        }
+        .navbar a.brand, .navbar .nav > li > a, .navbar .nav > li > a:hover {
+          color: #{project.headerBG} !important;
+        }
+
   body
     div.navbar.navbar-fixed-top
       div.navbar-inner
         div.container
-          a.brand(href=(currentUser.admin ? "/admin" : "/"), style=(typeof(project) != 'undefined' && project ? "color: #{project.headerBG};" : "")) Tech Dashboard by Alfa Jango
+          a.brand(href=(currentUser.admin ? "/admin" : "/")) Tech Dashboard by Alfa Jango
           a.btn.btn-navbar('data-toggle'='collapse', 'data-target'='.nav-collapse')
             span.icon-bar
             span.icon-bar
@@ -59,7 +72,7 @@ html
                   a(href='/logout') Logout
           block menu
 
-    .header(style=(typeof(project) != 'undefined' && project ? "background: #{project.headerBG}; color: #{project.headerColor};" : ""))
+    .header
       .container
         block header
 

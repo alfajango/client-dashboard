@@ -7,14 +7,18 @@ block head
           name = $('input[name="project[name]"]').val(),
           bgColor = $('input[name="project[headerBG]"]').val(),
           color = $('input[name="project[headerColor]"]').val(),
+          navbarBG = $('input[name="project[navbarBG]"]').val(),
           image = $('input[name="project[imageURL]"]').val(),
+          $navbar = $('#project-preview .navbar-inner');
           $brand = $('#project-preview a.brand');
 
       $target
         .css({'background-color': bgColor, 'color': color})
         .html('<img class="pull-right" src="' + image + '" /><h1>' + name + ' Status</h1><p>Welcome to awesomeness</p>');
       $brand
-        .css({color: bgColor});
+        .css({'color': bgColor});
+      $navbar
+        .css({'background-color': navbarBG});
     };
 
     $(document).ready( function() {
@@ -26,45 +30,54 @@ block head
 block content
   h1 #{theClient.name} / #{project ? "Update" : "Create"} Project
 
-  form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
-    #project-preview
-      div.navbar
-        div.navbar-inner
-          div.container
-            a.brand(href='#') Tech Dashboard by Alfa Jango
-      #project-colors-preview
-    fieldset
-      if project
-        input(type="hidden", name="_method", value="PUT")
+  .row
+    .span6
+       form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
+         fieldset
+           if project
+             input(type="hidden", name="_method", value="PUT")
 
-      .control-group
-        label.control-label Name
-        .controls
-          input(type="text", name="project[name]", value=(project ? project.name : ""))
+           .control-group
+             label.control-label Name
+             .controls
+               input(type="text", name="project[name]", value=(project ? project.name : ""))
 
-      .control-group
-        label.control-label URL
-        .controls
-          input(type="text", name="project[url]", value=(project ? project.url : ""))
+           .control-group
+             label.control-label URL
+             .controls
+               input(type="text", name="project[url]", value=(project ? project.url : ""))
 
-      .control-group
-        label.control-label Header Background (CSS value)
-        .controls
-          input(type="text", name="project[headerBG]", value=(project ? project.headerBG : ""))
+           .control-group
+             label.control-label Header Background (CSS value)
+             .controls
+               input(type="text", name="project[headerBG]", value=(project ? project.headerBG : ""))
 
-      .control-group
-        label.control-label Header Text Color (CSS value)
-        .controls
-          input(type="text", name="project[headerColor]", value=(project ? project.headerColor : ""))
+           .control-group
+             label.control-label Header Text Color (CSS value)
+             .controls
+               input(type="text", name="project[headerColor]", value=(project ? project.headerColor : ""))
 
-      .control-group
-        label.control-label Image URL
-        .controls
-          input(type="text", name="project[imageURL]", value=(project ? project.imageURL : ""))
+           .control-group
+             label.control-label Navbar Background (CSS value)
+             .controls
+               input(type="text", name="project[navbarBG]", value=(project ? project.navbarBG : ""))
 
-      .control-group
-        .controls
-          input.btn(type="submit", value=(project ? "Update" : "Create"))
+           .control-group
+             label.control-label Image URL
+             .controls
+               input(type="text", name="project[imageURL]", value=(project ? project.imageURL : ""))
+
+           .control-group
+             .controls
+               input.btn(type="submit", value=(project ? "Update" : "Create"))
+
+    .span6
+      #project-preview
+        div.navbar
+          div.navbar-inner
+            div.container
+              a.brand(href='#') Tech Dashboard by Alfa Jango
+        #project-colors-preview
 
   if project
     a.btn(href='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services/new')

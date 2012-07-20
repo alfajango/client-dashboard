@@ -14,6 +14,7 @@ var ProjectSchema = new Schema({
   deploys:          [DeploySchema],
   headerBG:         String,
   headerColor:      String,
+  navbarBG:         String,
   imageURL:         String
 });
 

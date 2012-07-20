@@ -27,11 +27,23 @@ body {
   }
 }
 
-.navbar {
+.navbar .navbar-inner {
+  background-color: #2C2C2C;
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.0));
+  background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.0));
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255, 255, 255, 0.10)), to(rgba(255, 255, 255, 0.0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.0));
+  background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.0));
+  background-image: linear-gradient(top, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.0));
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='rgba(255, 255, 255, 0.10)333', endColorstr='rgba(255, 255, 255, 0.0)222', GradientType=0);
 }
 .navbar a.brand {
   color: #78B347;
   text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.25);
+}
+.navbar .nav > li > a, .navbar .nav > li > a:hover {
+  color: #78B347 !important;
 }
 .main-content {
   /* Account for fixed navbar */
@@ -68,8 +80,6 @@ body {
 }
 
 #project-preview {
-  float: right;
-  width: 60%;
 }
 #project-preview .navbar {
   margin: 0;
