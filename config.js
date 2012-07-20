@@ -34,6 +34,9 @@ module.exports = function(app, options) {
     app.set('views', __dirname + '/app/views');
     app.set('view engine', 'jade');
     app.set('view options', { layout: __dirname + '/app/views/layouts/application' });
+    if (config.useSSL) {
+      app.use(middleware.ensureSSL);
+    }
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
