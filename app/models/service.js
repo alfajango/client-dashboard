@@ -1,5 +1,3 @@
-var services = require("./services");
-
 var ServiceSchema = new Schema({
   name:             String,
   url:              String,
@@ -9,7 +7,7 @@ var ServiceSchema = new Schema({
 });
 
 ServiceSchema.methods.fetch = function(callback) {
-  services[this.name].fetch(this, callback);
+  widgets[this.name].model.fetch(this, callback);
 };
 
 mongoose.model('Service', ServiceSchema);

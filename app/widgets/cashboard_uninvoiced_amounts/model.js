@@ -27,21 +27,21 @@ exports.fetch = function(service, callback) {
             out = cashboard.translate(resData);
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
-          out = {cashboard: [], error: err.message};
+          out = {cashboard_uninvoiced_amounts: [], error: err.message};
         }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({cashboard: [], error: e.message});
+    callback({cashboard_uninvoiced_amounts: [], error: e.message});
   });
 };
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
   return {
-    cashboard: {
+    cashboard_uninvoiced_amounts: {
       invoice: data.uninvoiced_item_cost,
       expenses: data.uninvoiced_expense_cost
     }

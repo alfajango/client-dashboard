@@ -38,14 +38,14 @@ exports.fetch = function(service, callback) {
             out = redmine.translate(resData);
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
-          out = {redmine: [], error: err.message};
+          out = {redmine_open_issues: [], error: err.message};
         }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({redmine: [], error: e.message});
+    callback({redmine_open_issues: [], error: e.message});
   });
 };
 
@@ -62,7 +62,7 @@ exports.translate = function(data) {
         return firstOrder;
       }
     });
-  return {redmine: issues};
+  return {redmine_open_issues: issues};
 };
 
 // Write fetched results to db

@@ -11,8 +11,8 @@ block content
         label.control-label Name
         .controls
           select(name="service[name]")
-            each serviceOption in ["Redmine", "Errbit", "Cashboard"]
-              option(value="#{serviceOption.toLowerCase()}", selected=(service && service.name == serviceOption.toLowerCase() ? "selected" : false))= serviceOption
+            - for (var serviceOption in widgets)
+              option(value="#{serviceOption}", selected=(service && service.name == serviceOption ? "selected" : false))= widgets[serviceOption]['name']
       .control-group
         label.control-label Endpoint URL
         .controls

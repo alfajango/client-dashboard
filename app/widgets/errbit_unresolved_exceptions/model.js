@@ -30,14 +30,14 @@ exports.fetch = function(service, callback) {
               out = errbit.translate(resData);
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
-          out = {errbit: [], error: err.message};
+          out = {errbit_unresolved_exceptions: [], error: err.message};
         }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({errbit: [], error: e.message});
+    callback({errbit_unresolved_exceptions: [], error: e.message});
   });
 };
 
@@ -61,7 +61,7 @@ exports.translate = function(data) {
         return firstOrder;
       }
     });
-  return {errbit: entries};
+  return {errbit_unresolved_exceptions: entries};
 };
 
 // Write fetched results to db

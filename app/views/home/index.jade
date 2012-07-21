@@ -18,12 +18,12 @@ block head
     var emitters = {};
 
     socket.on('serviceResponse', function(data) {
-      if (data.redmine) {
+      if (data.redmine_open_issues) {
         var rows = "";
         var now = new Date(),
             yesterday = now - (1000 * 60 * 60 * 24);
-        if (data.redmine.length > 0) {
-          $.each(data.redmine, function(i, issue) {
+        if (data.redmine_open_issues.length > 0) {
+          $.each(data.redmine_open_issues, function(i, issue) {
             var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
             rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
             rows += '<td>' + issue.id + '</td>';
@@ -42,21 +42,21 @@ block head
         }
         $('#redmine tbody').html(rows);
         $('#redmine tr').tooltip({placement: 'bottom'});
-        $('#redmine-title .badge').html(data.redmine.length);
-        $('.refresh-service[data-service="redmine"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
-      } else if (data.cashboard) {
+        $('#redmine-title .badge').html(data.redmine_open_issues.length);
+        $('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+      } else if (data.cashboard_uninvoiced_amounts) {
         if (data.error) {
           $('#invoice').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>');
           $('#expenses').html('');
         } else {
-          $('#invoice').html('$' + addCommas(data.cashboard.invoice));
-          $('#expenses').html('$' + addCommas(data.cashboard.expenses));
-          $('.refresh-service[data-service="cashboard"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+          $('#invoice').html('$' + addCommas(data.cashboard_uninvoiced_amounts.invoice));
+          $('#expenses').html('$' + addCommas(data.cashboard_uninvoiced_amounts.expenses));
+          $('.refresh-service[data-service="cashboard_uninvoiced_amounts"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
         }
-      } else if (data.errbit) {
+      } else if (data.errbit_unresolved_exceptions) {
         var rows = "";
-        if (data.errbit.length > 0) {
-          $.each(data.errbit, function(i, exception) {
+        if (data.errbit_unresolved_exceptions.length > 0) {
+          $.each(data.errbit_unresolved_exceptions, function(i, exception) {
             rows += '<tr>';
             rows += '<td class="errbit-description-td"><button class="btn btn-mini pull-right errbit-description-toggle">&hellip;</button><div class="errbit-url">' + (exception.url && exception.url !== "{}" ? exception.url : 'n/a') + '</div><br class="clear" /><div class="errbit-description"><pre>' + exception.error_class + '\n' + JSON.stringify(exception.messages) + '</pre></div></td>';
             rows += '<td>' + exception.env + '</td>';
@@ -71,10 +71,10 @@ block head
         }
         $('#errbit tbody').html(rows);
         $('#errbit-title .badge')
-          .html(data.errbit.length)
+          .html(data.errbit_unresolved_exceptions.length)
           .removeClass('badge-success').removeClass('badge-warning')
-          .addClass(data.errbit.length === 0 ? 'badge-success' : 'badge-warning');
-        $('.refresh-service[data-service="errbit"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+          .addClass(data.errbit_unresolved_exceptions.length === 0 ? 'badge-success' : 'badge-warning');
+        $('.refresh-service[data-service="errbit_unresolved_exceptions"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
       }
     });
 
@@ -106,10 +106,10 @@ block header
 
 block content
 
-  - if (project.hasService('redmine'))
+  - if (project.hasService('redmine_open_issues'))
     .pull-right
       i.icon-ok.refresh-ok.pull-left
-      button.btn.btn-small.refresh-service('data-service'='redmine')
+      button.btn.btn-small.refresh-service('data-service'='redmine_open_issues')
         i.icon-retweet
     h2#redmine-title
       | Open Tasks 
@@ -129,10 +129,10 @@ block content
 
   .row-fluid
     .span8
-      - if (project.hasService('errbit'))
+      - if (project.hasService('errbit_unresolved_exceptions'))
         .pull-right
           i.icon-ok.refresh-ok.pull-left
-          button.btn.btn-small.refresh-service('data-service'='errbit')
+          button.btn.btn-small.refresh-service('data-service'='errbit_unresolved_exceptions')
             i.icon-retweet
         h2#errbit-title
           | Unresolved Errors 
@@ -151,10 +151,10 @@ block content
                 img(src="/images/ajax-loader.gif")
 
     .span4
-      - if (project.hasService('cashboard'))
+      - if (project.hasService('cashboard_uninvoiced_amounts'))
         .pull-right
           i.icon-ok.refresh-ok.pull-left
-          button.btn.btn-small.refresh-service('data-service'='cashboard')
+          button.btn.btn-small.refresh-service('data-service'='cashboard_uninvoiced_amounts')
             i.icon-retweet
         h2 Invoice Amount
         table.table.table-bordered#cashboard

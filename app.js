@@ -13,10 +13,10 @@ utils = require(__dirname + '/lib/utils');
 _ = require('underscore');
 auth = require(__dirname + '/lib/authentication');
 
-process.on('uncaughtException', function (err) {
-  console.error(err);
-  console.log("Node NOT Exiting...");
-});
+//process.on('uncaughtException', function (err) {
+  //console.error(err);
+  //console.log("Node NOT Exiting...");
+//});
 
 var server = app.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'));
@@ -35,3 +35,6 @@ io.configure(function() {
 var models = require(__dirname + '/app/models');
 // Load controllers, passing `app` context
 var controllers = require(__dirname + '/app/controllers')(app);
+// Load widgets
+var active_widgets = ['cashboard_uninvoiced_amounts', 'errbit_unresolved_exceptions', 'redmine_open_issues'];
+widgets = require(__dirname + '/app/widgets')(active_widgets);

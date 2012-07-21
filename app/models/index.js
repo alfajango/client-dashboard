@@ -3,4 +3,3 @@ exports.service = require("./service.js");
 exports.project = require("./project.js");
 exports.client = require("./client.js");
 exports.user = require("./user.js");
-exports.services = require("./services");
