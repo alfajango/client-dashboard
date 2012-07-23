@@ -126,18 +126,9 @@ i.refresh-ok {
   display: none;
 }
 
-.errbit-description-td {
-  width: 290px;
-}
-
 .errbit-description {
-  display: none;
-  clear: both;
-}
-
-.errbit-url {
-  max-width: 260px;
   overflow: auto;
+  margin: 0;
 }
 
 .redmine-ticket-td {

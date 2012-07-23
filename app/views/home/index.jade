@@ -14,6 +14,12 @@ block head
       return x1 + x2;
     }
 
+    function stringToUrl(str) {
+      var url = document.createElement('a');
+      url.href = str;
+      return url;
+    }
+
     var socket = io.connect(location.protocol + '//' + location.host);
     var emitters = {};
 
@@ -87,10 +93,9 @@ block content
         table.table.table-bordered#errbit
           thead
             tr
-              th.errbit-description-td Error on
-              th Environment
+              th Affecting
               th Occurrences
-              th Last Occurrence
+              th Last Occurred
           tbody
             td(colspan=4)
               .loading.large
