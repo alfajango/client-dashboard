@@ -142,3 +142,9 @@ i.refresh-ok {
   margin-bottom: 0;
   height: 8px;
 }
+
+.aremysitesup-status {
+}
+.aremysitesup-status .alert {
+  margin: 0;
+}
