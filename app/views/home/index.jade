@@ -17,66 +17,13 @@ block head
     var socket = io.connect(location.protocol + '//' + location.host);
     var emitters = {};
 
-    socket.on('serviceResponse', function(data) {
-      if (data.redmine_open_issues) {
-        var rows = "";
-        var now = new Date(),
-            yesterday = now - (1000 * 60 * 60 * 24);
-        if (data.redmine_open_issues.length > 0) {
-          $.each(data.redmine_open_issues, function(i, issue) {
-            var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
-            rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
-            rows += '<td>' + issue.id + '</td>';
-            rows += '<td>' + issue.subject + '</td>';
-            rows += '<td class="redmine-status-td">' + issue.status;
-            if (issue.progress > 0) {
-              rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
-            }
-            rows += '</td>';
-            rows += '</tr>';
-          });
-        } else if (data.error) {
-          rows += '<tr><td colspan=3><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div></td></tr>'
-        } else {
-          rows += '<tr><td colspan=3><div class="alert alert-success">No current tasks</div></td></tr>';
+  each service in project.services
+    script
+      socket.on('serviceResponse', function(data) {
+        if (data["#{service.name}"]) {
+          widgets["#{service.name}"].call(this, data, jQuery);
         }
-        $('#redmine tbody').html(rows);
-        $('#redmine tr').tooltip({placement: 'bottom'});
-        $('#redmine-title .badge').html(data.redmine_open_issues.length);
-        $('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
-      } else if (data.cashboard_uninvoiced_amounts) {
-        if (data.error) {
-          $('#invoice').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>');
-          $('#expenses').html('');
-        } else {
-          $('#invoice').html('$' + addCommas(data.cashboard_uninvoiced_amounts.invoice));
-          $('#expenses').html('$' + addCommas(data.cashboard_uninvoiced_amounts.expenses));
-          $('.refresh-service[data-service="cashboard_uninvoiced_amounts"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
-        }
-      } else if (data.errbit_unresolved_exceptions) {
-        var rows = "";
-        if (data.errbit_unresolved_exceptions.length > 0) {
-          $.each(data.errbit_unresolved_exceptions, function(i, exception) {
-            rows += '<tr>';
-            rows += '<td class="errbit-description-td"><button class="btn btn-mini pull-right errbit-description-toggle">&hellip;</button><div class="errbit-url">' + (exception.url && exception.url !== "{}" ? exception.url : 'n/a') + '</div><br class="clear" /><div class="errbit-description"><pre>' + exception.error_class + '\n' + JSON.stringify(exception.messages) + '</pre></div></td>';
-            rows += '<td>' + exception.env + '</td>';
-            rows += '<td>' + exception.count + '</td>';
-            rows += '<td>' + (humaneDate(exception.last_occurrence) || exception.last_occurrence) + '</td>';
-            rows += '</tr>';
-          });
-        } else if (data.error) {
-          rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving errors</div></td></tr>'
-        } else {
-          rows += '<tr><td colspan=4><div class="alert alert-success">No unresolved errors <i class="icon-thumbs-up"></i></div></td></tr>';
-        }
-        $('#errbit tbody').html(rows);
-        $('#errbit-title .badge')
-          .html(data.errbit_unresolved_exceptions.length)
-          .removeClass('badge-success').removeClass('badge-warning')
-          .addClass(data.errbit_unresolved_exceptions.length === 0 ? 'badge-success' : 'badge-warning');
-        $('.refresh-service[data-service="errbit_unresolved_exceptions"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
-      }
-    });
+      });
 
   each service in project.services
     script

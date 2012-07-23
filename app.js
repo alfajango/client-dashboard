@@ -38,3 +38,8 @@ var controllers = require(__dirname + '/app/controllers')(app);
 // Load widgets
 var active_widgets = ['cashboard_uninvoiced_amounts', 'errbit_unresolved_exceptions', 'redmine_open_issues'];
 widgets = require(__dirname + '/app/widgets')(active_widgets);
+
+app.get('/widgets/:widget', function(req, res) {
+  var widget = req.params.widget;
+  res.sendfile('./app/widgets/' + widget + '/' + widgets[widget].update);
+});
