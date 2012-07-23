@@ -8,7 +8,8 @@ var statusOrder = {
   'In Progress': 4,
   'Feedback': 5,
   'Pushed to Staging': 6,
-  'Pushed to Production': 7
+  'Pushed to Production': 7,
+  'Resolved': 8
 };
 
 // Fetch issues from service endpoint
