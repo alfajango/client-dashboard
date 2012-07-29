@@ -7,7 +7,7 @@ widgets.redmine_open_issues = function(data, $) {
     $.each(data.results, function(i, issue) {
       var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
       rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
-      rows += '<td>' + issue.id + '</td>';
+      rows += '<td class="issue-number-column">' + issue.id + '</td>';
       rows += '<td>' + issue.subject + '</td>';
       rows += '<td class="redmine-status-td">' + issue.status;
       if (issue.progress > 0) {

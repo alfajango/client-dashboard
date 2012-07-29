@@ -52,7 +52,8 @@ exports.translate = function(data) {
       url: x.url,
       last_occurrence: new Date(x.last_occurrence),
       env: x.env,
-      count: x.count
+      count: x.count,
+      issue_link: x.issue_link
     };
   })
     .sort(function(a, b) {

@@ -3,12 +3,19 @@ widgets.errbit_unresolved_exceptions = function(data, $) {
       rows = "";
   if (data.results.length > 0) {
     $.each(data.results, function(i, exception) {
+      var issueTicket = exception.issue_link.match(/\/(\d+)[$\?]/);
       rows += '<tr>';
-      rows += '<td>' + exception.env + '<br />';
-      rows += (exception.url && exception.url !== "{}" ? stringToUrl(exception.url).pathname : 'n/a') + '</td>';
-      rows += '<td>' + exception.count + '</td>';
-      rows += '<td>' + (humaneDate(exception.last_occurrence) || exception.last_occurrence) + '</td>';
-      rows += '</tr>';
+      rows += '<td class="issue-number-column">' + (issueTicket ? issueTicket[1] : '') + '</td>';
+      rows += '<td><table class="table-condensed table-no-border">';
+      rows += '<tr><th>Env:</th><td>' + exception.env + '</td></tr>';
+      if (exception.url && exception.url !== "{}") {
+        rows += '<tr><th>URL:</th><td>' + stringToUrl(exception.url).pathname + '</td></tr>';
+      }
+      rows += '</table></td>';
+      rows += '<td><table class="table-condensed table-no-border">';
+      rows += '<tr><th>Last:</th><td>' + (exception.last_occurrence ? humaneDate(exception.last_occurrence) : '') + '</td></tr>';
+      rows += '<tr><th>Total:</th><td>' + exception.count + '</td></tr>';
+      rows += '</table></tr>';
     });
   } else if (data.error) {
     rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving errors</div></td></tr>'

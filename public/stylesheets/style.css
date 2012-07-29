@@ -50,6 +50,25 @@ body {
   padding-top: 20px;
 }
 
+table.table th {
+  vertical-align: top;
+}
+.table-no-border th,
+.table-no-border td {
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.table-no-border th {
+  color: #929292;
+  text-align: right;
+  font-weight: normal;
+}
+th.issue-number-column,
+td.issue-number-column {
+  text-align: center;
+}
+
 #login {
   margin-top: 30%;
   padding: 0;
