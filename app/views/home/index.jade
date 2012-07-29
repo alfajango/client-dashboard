@@ -65,7 +65,7 @@ block content
       div(id="widget-#{service.id}")
         .pull-right
           i.icon-ok.refresh-ok.pull-left
-          button.btn.btn-small.refresh-service('data-service'='redmine_open_issues')
+          button.btn.btn-small.refresh-service('data-service'='redmine_open_issues', 'data-id'="#{service.id}")
             i.icon-retweet
 
         include ../../widgets/redmine_open_issues/view.jade
@@ -77,7 +77,7 @@ block content
           div(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
-              button.btn.btn-small.refresh-service('data-service'='errbit_unresolved_exceptions')
+              button.btn.btn-small.refresh-service('data-service'='errbit_unresolved_exceptions', 'data-id'="#{service.id}")
                 i.icon-retweet
 
             include ../../widgets/errbit_unresolved_exceptions/view.jade
@@ -88,7 +88,7 @@ block content
           div(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
-              button.btn.btn-small.refresh-service('data-service'='cashboard_uninvoiced_amounts')
+              button.btn.btn-small.refresh-service('data-service'='cashboard_uninvoiced_amounts', 'data-id'="#{service.id}")
                 i.icon-retweet
 
             include ../../widgets/cashboard_uninvoiced_amounts/view.jade
@@ -99,7 +99,7 @@ block content
           div(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
-              button.btn.btn-small.refresh-service('data-service'='aremysitesup_instant_status')
+              button.btn.btn-small.refresh-service('data-service'='aremysitesup_instant_status', 'data-id'="#{service.id}")
                 i.icon-retweet
 
             include ../../widgets/aremysitesup_instant_status/view.jade
