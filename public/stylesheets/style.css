@@ -145,7 +145,7 @@ i.refresh-ok {
 
 .aremysitesup-status {
 }
-.aremysitesup-status .alert {
+table .alert {
   margin: 0;
   text-align: center
 }
