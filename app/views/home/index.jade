@@ -26,24 +26,25 @@ block head
   each service in project.services
     script
       socket.on('serviceResponse', function(data) {
-        if (data["#{service.name}"]) {
+        if (data.id == "#{service.id}") {
           widgets["#{service.name}"].call(this, data, jQuery);
         }
       });
 
   each service in project.services
     script
-      emitters["#{service.name}"] = function() {
-        socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: "#{service.name}"});
+      emitters["#{service.name}-#{service.id}"] = function() {
+        socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: "#{service.name}", id: "#{service.id}"});
       };
-      emitters["#{service.name}"]();
+      emitters["#{service.name}-#{service.id}"]();
 
   script
     $(document).delegate('.refresh-service', 'click', function(e) {
       var $this = $(this),
-          service = $this.data('service');
+          service = $this.data('service'),
+          id = $this.data('id');
       $this.addClass('disabled').text('Refreshing...');
-      emitters[service]();
+      emitters[service + '-' + id]();
     });
     $(document).delegate('.errbit-description-toggle', 'click', function(e) {
       $(this).siblings('.errbit-description').slideToggle();
@@ -60,79 +61,45 @@ block header
 block content
 
   - if (project.hasService('redmine_open_issues'))
-    .pull-right
-      i.icon-ok.refresh-ok.pull-left
-      button.btn.btn-small.refresh-service('data-service'='redmine_open_issues')
-        i.icon-retweet
-    h2#redmine-title
-      | Open Tasks 
-      span.badge
-    table.table.table-bordered#redmine
-      thead
-        tr
-          th.redmine-ticket-td Ticket
-          th Description
-          th.redmine-status-td Status
-      tbody
-        tr
-          td(colspan=3)
-            .loading.large
-              | Loading 
-              img(src="/images/ajax-loader.gif")
+    each service in project.filteredServices('redmine_open_issues')
+      div(id="widget-#{service.id}")
+        .pull-right
+          i.icon-ok.refresh-ok.pull-left
+          button.btn.btn-small.refresh-service('data-service'='redmine_open_issues')
+            i.icon-retweet
+
+        include ../../widgets/redmine_open_issues/view.jade
 
   .row-fluid
     .span8
       - if (project.hasService('errbit_unresolved_exceptions'))
-        .pull-right
-          i.icon-ok.refresh-ok.pull-left
-          button.btn.btn-small.refresh-service('data-service'='errbit_unresolved_exceptions')
-            i.icon-retweet
-        h2#errbit-title
-          | Unresolved Errors 
-          span.badge
-        table.table.table-bordered#errbit
-          thead
-            tr
-              th Affecting
-              th Occurrences
-              th Last Occurred
-          tbody
-            td(colspan=4)
-              .loading.large
-                | Loading 
-                img(src="/images/ajax-loader.gif")
+        each service in project.filteredServices('errbit_unresolved_exceptions')
+          div(id="widget-#{service.id}")
+            .pull-right
+              i.icon-ok.refresh-ok.pull-left
+              button.btn.btn-small.refresh-service('data-service'='errbit_unresolved_exceptions')
+                i.icon-retweet
+
+            include ../../widgets/errbit_unresolved_exceptions/view.jade
 
     .span4
       - if (project.hasService('cashboard_uninvoiced_amounts'))
-        .pull-right
-          i.icon-ok.refresh-ok.pull-left
-          button.btn.btn-small.refresh-service('data-service'='cashboard_uninvoiced_amounts')
-            i.icon-retweet
-        h2 Invoice Amount
-        table.table.table-bordered#cashboard
-          tr
-            th Uninvoiced Time
-            td#invoice.right-align
-              .loading
-                | Loading 
-                img(src="/images/ajax-loader-small.gif")
-          tr
-            th Uninvoiced Expenses
-            td#expenses.right-align
-              .loading
-                | Loading 
-                img(src="/images/ajax-loader-small.gif")
+        each service in project.filteredServices('cashboard_uninvoiced_amounts')
+          div(id="widget-#{service.id}")
+            .pull-right
+              i.icon-ok.refresh-ok.pull-left
+              button.btn.btn-small.refresh-service('data-service'='cashboard_uninvoiced_amounts')
+                i.icon-retweet
+
+            include ../../widgets/cashboard_uninvoiced_amounts/view.jade
 
     .span4
       - if (project.hasService('aremysitesup_instant_status'))
-        .pull-right
-          i.icon-ok.refresh-ok.pull-left
-          button.btn.btn-small.refresh-service('data-service'='aremysitesup_instant_status')
-            i.icon-retweet
-        h2 Site Status
-        table.table.table-bordered#aremysitesup
-          tr
-            td.aremysitesup-status
-              .loading
-                | Loading 
-                img(src="/images/ajax-loader-small.gif")
+        each service in project.filteredServices('aremysitesup_instant_status')
+          div(id="widget-#{service.id}")
+            .pull-right
+              i.icon-ok.refresh-ok.pull-left
+              button.btn.btn-small.refresh-service('data-service'='aremysitesup_instant_status')
+                i.icon-retweet
+
+            include ../../widgets/aremysitesup_instant_status/view.jade

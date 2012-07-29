@@ -14,7 +14,8 @@ var statusOrder = {
 
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
-  var redmine = this;
+  var redmine = this,
+      out = {id: service.id, name: service.name};
 
   var options = {
     host: service.url,
@@ -35,18 +36,19 @@ exports.fetch = function(service, callback) {
       });
       res.on('end', function(){
         try {
-        var resData = JSON.parse(data),
-            out = redmine.translate(resData);
+        var resData = JSON.parse(data);
+        out.results = redmine.translate(resData);
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
-          out = {redmine_open_issues: [], error: err.message};
+          out.error = err.message;
         }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({redmine_open_issues: [], error: e.message});
+    out.error = e.message;
+    callback(out);
   });
 };
 
@@ -63,7 +65,7 @@ exports.translate = function(data) {
         return firstOrder;
       }
     });
-  return {redmine_open_issues: issues};
+  return issues;
 };
 
 // Write fetched results to db

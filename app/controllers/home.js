@@ -56,7 +56,7 @@ module.exports = function(app) {
       Client.findById(data.client, function(err, client) {
         if (client) {
           var project = client.projects.id(data.project),
-              service = project.services.filter( function(x) { return x.name == data.service } )[0];
+              service = project.services.id(data.id);
 
           service.fetch( function(response) {
             socket.emit('serviceResponse', response);

@@ -7,7 +7,8 @@ var envOrder = {
 
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
-  var errbit = this;
+  var errbit = this,
+      out = {id: service.id, name: service.name};
 
   var options = {
     host: service.url,
@@ -26,18 +27,19 @@ exports.fetch = function(service, callback) {
       });
       res.on('end', function(){
         try {
-          var resData = JSON.parse(data),
-              out = errbit.translate(resData);
+          var resData = JSON.parse(data);
+          out.results = errbit.translate(resData);
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
-          out = {errbit_unresolved_exceptions: [], error: err.message};
+          out.error = err.message;
         }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({errbit_unresolved_exceptions: [], error: e.message});
+    out.error = e.message;
+    callback(out);
   });
 };
 
@@ -61,7 +63,7 @@ exports.translate = function(data) {
         return firstOrder;
       }
     });
-  return {errbit_unresolved_exceptions: entries};
+  return entries;
 };
 
 // Write fetched results to db

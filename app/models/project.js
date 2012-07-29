@@ -43,4 +43,10 @@ ProjectSchema.methods.hasService = function(name) {
   return this.serviceNames().indexOf(name) !== -1;
 };
 
+ProjectSchema.methods.filteredServices = function(name) {
+  return this.services.filter( function(service) {
+    return service.name === name;
+  });
+};
+
 mongoose.model('Project', ProjectSchema);

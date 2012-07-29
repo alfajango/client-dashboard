@@ -1,0 +1,15 @@
+h2.redmine-title
+  | Open Tasks 
+  span.badge
+table.table.table-bordered.redmine-table
+  thead
+    tr
+      th.redmine-ticket-td Ticket
+      th Description
+      th.redmine-status-td Status
+  tbody
+    tr
+      td(colspan=3)
+        .loading.large
+          | Loading 
+          img(src="/images/ajax-loader.gif")

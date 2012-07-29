@@ -1,13 +1,15 @@
 widgets.aremysitesup_instant_status = function(data, $) {
-  var up = data.aremysitesup_instant_status.status == 'up';
+  var $target = $('#widget-' + data.id),
+      up = data.results.status == 'up',
+      url = stringToUrl(data.results.link);
   if (data.error) {
-    $('.aremysitesup-status').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving status</div>');
+    $target.find('.aremysitesup-status').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving status</div>');
   } else {
     var out = "";
     out += (up ? '<div class="alert alert-success">' : '<div class="alert alert-error">');
-    out += 'Site is ' + data.aremysitesup_instant_status.status;
+    out += url.host + ' is ' + data.results.status;
     out += (up ? ' <i class="icon-thumbs-up"></i>' : ' <i class="icon-exclamation-sign"></i>');
-    $('.aremysitesup-status').html(out);
-    $('.refresh-service[data-service="aremysitesup_instant_status"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+    $target.find('.aremysitesup-status').html(out);
+    $target.find('.refresh-service[data-service="aremysitesup_instant_status"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
   }
 };

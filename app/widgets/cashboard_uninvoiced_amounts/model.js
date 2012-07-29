@@ -2,7 +2,8 @@ var https = require('https');
 
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
-  var cashboard = this;
+  var cashboard = this,
+      out = {id: service.id, name: service.name};
 
   var auth = 'Basic ' + new Buffer(service.user + ':' + service.token).toString('base64');
   var options = {
@@ -23,28 +24,27 @@ exports.fetch = function(service, callback) {
       });
       res.on('end', function(){
         try {
-        var resData = JSON.parse(data),
-            out = cashboard.translate(resData);
+        var resData = JSON.parse(data);
+        out.results = cashboard.translate(resData);
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
-          out = {cashboard_uninvoiced_amounts: [], error: err.message};
+          out.error = err.message;
         }
         callback(out);
       });
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    callback({cashboard_uninvoiced_amounts: [], error: e.message});
+    out.error = e.message;
+    callback(out);
   });
 };
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
   return {
-    cashboard_uninvoiced_amounts: {
-      invoice: data.uninvoiced_item_cost,
-      expenses: data.uninvoiced_expense_cost
-    }
+    invoice: data.uninvoiced_item_cost,
+    expenses: data.uninvoiced_expense_cost
   };
 };
 
