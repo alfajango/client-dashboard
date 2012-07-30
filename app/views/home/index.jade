@@ -60,19 +60,21 @@ block header
 
 block content
 
-  - if (project.hasService('redmine_open_issues'))
-    each service in project.filteredServices('redmine_open_issues')
-      div(id="widget-#{service.id}")
-        .pull-right
-          i.icon-ok.refresh-ok.pull-left
-          button.btn.btn-small.refresh-service('data-service'='redmine_open_issues', 'data-id'="#{service.id}")
-            i.icon-retweet
+  .row-fluid
+    - if (project.hasService('redmine_open_issues'))
+      .span12
+        each service in project.filteredServices('redmine_open_issues')
+          div(id="widget-#{service.id}")
+            .pull-right
+              i.icon-ok.refresh-ok.pull-left
+              button.btn.btn-small.refresh-service('data-service'='redmine_open_issues', 'data-id'="#{service.id}")
+                i.icon-retweet
 
-        include ../../widgets/redmine_open_issues/view.jade
+            include ../../widgets/redmine_open_issues/view.jade
 
   .row-fluid
-    .span8
-      - if (project.hasService('errbit_unresolved_exceptions'))
+    - if (project.hasService('errbit_unresolved_exceptions'))
+      .span8
         each service in project.filteredServices('errbit_unresolved_exceptions')
           div(id="widget-#{service.id}")
             .pull-right
@@ -82,8 +84,8 @@ block content
 
             include ../../widgets/errbit_unresolved_exceptions/view.jade
 
-    .span4
-      - if (project.hasService('cashboard_uninvoiced_amounts'))
+    - if (project.hasService('cashboard_uninvoiced_amounts'))
+      .span4
         each service in project.filteredServices('cashboard_uninvoiced_amounts')
           div(id="widget-#{service.id}")
             .pull-right
@@ -93,8 +95,8 @@ block content
 
             include ../../widgets/cashboard_uninvoiced_amounts/view.jade
 
-    .span4
-      - if (project.hasService('aremysitesup_instant_status'))
+    - if (project.hasService('aremysitesup_instant_status'))
+      .span4
         each service in project.filteredServices('aremysitesup_instant_status')
           div(id="widget-#{service.id}")
             .pull-right
@@ -104,8 +106,8 @@ block content
 
             include ../../widgets/aremysitesup_instant_status/view.jade
 
-    .span5
-      - if (project.hasService('semaphore_build_status'))
+    - if (project.hasService('semaphore_build_status'))
+      .span5
         each service in project.filteredServices('semaphore_build_status')
           div(id="widget-#{service.id}")
             .pull-right
