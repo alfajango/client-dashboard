@@ -103,3 +103,14 @@ block content
                 i.icon-retweet
 
             include ../../widgets/aremysitesup_instant_status/view.jade
+
+    .span5
+      - if (project.hasService('semaphore_build_status'))
+        each service in project.filteredServices('semaphore_build_status')
+          div(id="widget-#{service.id}")
+            .pull-right
+              i.icon-ok.refresh-ok.pull-left
+              button.btn.btn-small.refresh-service('data-service'='semaphore_build_status', 'data-id'="#{service.id}")
+                i.icon-retweet
+
+            include ../../widgets/semaphore_build_status/view.jade
