@@ -20,7 +20,7 @@ exports.fetch = function(service, callback) {
   var options = {
     host: service.url,
     port: 80,
-    path: '/projects/' + service.identifier + '/issues.json',
+    path: '/projects/' + service.identifier + '/issues.json?status_id=open&limit=100', // query parameter doesn't work as advertised
     query: 'status_id=open&limit=100',
     headers: {
       'Accept': 'application/json',
@@ -54,6 +54,8 @@ exports.fetch = function(service, callback) {
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
+  if (data.total_amount > data.limit) { console.log('WARNING: Total issues is greater than returned.'); }
+
   var issues = data.issues.map(function(x) {
     return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on) };
   })
