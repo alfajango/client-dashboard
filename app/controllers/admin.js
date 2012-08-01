@@ -70,7 +70,7 @@ module.exports = function(app) {
   //----------------------------
 
   app.get('/admin/users/new', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    Client.find({}, function(err, clients) {
+    Client.find().sort('name', 1).exec(function(err, clients) {
       res.render('admin/user_new', {
         title: 'New User',
         message: req.flash(),
@@ -107,7 +107,7 @@ module.exports = function(app) {
   });
 
   app.get('/admin/users/:id/edit', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    Client.find({}, function(err, clients) {
+    Client.find().sort('name', 1).exec(function(err, clients) {
       res.render('admin/user_new', {
         title: 'Edit User',
         message: req.flash(),
