@@ -13,6 +13,14 @@ var statusOrder = {
   'Resolved': 9
 };
 
+var priorityOrder = {
+  'Low': 0,
+  'Normal': 1,
+  'High': 2,
+  'Urgent': 3,
+  'Immediate': 4
+};
+
 // Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
   var redmine = this,
@@ -58,7 +66,7 @@ exports.translate = function(data) {
   if (data.total_amount > data.limit) { console.log('WARNING: Total issues is greater than returned.'); }
 
   var issues = data.issues.map(function(x) {
-    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on) };
+    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name] };
   })
     .sort(function(a, b) {
       var firstOrder = statusOrder[a.status] - statusOrder[b.status];

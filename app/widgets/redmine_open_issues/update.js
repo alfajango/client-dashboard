@@ -9,7 +9,11 @@ widgets.redmine_open_issues = function(data, $) {
       rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
       rows += '<td class="issue-number-column">' + issue.id + '</td>';
       rows += '<td>' + issue.subject + '</td>';
-      rows += '<td class="redmine-status-td">' + issue.status;
+      rows += '<td class="redmine-status-td">';
+      rows += issue.status;
+      if (issue.priority > 1) {
+        rows += ' <i class="icon-star"></i>';
+      }
       if (issue.progress > 0) {
         rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
       }
