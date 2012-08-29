@@ -69,9 +69,14 @@ exports.translate = function(data) {
     return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name] };
   })
     .sort(function(a, b) {
-      var firstOrder = statusOrder[a.status] - statusOrder[b.status];
+      var firstOrder = statusOrder[a.status] - statusOrder[b.status],
+          secondOrder = b.priority - a.priority;
       if (firstOrder === 0) {
-        return a.id - b.id;
+        if (secondOrder === 0) {
+          return a.id - b.id;
+        } else {
+          return secondOrder;
+        }
       } else {
         return firstOrder;
       }
