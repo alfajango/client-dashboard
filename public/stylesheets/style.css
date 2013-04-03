@@ -133,6 +133,9 @@ h2 .badge {
 .recently-updated td {
   background: #e8f7ff;
 }
+.zero-rate td {
+  background: #F2DEDE;
+}
 
 #invoice, #expenses {
   text-align: right;

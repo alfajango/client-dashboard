@@ -54,6 +54,18 @@ block header
 block content
 
   .row-fluid
+    - if (project.hasService('cashboard_global_billable_time'))
+      .span12
+        each service in project.filteredServices('cashboard_global_billable_time')
+          div(id="widget-#{service.id}")
+            .pull-right
+              i.icon-ok.refresh-ok.pull-left
+              button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
+                i.icon-retweet
+
+            include ../../widgets/cashboard_global_billable_time/view.jade
+
+  .row-fluid
     - if (project.hasService('redmine_open_issues'))
       .span12
         each service in project.filteredServices('redmine_open_issues')
