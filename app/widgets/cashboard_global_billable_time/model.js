@@ -14,15 +14,34 @@ exports.options = function(service, path) {
   };
 };
 
+// These will automatically populate the front-end settings form for the widget,
+// where the object keys correspond to their respective form inputs.
+exports.defaultSettings = {
+  formatted: function(date) {
+    return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+  },
+  end_date: function() {
+    return exports.defaultSettings.formatted(new Date());
+  },
+  start_date: function() {
+    var d = new Date(),
+        day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+    return exports.defaultSettings.formatted(new Date(d.setDate(diff)));
+  }
+}
+
 // Fetch issues from service endpoint
-exports.fetch = function(service, callback) {
+exports.fetch = function(service, callback, settings) {
   var cashboard = this,
       out = {id: service.id, name: service.name},
       jsonData = {};
 
   utils.when(
     function(done) {
-      var path = '/time_entries.json?billable=true&start_date=2013-03-24&end_date=2013-03-30';
+      var startDate = settings && settings.start_date ? settings.start_date : cashboard.defaultSettings.start_date(),
+          endDate = settings && settings.end_date ? settings.end_date : cashboard.defaultSettings.end_date(),
+          path = '/time_entries.json?billable=true&start_date=' + startDate + '&end_date=' + endDate;
       cashboard.fetchAPI('timeEntries', path, service, jsonData, done);
     },
     function(done) {

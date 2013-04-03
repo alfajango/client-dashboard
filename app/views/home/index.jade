@@ -13,6 +13,12 @@ block head
       return url;
     }
 
+    function getMonday(date) {
+      var day = d.getDay(),
+      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
+    }
+
     var socket = io.connect(location.protocol + '//' + location.host);
     var emitters = {};
 
@@ -27,11 +33,56 @@ block head
   each service in project.services
     script
       emitters["#{service.name}-#{service.id}"] = function() {
-        socket.emit('service', {client: "#{theClient.id}", project: "#{project.id}", service: "#{service.name}", id: "#{service.id}"});
+        var settings = {
+            client: "#{theClient.id}",
+            project: "#{project.id}",
+            service: "#{service.name}",
+            id: "#{service.id}"
+          },
+          $form = $("#widget-#{service.id} form");
+
+        if ($form.length) {
+          var settingsObj = {};
+          $.each($($form).serializeArray(), function(_, kv) {
+            settingsObj[kv.name] = kv.value;
+          });
+          settings.settings = settingsObj;
+        }
+
+        socket.emit('service', settings);
       };
       emitters["#{service.name}-#{service.id}"]();
 
   script
+    $(document).ready( function() {
+      var $start = $('.datepicker[name="start_date"]'),
+          $end = $('.datepicker[name="end_date"]'),
+          start = $start
+                    .datepicker({
+                      format: 'yyyy-mm-dd',
+                      weekStart: 1
+                    })
+                    .on('changeDate', function(ev) {
+                      var newDate = new Date(ev.date)
+                      newDate.setDate(newDate.getDate() + 6);
+                      end.setValue(newDate);
+                      start.hide();
+                      $end.focus();
+                    })
+                    .data('datepicker'),
+            end = $end
+              .datepicker({
+                format: 'yyyy-mm-dd',
+                weekStart: 1,
+                onRender: function(date) {
+                  return date.valueOf() <= start.date.valueOf() ? 'disabled' : '';
+                }
+              })
+              .on('changeDate', function(ev) {
+                end.hide();
+              })
+              .data('datepicker');
+    });
     $(document).delegate('.refresh-service', 'click', function(e) {
       var $this = $(this),
           service = $this.data('service'),
@@ -59,9 +110,16 @@ block content
         each service in project.filteredServices('cashboard_global_billable_time')
           div(id="widget-#{service.id}")
             .pull-right
-              i.icon-ok.refresh-ok.pull-left
-              button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
-                i.icon-retweet
+              form.form-inline
+                fieldset
+                  label &nbsp; Start date &nbsp;
+                  input.datepicker(type="text", name="start_date", value="#{service.defaultSettings()['start_date']()}")
+                  label &nbsp; End date &nbsp;
+                  input.datepicker(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
+                  i.icon-ok.refresh-ok.pull-left
+                  &nbsp;
+                  button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
+                    i.icon-filter
 
             include ../../widgets/cashboard_global_billable_time/view.jade
 

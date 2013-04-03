@@ -130,6 +130,10 @@ h2 .badge {
   top: -2px;
 }
 
+.totals th {
+  background: #e8f7ff;
+  text-align: center;
+}
 .recently-updated td {
   background: #e8f7ff;
 }

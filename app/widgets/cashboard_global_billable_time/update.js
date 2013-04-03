@@ -22,14 +22,17 @@ widgets.cashboard_global_billable_time = function(data, $) {
       rows += '<td>$' + billable.formatMoney(2, '.', ',') + '</td>';
       rows += '<td>' + entry.description + '</td>';
       rows += '</tr>';
+
       totalHours += hours;
       totalBillable += billable;
     });
-    rows += '<tr><th colspan=4>Total Hours: ' + totalHours + '</th><th colspan=3>Total Billable: $' + totalBillable.formatMoney(2, '.', ',') + '</th></tr>';
+    rows = '<tr class="totals"><th colspan=3>Total Hours: ' + totalHours + '</th><th colspan=3>Total Billable: $' + totalBillable.formatMoney(2, '.', ',') + '</th><th colspan=1>Avg Hourly Rate: $' + (totalBillable / totalHours).formatMoney(2, '.', ',') + '</th></tr>' + rows;
+
     $target.find('.cashboard-billable-table tbody').html(rows);
   } else if (data.error) {
     $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=7><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div></td></tr>');
   } else {
     $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=7><div class="alert alert-error" title="No results">No results</div></td></tr>');
   }
+  $target.find('.refresh-service[data-service="cashboard_global_billable_time"]').removeClass('disabled').html('<i class="icon-filter"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
 };

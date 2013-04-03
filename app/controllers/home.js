@@ -60,7 +60,7 @@ module.exports = function(app) {
 
           service.fetch( function(response) {
             socket.emit('serviceResponse', response);
-          });
+          }, data.settings);
         }
       });
     });

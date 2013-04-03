@@ -6,8 +6,12 @@ var ServiceSchema = new Schema({
   token:            String
 });
 
-ServiceSchema.methods.fetch = function(callback) {
-  widgets[this.name].model.fetch(this, callback);
+ServiceSchema.methods.fetch = function(callback, settings) {
+  widgets[this.name].model.fetch(this, callback, settings);
+};
+
+ServiceSchema.methods.defaultSettings = function() {
+  return widgets[this.name].model.defaultSettings;
 };
 
 mongoose.model('Service', ServiceSchema);
