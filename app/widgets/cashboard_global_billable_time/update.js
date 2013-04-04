@@ -12,6 +12,45 @@ widgets.cashboard_global_billable_time = function(data, $) {
       }
     }
   }
+
+  function workingDaysBetweenDates(origStartDate, origEndDate) {
+    var startDate = new Date(origStartDate.getTime()),
+        endDate = new Date(origEndDate.getTime());
+
+    // Validate input
+    if (endDate < startDate)
+      return 0;
+
+    // Calculate days between dates
+    var millisecondsPerDay = 86400 * 1000; // Day in milliseconds
+    startDate.setHours(0,0,0,1);  // Start just after midnight
+    endDate.setHours(23,59,59,999);  // End just before midnight
+    var diff = endDate - startDate;  // Milliseconds between datetime objects    
+    var days = Math.ceil(diff / millisecondsPerDay);
+
+    // Subtract two weekend days for every week in between
+    var weeks = Math.floor(days / 7);
+    var days = days - (weeks * 2);
+
+    // Handle special cases
+    var startDay = startDate.getDay();
+    var endDay = endDate.getDay();
+
+    // Remove weekend not previously removed.   
+    if (startDay - endDay > 1)         
+      days = days - 2;      
+
+    // Remove start day if span starts on Sunday but ends before Saturday
+    if (startDay == 0 && endDay != 6)
+      days = days - 1  
+
+    // Remove end day if span ends on Saturday but starts after Sunday
+    if (endDay == 6 && startDay != 0)
+      days = days - 1  
+
+    return days;
+  }
+
   var $target = $('#widget-' + data.id),
       rows = "";
   if (data.results && data.results.length > 0) {
@@ -72,11 +111,6 @@ widgets.cashboard_global_billable_time = function(data, $) {
     console.log(hoursByDayByProject);
     console.log(hoursByMemberByDay);
 
-    $target.find('.total-hours').html(totalHours);
-    $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
-    $target.find('.average-hourly-rate').html('$' + (totalBillable / totalHours).formatMoney(2, '.', ','));
-    $target.find('.cashboard-billable-table tbody').html(rows);
-
     var startDateVal = $target.find('input[name="start_date"]').val().split('-'),
         endDateVal = $target.find('input[name="end_date"]').val().split('-'),
         startDate = new Date(startDateVal[0], (startDateVal[1] - 1), startDateVal[2]),
@@ -84,17 +118,43 @@ widgets.cashboard_global_billable_time = function(data, $) {
         startDateInt = +(startDate),
         endDateInt = +(endDate);
 
+    var workDays = workingDaysBetweenDates(startDate, endDate),
+        totalBreakEven = workDays * 700;
+
+    $target.find('.total-hours').html(totalHours);
+    $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
+    $target.find('.average-hourly-rate').html('$' + (totalBillable / totalHours).formatMoney(2, '.', ','));
+    $target.find('.cashboard-billable-table tbody').html(rows);
+
+    $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
+
     var plotSeries = [],
         members = Object.keys(hoursByMember);
+
+    plotSeries[0] = {
+      color: "#ebc4c4",
+      label: "[break even]",
+      stack: false,
+      data: [],
+      points: {
+        show: false
+      }
+    }
+
     for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+      var day = new Date(d),
+          dayDate = day.getDate(),
+          dayMonth = day.getMonth(), //Months are zero based
+          dayYear = day.getFullYear()
+          formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate;
+          dayInt = +(day);
+
+      // Break-even is ~$15k/mo, so 15000 / 30 days a month / number of weekdays in a week (5/7) = 700
+      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 700;
+      plotSeries[0]['data'].push([dayInt, breakEvenAmount]);
+
       members.forEach(function(member) {
-        var memberIndex = members.indexOf(member),
-            day = new Date(d),
-            dayDate = day.getDate(),
-            dayMonth = day.getMonth(), //Months are zero based
-            dayYear = day.getFullYear()
-            formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate;
-            dayInt = +(day),
+        var memberIndex = members.indexOf(member) + 1,
             hours = hoursByMemberByDay[member][dayInt] || 0,
             value = [dayInt, hours];
         if (plotSeries[memberIndex] === undefined) {
@@ -130,6 +190,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
         min: startDateInt,
         max: endDateInt,
         timeformat: "%a"
+      },
+      grid: {
+        hoverable: true,
+        clickable: true
       }
     });
   } else if (data.error) {
