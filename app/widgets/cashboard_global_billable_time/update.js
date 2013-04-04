@@ -184,6 +184,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
           symbol: "circle"
         }
       },
+      yaxis: {
+        mode: "money",
+        tickFormatter: function (v, axis) { return "$" + v.toFixed(axis.tickDecimals) }
+      },
       xaxis: {
         mode: "time",
         minTickSize: [1, "day"],
