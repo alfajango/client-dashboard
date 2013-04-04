@@ -60,6 +60,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
         hoursByDayByMember = {},
         hoursByDayByProject = {},
         hoursByMemberByDay = {},
+        hoursByProjectByDay = {},
         totalHours = 0,
         totalBillable = 0;
     $.each(data.results, function(i, entry) {
@@ -102,6 +103,9 @@ widgets.cashboard_global_billable_time = function(data, $) {
       dayHours[createdInt] = billable;
       group(hoursByMemberByDay, entry.person_name, dayHours)
 
+      var dayHours = {};
+      dayHours[createdInt] = billable;
+      group(hoursByProjectByDay, entry.project_name, dayHours)
     });
 
     console.log(hoursByRate);
@@ -128,10 +132,12 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
     $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
 
-    var plotSeries = [],
-        members = Object.keys(hoursByMember);
+    var memberPlotSeries = [],
+        projectPlotSeries = [],
+        members = Object.keys(hoursByMember),
+        projects = Object.keys(hoursByProject);
 
-    plotSeries[0] = {
+    memberPlotSeries[0] = {
       color: "#ebc4c4",
       label: "[break even]",
       stack: false,
@@ -139,7 +145,17 @@ widgets.cashboard_global_billable_time = function(data, $) {
       points: {
         show: false
       }
-    }
+    };
+
+    projectPlotSeries[0] = {
+      color: "#ebc4c4",
+      label: "[break even]",
+      stack: false,
+      data: [],
+      points: {
+        show: false
+      }
+    };
 
     for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
       var day = new Date(d),
@@ -151,27 +167,73 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
       // Break-even is ~$15k/mo, so 15000 / 30 days a month / number of weekdays in a week (5/7) = 700
       var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 700;
-      plotSeries[0]['data'].push([dayInt, breakEvenAmount]);
+      memberPlotSeries[0]['data'].push([dayInt, breakEvenAmount]);
+      projectPlotSeries[0]['data'].push([dayInt, breakEvenAmount]);
 
       members.forEach(function(member) {
         var memberIndex = members.indexOf(member) + 1,
             hours = hoursByMemberByDay[member][dayInt] || 0,
             value = [dayInt, hours];
-        if (plotSeries[memberIndex] === undefined) {
-          plotSeries[memberIndex] = {
+        if (memberPlotSeries[memberIndex] === undefined) {
+          memberPlotSeries[memberIndex] = {
             label: member,
             data: [value],
             hoverable: true
           };
         } else {
-          plotSeries[memberIndex]['data'].push(value);
+          memberPlotSeries[memberIndex]['data'].push(value);
+        }
+      });
+
+      projects.forEach(function(member) {
+        var memberIndex = projects.indexOf(member) + 1,
+            hours = hoursByProjectByDay[member][dayInt] || 0,
+            value = [dayInt, hours];
+        if (projectPlotSeries[memberIndex] === undefined) {
+          projectPlotSeries[memberIndex] = {
+            label: member,
+            data: [value],
+            hoverable: true
+          };
+        } else {
+          projectPlotSeries[memberIndex]['data'].push(value);
         }
       });
     }
 
-    console.log(plotSeries);
+    console.log(memberPlotSeries);
+    console.log(projectPlotSeries);
 
-    $.plot($target.find('.hours-by-day-by-member'), plotSeries, {
+    $.plot($target.find('.hours-by-day-by-member'), memberPlotSeries, {
+      series: {
+        stack: true,
+        lines: {
+          show: true,
+          fill: true,
+          steps: false
+        },
+        points: {
+          show: true,
+          symbol: "circle"
+        }
+      },
+      yaxis: {
+        mode: "money",
+        tickFormatter: function (v, axis) { return "$" + v.toFixed(axis.tickDecimals) }
+      },
+      xaxis: {
+        mode: "time",
+        minTickSize: [1, "day"],
+        min: startDateInt,
+        max: endDateInt,
+        timeformat: "%a"
+      },
+      grid: {
+        hoverable: true,
+        clickable: true
+      }
+    });
+    $.plot($target.find('.hours-by-day-by-project'), projectPlotSeries, {
       series: {
         stack: true,
         lines: {
