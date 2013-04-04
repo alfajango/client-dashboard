@@ -67,19 +67,21 @@ widgets.cashboard_global_billable_time = function(data, $) {
       var createdAt = new Date(entry.created_on),
           hours = entry.minutes / 60.0,
           rate = parseFloat(entry.billable_rate),
-          billable = hours * rate,
+          pay_rate = parseFloat(entry.pay_rate),
+          billable = hours * (rate - pay_rate),
           currDate = createdAt.getDate(),
           currMonth = createdAt.getMonth(), //Months are zero based
           currYear = createdAt.getFullYear()
           created = new Date(currYear, currMonth, currDate),
           createdInt = +(created), // Make sure both dates are compared as integers
           formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate;
-      rows += '<tr' + (entry.rate <= 0 ? ' class="zero-rate"' : '') + '>';
+      rows += '<tr' + (rate <= 0 ? ' class="zero-rate"' : '') + '>';
       rows += '<td>' + formattedDate + '</td>';
       rows += '<td>' + entry.person_name + '</td>';
       rows += '<td>' + entry.project_name + '</td>';
       rows += '<td>' + hours + '</td>';
       rows += '<td>$' + rate.formatMoney(2, '.', ',') + '</td>';
+      rows += '<td>($' + pay_rate.formatMoney(2, '.', ',') + ')</td>';
       rows += '<td>$' + billable.formatMoney(2, '.', ',') + '</td>';
       rows += '<td>' + entry.description + '</td>';
       rows += '</tr>';
