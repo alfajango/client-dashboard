@@ -98,9 +98,13 @@ widgets.cashboard_global_billable_time = function(data, $) {
             hours = hoursByMemberByDay[member][dayInt] || 0,
             value = [dayInt, hours];
         if (plotSeries[memberIndex] === undefined) {
-          plotSeries[memberIndex] = [value];
+          plotSeries[memberIndex] = {
+            label: member,
+            data: [value],
+            hoverable: true
+          };
         } else {
-          plotSeries[memberIndex].push(value);
+          plotSeries[memberIndex]['data'].push(value);
         }
       });
     }
@@ -114,6 +118,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
           show: true,
           fill: true,
           steps: false
+        },
+        points: {
+          show: true,
+          symbol: "circle"
         }
       },
       xaxis: {
