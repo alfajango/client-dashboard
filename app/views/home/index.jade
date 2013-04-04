@@ -93,6 +93,12 @@ block head
     $(document).delegate('.errbit-description-toggle', 'click', function(e) {
       $(this).siblings('.errbit-description').slideToggle();
     });
+    $(document).delegate('form.settings', 'submit', function(e) {
+      e.preventDefault();
+    });
+    $(document).delegate('[data-toggle]', 'click', function(e) {
+      e.preventDefault();
+    });
 
 block header
   - if (project.imageURL)
@@ -104,24 +110,22 @@ block header
 
 block content
 
-  .row-fluid
-    - if (project.hasService('cashboard_global_billable_time'))
-      .span12
-        each service in project.filteredServices('cashboard_global_billable_time')
-          div(id="widget-#{service.id}")
-            .pull-right
-              form.form-inline
-                fieldset
-                  label &nbsp; Start date &nbsp;
-                  input.datepicker(type="text", name="start_date", value="#{service.defaultSettings()['start_date']()}")
-                  label &nbsp; End date &nbsp;
-                  input.datepicker(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
-                  i.icon-ok.refresh-ok.pull-left
-                  &nbsp;
-                  button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
-                    i.icon-filter
+  - if (project.hasService('cashboard_global_billable_time'))
+    each service in project.filteredServices('cashboard_global_billable_time')
+      div(id="widget-#{service.id}")
+        .pull-right
+          form.form-inline.settings
+            fieldset
+              label &nbsp; Start date &nbsp;
+              input.datepicker(type="text", name="start_date", value="#{service.defaultSettings()['start_date']()}")
+              label &nbsp; End date &nbsp;
+              input.datepicker(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
+              i.icon-ok.refresh-ok.pull-left
+              &nbsp;
+              button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
+                i.icon-filter
 
-            include ../../widgets/cashboard_global_billable_time/view.jade
+        include ../../widgets/cashboard_global_billable_time/view.jade
 
   .row-fluid
     - if (project.hasService('redmine_open_issues'))

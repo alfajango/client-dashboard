@@ -175,3 +175,8 @@ table .alert {
   margin: 0;
   text-align: center
 }
+
+.hours-by-day-by-member {
+  width: 100%;
+  height: 300px;
+}

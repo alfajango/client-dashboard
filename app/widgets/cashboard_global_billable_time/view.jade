@@ -1,17 +1,47 @@
 h2 Billable Time
-table.table.table-bordered.cashboard-billable-table
-  thead
-    tr
-      th Date
-      th Member
-      th Project
-      th Hours
-      th Rate
-      th Total
-      th Notes
-  tbody
-    tr
-      td.data-row.right-align(colspan=7)
-        .loading.large
-          | Loading 
-          img(src="/images/ajax-loader.gif")
+.row-fluid
+  .span12
+    a.accordian-toggle('data-toggle'="collapse", 'data-target'="#time-entries-#{service.id}", 'href'="#time-entries-#{service.id}")
+      | Detailed Time Entries
+    div.cashboard-billable-table-container.collapse('id'="time-entries-#{service.id}")
+      table.table.table-bordered.cashboard-billable-table
+        thead
+          tr
+            th Date
+            th Member
+            th Project
+            th Hours
+            th Rate
+            th Total
+            th Notes
+        tbody
+          tr
+            td.data-row.right-align(colspan=7)
+              .loading.large
+                | Loading 
+                img(src="/images/ajax-loader.gif")
+
+.row-fluid
+  .span6
+    table.table.table-bordered.cashboard-billable-summary-table
+      tr
+        th Total Hours
+        td.total-hours.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Total Billable
+        td.total-billable.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Average Hourly Rate
+        td.average-hourly-rate.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+
+  .span6
+    div.hours-by-day-by-member
