@@ -51,6 +51,7 @@ h2 Billable Time
             | Loading 
             img(src="/images/ajax-loader-small.gif")
 
+.row-fluid
   .span6
     h3 Member Billable
     div.hours-by-day-by-member.cashboard-global-graph
@@ -59,8 +60,23 @@ h2 Billable Time
         img(src="/images/ajax-loader.gif")
 
   .span6
+    h3 Cumulative Member Billable
+    div.cumulative-hours-by-day-by-member.cashboard-global-graph
+      .loading.large
+        | Loading 
+        img(src="/images/ajax-loader.gif")
+
+.row-fluid
+  .span6
     h3 Project Billable
     div.hours-by-day-by-project.cashboard-global-graph
+      .loading.large
+        | Loading 
+        img(src="/images/ajax-loader.gif")
+
+  .span6
+    h3 Cumulative Project Billable
+    div.cumulative-hours-by-day-by-project.cashboard-global-graph
       .loading.large
         | Loading 
         img(src="/images/ajax-loader.gif")

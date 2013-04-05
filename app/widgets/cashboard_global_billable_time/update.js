@@ -51,7 +51,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
     return days;
   }
 
-  function generateStackedTimePlotFor(obj, $target, origStartDate, origEndDate) {
+  function generateStackedTimePlotFor(obj, $target, origStartDate, origEndDate, cumulative) {
     var startDate = new Date(origStartDate.getTime()),
         endDate = new Date(origEndDate.getTime()),
         plotSeries = [],
@@ -71,26 +71,34 @@ widgets.cashboard_global_billable_time = function(data, $) {
       var day = new Date(d),
           dayDate = day.getDate(),
           dayMonth = day.getMonth(), //Months are zero based
-          dayYear = day.getFullYear()
-          formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate;
+          dayYear = day.getFullYear(),
+          formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate,
           dayInt = +(day);
 
       // Break-even is ~$15k/mo, so 15000 / 30 days a month / number of weekdays in a week (5/7) = 700
       var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 700;
+      if (cumulative) {
+        var data = plotSeries[0]['data'];
+        if (data.length) { breakEvenAmount += data[data.length-1][1]; }
+      }
       plotSeries[0]['data'].push([dayInt, breakEvenAmount]);
 
       keys.forEach(function(key) {
         var keyIndex = keys.indexOf(key) + 1,
-            value = obj[key][dayInt] || 0,
-            coords = [dayInt, value];
+            value = obj[key][dayInt] || 0;
+
         if (plotSeries[keyIndex] === undefined) {
           plotSeries[keyIndex] = {
             label: key,
-            data: [coords],
+            data: [[dayInt, value]],
             hoverable: true
           };
         } else {
-          plotSeries[keyIndex]['data'].push(coords);
+          if (cumulative) {
+            var data = plotSeries[keyIndex]['data'];
+            if (data.length) { value += data[data.length-1][1]; }
+          }
+          plotSeries[keyIndex]['data'].push([dayInt, value]);
         }
       });
     }
@@ -107,6 +115,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
         },
         points: {
           show: true,
+          radius: 2,
           symbol: "circle"
         }
       },
@@ -124,6 +133,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
       grid: {
         hoverable: true,
         clickable: true
+      },
+      legend: {
+        show: true,
+        position: cumulative ? "nw" : "ne"
       }
     });
   }
@@ -214,6 +227,9 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate);
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.hours-by-day-by-project'), startDate, endDate);
+
+    generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.cumulative-hours-by-day-by-member'), startDate, endDate, true);
+    generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.cumulative-hours-by-day-by-project'), startDate, endDate, true);
 
   } else if (data.error) {
     $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=7><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div></td></tr>');
