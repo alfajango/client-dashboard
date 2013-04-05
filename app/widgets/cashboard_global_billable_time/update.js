@@ -51,6 +51,83 @@ widgets.cashboard_global_billable_time = function(data, $) {
     return days;
   }
 
+  function generateStackedTimePlotFor(obj, $target, origStartDate, origEndDate) {
+    var startDate = new Date(origStartDate.getTime()),
+        endDate = new Date(origEndDate.getTime()),
+        plotSeries = [],
+        keys = Object.keys(obj);
+
+    plotSeries[0] = {
+      color: "#ebc4c4",
+      label: "[break even]",
+      stack: false,
+      data: [],
+      points: {
+        show: false
+      }
+    };
+
+    for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+      var day = new Date(d),
+          dayDate = day.getDate(),
+          dayMonth = day.getMonth(), //Months are zero based
+          dayYear = day.getFullYear()
+          formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate;
+          dayInt = +(day);
+
+      // Break-even is ~$15k/mo, so 15000 / 30 days a month / number of weekdays in a week (5/7) = 700
+      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 700;
+      plotSeries[0]['data'].push([dayInt, breakEvenAmount]);
+
+      keys.forEach(function(key) {
+        var keyIndex = keys.indexOf(key) + 1,
+            value = obj[key][dayInt] || 0,
+            coords = [dayInt, value];
+        if (plotSeries[keyIndex] === undefined) {
+          plotSeries[keyIndex] = {
+            label: key,
+            data: [coords],
+            hoverable: true
+          };
+        } else {
+          plotSeries[keyIndex]['data'].push(coords);
+        }
+      });
+    }
+
+    console.log(plotSeries);
+
+    $.plot($target, plotSeries, {
+      series: {
+        stack: true,
+        lines: {
+          show: true,
+          fill: true,
+          steps: false
+        },
+        points: {
+          show: true,
+          symbol: "circle"
+        }
+      },
+      yaxis: {
+        mode: "money",
+        tickFormatter: function (v, axis) { return "$" + v.toFixed(axis.tickDecimals) }
+      },
+      xaxis: {
+        mode: "time",
+        minTickSize: [1, "day"],
+        min: startDateInt,
+        max: endDateInt,
+        timeformat: "%a"
+      },
+      grid: {
+        hoverable: true,
+        clickable: true
+      }
+    });
+  }
+
   var $target = $('#widget-' + data.id),
       rows = "";
   if (data.results && data.results.length > 0) {
@@ -116,6 +193,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
     console.log(hoursByDayByMember);
     console.log(hoursByDayByProject);
     console.log(hoursByMemberByDay);
+    console.log(hoursByProjectByDay);
 
     var startDateVal = $target.find('input[name="start_date"]').val().split('-'),
         endDateVal = $target.find('input[name="end_date"]').val().split('-'),
@@ -134,136 +212,9 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
     $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
 
-    var memberPlotSeries = [],
-        projectPlotSeries = [],
-        members = Object.keys(hoursByMember),
-        projects = Object.keys(hoursByProject);
+    generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate);
+    generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.hours-by-day-by-project'), startDate, endDate);
 
-    memberPlotSeries[0] = {
-      color: "#ebc4c4",
-      label: "[break even]",
-      stack: false,
-      data: [],
-      points: {
-        show: false
-      }
-    };
-
-    projectPlotSeries[0] = {
-      color: "#ebc4c4",
-      label: "[break even]",
-      stack: false,
-      data: [],
-      points: {
-        show: false
-      }
-    };
-
-    for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-      var day = new Date(d),
-          dayDate = day.getDate(),
-          dayMonth = day.getMonth(), //Months are zero based
-          dayYear = day.getFullYear()
-          formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate;
-          dayInt = +(day);
-
-      // Break-even is ~$15k/mo, so 15000 / 30 days a month / number of weekdays in a week (5/7) = 700
-      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 700;
-      memberPlotSeries[0]['data'].push([dayInt, breakEvenAmount]);
-      projectPlotSeries[0]['data'].push([dayInt, breakEvenAmount]);
-
-      members.forEach(function(member) {
-        var memberIndex = members.indexOf(member) + 1,
-            hours = hoursByMemberByDay[member][dayInt] || 0,
-            value = [dayInt, hours];
-        if (memberPlotSeries[memberIndex] === undefined) {
-          memberPlotSeries[memberIndex] = {
-            label: member,
-            data: [value],
-            hoverable: true
-          };
-        } else {
-          memberPlotSeries[memberIndex]['data'].push(value);
-        }
-      });
-
-      projects.forEach(function(member) {
-        var memberIndex = projects.indexOf(member) + 1,
-            hours = hoursByProjectByDay[member][dayInt] || 0,
-            value = [dayInt, hours];
-        if (projectPlotSeries[memberIndex] === undefined) {
-          projectPlotSeries[memberIndex] = {
-            label: member,
-            data: [value],
-            hoverable: true
-          };
-        } else {
-          projectPlotSeries[memberIndex]['data'].push(value);
-        }
-      });
-    }
-
-    console.log(memberPlotSeries);
-    console.log(projectPlotSeries);
-
-    $.plot($target.find('.hours-by-day-by-member'), memberPlotSeries, {
-      series: {
-        stack: true,
-        lines: {
-          show: true,
-          fill: true,
-          steps: false
-        },
-        points: {
-          show: true,
-          symbol: "circle"
-        }
-      },
-      yaxis: {
-        mode: "money",
-        tickFormatter: function (v, axis) { return "$" + v.toFixed(axis.tickDecimals) }
-      },
-      xaxis: {
-        mode: "time",
-        minTickSize: [1, "day"],
-        min: startDateInt,
-        max: endDateInt,
-        timeformat: "%a"
-      },
-      grid: {
-        hoverable: true,
-        clickable: true
-      }
-    });
-    $.plot($target.find('.hours-by-day-by-project'), projectPlotSeries, {
-      series: {
-        stack: true,
-        lines: {
-          show: true,
-          fill: true,
-          steps: false
-        },
-        points: {
-          show: true,
-          symbol: "circle"
-        }
-      },
-      yaxis: {
-        mode: "money",
-        tickFormatter: function (v, axis) { return "$" + v.toFixed(axis.tickDecimals) }
-      },
-      xaxis: {
-        mode: "time",
-        minTickSize: [1, "day"],
-        min: startDateInt,
-        max: endDateInt,
-        timeformat: "%a"
-      },
-      grid: {
-        hoverable: true,
-        clickable: true
-      }
-    });
   } else if (data.error) {
     $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=7><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div></td></tr>');
   } else {

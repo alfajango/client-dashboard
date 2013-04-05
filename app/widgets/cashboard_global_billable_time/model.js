@@ -123,7 +123,7 @@ exports.translate = function(data) {
         return pa.person_id === entry.person_id && pa.project_id === lineItem.project_id;
       })[0];
 
-      entry.pay_rate = projectAssignment.pay_rate;
+      entry.pay_rate = projectAssignment ? projectAssignment.pay_rate : 0;
 
       if (project.billing_code === 0) {
         entry.billable_rate = 0;
