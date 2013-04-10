@@ -55,7 +55,15 @@ widgets.cashboard_global_billable_time = function(data, $) {
     var startDate = new Date(origStartDate.getTime()),
         endDate = new Date(origEndDate.getTime()),
         plotSeries = [],
-        keys = Object.keys(obj);
+        keys = Object.keys(obj),
+        startDateInt = +(startDate),
+        endDateInt = +(endDate);
+
+    // If bar chart, add 1 day to x-axis to make bar width viewable
+    if (!cumulative) {
+      endDate = endDate.setDate(endDate.getDate() + 1);
+      endDateInt = +(endDate);
+    }
 
     plotSeries[0] = {
       color: "#ebc4c4",
@@ -64,7 +72,12 @@ widgets.cashboard_global_billable_time = function(data, $) {
       data: [],
       points: {
         show: false
-      }
+      },
+      lines: {
+        show: true,
+        fill: true,
+        steps: !cumulative
+      },
     };
 
     for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
@@ -91,7 +104,17 @@ widgets.cashboard_global_billable_time = function(data, $) {
           plotSeries[keyIndex] = {
             label: key + ' -',
             data: [[dayInt, value]],
-            hoverable: true
+            hoverable: true,
+            lines: {
+              show: cumulative, // Show lines if cumulative chart
+              fill: true,
+              steps: false
+            },
+            bars: {
+              show: !cumulative, // Show bars if not cumulative chart
+              fill: true,
+              barWidth: 1000*60*60*24
+            }
           };
         } else {
           if (cumulative) {
@@ -108,13 +131,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
     var plot = $.plot($target, plotSeries, {
       series: {
         stack: true,
-        lines: {
-          show: true,
-          fill: true,
-          steps: false
-        },
         points: {
-          show: true,
+          show: cumulative,
           radius: 2,
           symbol: "circle"
         }
