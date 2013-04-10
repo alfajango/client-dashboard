@@ -1,4 +1,5 @@
 widgets.cashboard_global_billable_time = function(data, $) {
+  var GOLDEN_RATIO = 0.618033988749895;
   function group(obj, key, value) {
     if (!(obj[key])) {
       obj[key] = value;
@@ -11,6 +12,40 @@ widgets.cashboard_global_billable_time = function(data, $) {
         });
       }
     }
+  }
+
+  // HSV values in [0..1[
+  // returns [r, g, b] values from 0 to 255
+  // See http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+  function hsv_to_rgb(h, s, v) {
+    var h_i, f, p, q, t, r, g, b;
+    h_i = parseInt(h*6);
+    f = h*6 - h_i;
+    p = v * (1 - s);
+    q = v * (1 - f*s);
+    t = v * (1 - (1 - f) * s);
+    if (h_i==0) { r = v; g = t; b = p; }
+    if (h_i==1) { r = q; g = v; b = p; }
+    if (h_i==2) { r = p; g = v; b = t; }
+    if (h_i==3) { r = p; g = q; b = v; }
+    if (h_i==4) { r = t; g = p; b = v; }
+    if (h_i==5) { r = v; g = p; b = q; }
+    return [parseInt(r*256), parseInt(g*256), parseInt(b*256)];
+  }
+
+  function generate_css_series_colors(tracks) {
+    var out = [],
+        colors,
+        hue = 0.45, // or mix it up with Math.random()
+        saturation = 0.7,
+        value = 0.75; // aka brightness
+    tracks.forEach (function(track) {
+      hue += GOLDEN_RATIO;
+      hue %= 1;
+      colors = hsv_to_rgb(hue, saturation, value);
+      out.push( "rgb(" + colors + ")");
+    });
+    return out;
   }
 
   function workingDaysBetweenDates(origStartDate, origEndDate) {
@@ -96,6 +131,9 @@ widgets.cashboard_global_billable_time = function(data, $) {
       }
       plotSeries[0]['data'].push([dayInt, breakEvenAmount]);
 
+      var colors = generate_css_series_colors(keys);
+      console.log(colors);
+
       keys.forEach(function(key) {
         var keyIndex = keys.indexOf(key) + 1,
             value = obj[key][dayInt] || 0;
@@ -104,6 +142,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
           plotSeries[keyIndex] = {
             label: key + ' -',
             data: [[dayInt, value]],
+            color: colors[keyIndex],
             hoverable: true,
             lines: {
               show: cumulative, // Show lines if cumulative chart
