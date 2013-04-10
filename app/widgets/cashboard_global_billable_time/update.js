@@ -102,7 +102,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
     plotSeries[0] = {
       color: "#ebc4c4",
-      label: "[break even] -",
+      label: "[break even]: n/a",
       stack: false,
       data: [],
       points: {
@@ -140,7 +140,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         if (plotSeries[keyIndex] === undefined) {
           plotSeries[keyIndex] = {
-            label: key + ' -',
+            label: key + ': n/a',
             data: [[dayInt, value]],
             color: colors[keyIndex],
             hoverable: true,
@@ -223,7 +223,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
       }
 
       var i, j, dataset = plot.getData();
-      for (i = 0; i < dataset.length; ++i) {
+      var hoursTotal = 0;
+      // Loop through dataset backwards so break even label is written last,
+      // this way we can easily include total from all other series
+      for (i = dataset.length - 1; i >= 0; --i) {
 
         var series = dataset[i];
 
@@ -246,10 +249,27 @@ widgets.cashboard_global_billable_time = function(data, $) {
         } else if (p2 == null) {
           y = p1[1];
         } else {
-          y = p1[1] + (p2[1] - p1[1]) * (pos.x - p1[0]) / (p2[0] - p1[0]);
+          if (series.lines && series.lines.show && !series.lines.steps) {
+            y = p1[1] + (p2[1] - p1[1]) * (pos.x - p1[0]) / (p2[0] - p1[0]);
+          } else {
+            y = p1[1];
+          }
         }
 
-        legends.eq(i).text(series.label.replace(/-.*/, "- $" + y.toFixed(axes.yaxis.tickDecimals)));
+        if (i > 0) {
+          hoursTotal += y;
+          y = '$' + y.toFixed(axes.yaxis.tickDecimals);
+        } else {
+          var diff = hoursTotal - y;
+          if (diff < 0) {
+            diff = '($' + diff.toFixed(axes.yaxis.tickDecimals) * -1 + ')';
+          } else {
+            diff = '$' + diff.toFixed(axes.yaxis.tickDecimals);
+          }
+          y = '($' + y.toFixed(axes.yaxis.tickDecimals) + ')' + ' + $' + hoursTotal.toFixed(axes.yaxis.tickDecimals) + ' = ' + diff;
+        }
+
+        legends.eq(i).text(series.label.replace(/:.*/, ": " + y));
       }
     }
 
