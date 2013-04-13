@@ -9,8 +9,6 @@ style(type='text/css')
     display: inline-block;
   }
 .pull-right
-  i.icon-ok.refresh-ok.pull-left
-  &nbsp;
   form.form-inline.settings
     fieldset
       .control-group
@@ -24,6 +22,8 @@ style(type='text/css')
             input.datepicker.span2(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
             button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
               i.icon-filter
+            i.icon-ok.refresh-ok.pull-right
+            &nbsp;
 
 h2 Billable Time
 

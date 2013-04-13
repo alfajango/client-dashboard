@@ -376,5 +376,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
   } else {
     $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=7><div class="alert alert-error" title="No results">No results</div></td></tr>');
   }
-  $target.find('.refresh-service[data-service="cashboard_global_billable_time"]').removeClass('disabled').html('<i class="icon-filter"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+  var $button = $target.find('.refresh-service[data-service="cashboard_global_billable_time"]');
+  $button.removeClass('disabled').html('<i class="icon-filter"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+  $button.parents('form').find('input,textarea,select').prop('disabled', false);
 };
