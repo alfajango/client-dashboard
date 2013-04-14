@@ -88,7 +88,7 @@ block head
           service = $this.data('service'),
           id = $this.data('id');
       $this.addClass('disabled').text('Refreshing...');
-      $this.parents('form').find('input,textarea,select').prop('disabled', true);
+      $this.parents('form').find('input,textarea,select').prop('readonly', true);
       emitters[service + '-' + id]();
     });
     $(document).delegate('.errbit-description-toggle', 'click', function(e) {

@@ -378,5 +378,5 @@ widgets.cashboard_global_billable_time = function(data, $) {
   }
   var $button = $target.find('.refresh-service[data-service="cashboard_global_billable_time"]');
   $button.removeClass('disabled').html('<i class="icon-filter"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
-  $button.parents('form').find('input,textarea,select').prop('disabled', false);
+  $button.parents('form').find('input,textarea,select').prop('readonly', false);
 };
