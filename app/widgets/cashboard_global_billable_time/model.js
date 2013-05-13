@@ -17,17 +17,21 @@ exports.options = function(service, path) {
 // These will automatically populate the front-end settings form for the widget,
 // where the object keys correspond to their respective form inputs.
 exports.defaultSettings = {
+  start_date_raw: function() {
+    var d = new Date(),
+        day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
+  },
   formatted: function(date) {
     return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
   },
   end_date: function() {
-    return exports.defaultSettings.formatted(new Date());
+    var start = exports.defaultSettings.start_date_raw();
+    return exports.defaultSettings.formatted(new Date(start.setDate(start.getDate() + 7)));
   },
   start_date: function() {
-    var d = new Date(),
-        day = d.getDay(),
-        diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-    return exports.defaultSettings.formatted(new Date(d.setDate(diff)));
+    return exports.defaultSettings.formatted(exports.defaultSettings.start_date_raw());
   }
 }
 
@@ -63,6 +67,7 @@ exports.fetch = function(service, callback, settings) {
   ).then(function() {
     out.results = cashboard.translate(jsonData);
     out.error = jsonData.error;
+    console.log("RETURNING RESPONSE");
     callback(out);
   });
 

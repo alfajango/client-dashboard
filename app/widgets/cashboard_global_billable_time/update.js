@@ -372,9 +372,15 @@ widgets.cashboard_global_billable_time = function(data, $) {
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.cumulative-hours-by-day-by-project'), startDate, endDate, true);
 
   } else if (data.error) {
-    $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=7><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div></td></tr>');
+    var msg = '<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>';
+    $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=8></td>' + msg + '</tr>');
+    $target.find('.cashboard-billable-summary-table td').html(msg);
+    $target.find('.loading.large').hide();
   } else {
-    $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=7><div class="alert alert-error" title="No results">No results</div></td></tr>');
+    var msg = '<div class="alert alert-error" title="No results">No results</div>';
+    $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=8>' + msg + '</td></tr>');
+    $target.find('.cashboard-billable-summary-table td').html(msg);
+    $target.find('.loading.large').hide();
   }
   var $button = $target.find('.refresh-service[data-service="cashboard_global_billable_time"]');
   $button.removeClass('disabled').html('<i class="icon-filter"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
