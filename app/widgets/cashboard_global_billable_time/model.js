@@ -28,7 +28,7 @@ exports.defaultSettings = {
   },
   end_date: function() {
     var start = exports.defaultSettings.start_date_raw();
-    return exports.defaultSettings.formatted(new Date(start.setDate(start.getDate() + 7)));
+    return exports.defaultSettings.formatted(new Date(start.setDate(start.getDate() + 6)));
   },
   start_date: function() {
     return exports.defaultSettings.formatted(exports.defaultSettings.start_date_raw());
