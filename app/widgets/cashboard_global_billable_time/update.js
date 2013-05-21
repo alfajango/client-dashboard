@@ -1,3 +1,52 @@
+$(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
+  var $this = $(this),
+      $parent = $this.closest('form'),
+      shortcut = $this.attr('href').replace('#cashboard-global-', ''),
+      start,
+      end,
+      d = new Date(),
+      date = d.getDate(),
+      day = d.getDay(),
+      month = d.getMonth(),
+      year = d.getFullYear(),
+      diff,
+      formatted = function(date) {
+        return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+      };
+  switch (shortcut) {
+    case "last-month":
+      start = new Date(year, month-1, 1);
+      end = new Date(year, month, 0);
+      break;
+    case "last-week":
+      diff = date - day + (day == 0 ? -6:1); // adjust when day is sunday
+      start = new Date(d.setDate(diff-7));
+      end = new Date(start.getTime());
+      end = new Date(end.setDate(start.getDate() + 6));
+      break;
+    case "this-month":
+      start = new Date(year, month, 1);
+      end = new Date(year, month+1, 0);
+      break;
+    default:
+      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      start = new Date(d.setDate(diff));
+      end = new Date(start.getTime());
+      end = new Date(end.setDate(start.getDate() + 6));
+      break;
+  }
+
+
+  start = formatted(start);
+  end = formatted(end);
+
+  $parent.find('input[name="start_date"]').val(start);
+  $parent.find('input[name="end_date"]').val(end);
+  $parent.find('button').click();
+
+  e.preventDefault();
+});
+
 widgets.cashboard_global_billable_time = function(data, $) {
   var GOLDEN_RATIO = 0.618033988749895;
   function group(obj, key, value) {

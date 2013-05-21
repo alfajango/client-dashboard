@@ -12,6 +12,12 @@ style(type='text/css')
   form.form-inline.settings
     fieldset
       .control-group
+        .btn-group
+          a.btn.cashboard-global-time-shortcut#cashboard-global-last-month('href'="#cashboard-global-last-month") Last Month
+          a.btn.cashboard-global-time-shortcut#cashboard-global-last-week('href'="#cashboard-global-last-week") Last Week
+          a.btn.cashboard-global-time-shortcut#cashboard-global-this-month('href'="#cashboard-global-this-month") This Month
+          a.btn.cashboard-global-time-shortcut#cashboard-global-this-week('href'="#cashboard-global-this-week") This Week
+      .control-group
         label.control-label &nbsp; Start date &nbsp;
         .controls
           input.datepicker.span2(type="text", name="start_date", value="#{service.defaultSettings()['start_date']()}")
