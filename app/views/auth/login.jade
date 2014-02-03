@@ -3,10 +3,10 @@ extends ../layouts/application
 block content
   .row
     .span4.offset4
-      form.well#login(action="/login", method="POST")
-        #login-header
+      form.well.small-form#login(action="/login", method="POST")
+        .form-header
           h1 Login to Tech Dashboard
-        #login-fields
+        .form-fields
           fieldset
             .control-group
               label.control-label Email

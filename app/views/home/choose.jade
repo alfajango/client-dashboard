@@ -1,0 +1,23 @@
+extends ../layouts/application
+
+block content
+  .row
+    .span4.offset4
+      form.well.small-form.choose(action="/", method="GET")
+        input(type="hidden", name="client_id", value=theClient.id)
+        .form-header
+          h1 Choose Project
+        .form-fields
+          fieldset
+            .control-group
+              label.control-label Projects
+              .controls
+                select(type="text", name="project_id")
+                  each project in projects
+                    option(value=project.id)
+                      = project.name
+
+          fieldset
+            .control-group
+              .controls
+                input.btn.btn-success(type="submit", value="View Status")
