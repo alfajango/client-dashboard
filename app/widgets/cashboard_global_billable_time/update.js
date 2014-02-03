@@ -172,8 +172,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
           formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate,
           dayInt = +(day);
 
-      // Break-even is ~$15k/mo, so 15000 / 30 days a month / number of weekdays in a week (5/7) = 700
-      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 700;
+      // Break-even is ~$4100/wk, so 4100 / number of weekdays in a week (5/7) = 820
+      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 820;
       if (cumulative) {
         var data = plotSeries[0]['data'];
         if (data.length) { breakEvenAmount += data[data.length-1][1]; }
