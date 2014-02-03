@@ -1,4 +1,6 @@
-var Client = mongoose.model('Client');
+var Client = mongoose.model('Client'),
+    User = mongoose.model('User'),
+    MongoStore = require('connect-mongodb');
 
 module.exports = function(app) {
   var ensureClient = function(req, res, next) {
@@ -85,17 +87,47 @@ module.exports = function(app) {
   // TODO: Namespace the return object per user,
   // so we don't get crossed messages!
   io.sockets.on('connection', function(socket) {
-    socket.on('service', function(data) {
-      Client.findById(data.client, function(err, client) {
-        if (client) {
-          var project = client.projects.id(data.project),
-              service = project.services.id(data.id);
+    // reference to my initialized sessionStore in app.js
+    var sessionStore = new MongoStore({db:mongoose.connection.db});
+    var sessionId    = socket.handshake.sessionID;
 
-          service.fetch( function(response) {
-            socket.emit('serviceResponse', response);
-          }, data.settings);
+    sessionStore.get(sessionId, function(err, session) {
+      if( ! err) {
+        if(session.passport.user) {
+          console.log('Socket user id', session.passport.user);
+          User.findById(session.passport.user, function(err, user) {
+            if (! err) {
+              socket.on('service', function(data) {
+                var clientQuery;
+                if (user.admin && data.client) {
+                  clientQuery = Client.findById(data.client);
+                } else if (user.admin) {
+                  socket.emit('error', {type: 'warn', msg: "Choose a client", location: '/admin'});
+                } else {
+                  clientQuery = Client.findById(user.client);
+                }
+                clientQuery && clientQuery.exec(function(err, client) {
+                  if (client) {
+                    var project = client.projects.id(data.project),
+                    service = project.services.id(data.id);
+
+                    service.fetch( function(response) {
+                      socket.emit('serviceResponse', response);
+                    }, data.settings);
+                  }
+                });
+              });
+            } else {
+              console.log("Couldn't find user", err);
+            }
+          });
+        } else {
+          console.log(data);
+          socket.emit('error', {type: 'warn', msg: "Please log back in", location: '/login'});
         }
-      });
+      } else {
+        console.log(err);
+      }
     });
   });
 

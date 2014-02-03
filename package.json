@@ -23,6 +23,8 @@
     "jake": "",
     "connect-mongodb": "",
     "socket.io": "",
-    "feedparser": ""
+    "feedparser": "",
+    "cookie": "",
+    "connect": ""
   }
 }

@@ -10,7 +10,7 @@ module.exports = function(app, options) {
   if (!options) { options = {}; }
 
   // Load configurations
-  var config_file = require('yaml-config')
+  var config_file = require('yaml-config');
   exports = module.exports = config = config_file.readConfig('./config.yaml')
 
   // Load environment-specific config
@@ -47,13 +47,15 @@ module.exports = function(app, options) {
     // close the mongodb connection when jake script is done.
     if (!options.skipSession) {
       app.use(express.session({
+        key: 'express.sid',
         secret: config.app_secret,
         maxAge: new Date(Date.now() + 3600000),
         store: new MongoStore(
           {db:mongoose.connection.db},
           function(err){
             if (err) { console.log(err); };
-          })
+          }
+        )
       }));
     }
     app.use(express.static(__dirname + '/public'));

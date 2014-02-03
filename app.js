@@ -5,7 +5,9 @@
 
 var express = require('express'),
   http = require('http'),
-  app = express();
+  app = express(),
+  cookie = require('cookie'),
+  connect = require('connect');
 
 require('./config')(app);
 
@@ -23,6 +25,20 @@ var server = app.listen(app.get('port'), function() {
 });
 
 io = require('socket.io').listen(server);
+
+io.set('authorization', function (handshakeData, accept) {
+  if (handshakeData.headers.cookie) {
+    handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+    handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], config.app_secret);
+
+    if (handshakeData.cookie['express.sid'] == handshakeData.sessionID) {
+      return accept('Cookie is invalid.', false);
+    }
+  } else {
+    return accept('No cookie transmitted.', false);
+  }
+  accept(null, true);
+});
 
 // Needed for Heroku, which does not yet support websockets,
 // must use long polling.

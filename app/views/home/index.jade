@@ -22,6 +22,17 @@ block head
     var socket = io.connect(location.protocol + '//' + location.host);
     var emitters = {};
 
+    socket.on('error', function (reason){
+      console.error('Unable to connect Socket.IO', reason);
+      if (reason.location) {
+        window.location = reason.location;
+      }
+    });
+
+    socket.on('connect', function (){
+      console.info('successfully established a working and authorized connection');
+    });
+
   each service in project.services
     script
       socket.on('serviceResponse', function(data) {
