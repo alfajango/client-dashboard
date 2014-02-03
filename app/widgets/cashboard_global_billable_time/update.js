@@ -1,3 +1,8 @@
+// Break-even is ~$4100/wk, so 4100 / number of weekdays in a week (5/7) = 820
+var breakEvenWeekday = 820,
+// Goal is ~$5100/wk, so 5100 / number of weekdays in a week (5/7) = 1020
+    goalWeekday = 1020;
+
 $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
   var $this = $(this),
       $parent = $this.closest('form'),
@@ -164,6 +169,21 @@ widgets.cashboard_global_billable_time = function(data, $) {
       },
     };
 
+    plotSeries[1] = {
+      color: "#bde3bd",
+      label: "[goal]: n/a",
+      stack: false,
+      data: [],
+      points: {
+        show: false
+      },
+      lines: {
+        show: true,
+        fill: true,
+        steps: !cumulative
+      },
+    };
+
     for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
       var day = new Date(d),
           dayDate = day.getDate(),
@@ -172,19 +192,23 @@ widgets.cashboard_global_billable_time = function(data, $) {
           formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate,
           dayInt = +(day);
 
-      // Break-even is ~$4100/wk, so 4100 / number of weekdays in a week (5/7) = 820
-      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : 820;
+      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : breakEvenWeekday;
+      var goalAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : goalWeekday;
       if (cumulative) {
         var data = plotSeries[0]['data'];
         if (data.length) { breakEvenAmount += data[data.length-1][1]; }
+
+        data = plotSeries[1]['data'];
+        if (data.length) { goalAmount += data[data.length-1][1]; }
       }
       plotSeries[0]['data'].push([dayInt, breakEvenAmount]);
+      plotSeries[1]['data'].push([dayInt, goalAmount]);
 
       var colors = generate_css_series_colors(keys);
       console.log(colors);
 
       keys.forEach(function(key) {
-        var keyIndex = keys.indexOf(key) + 1,
+        var keyIndex = keys.indexOf(key) + 2,
             value = obj[key][dayInt] || 0;
 
         if (plotSeries[keyIndex] === undefined) {
@@ -305,7 +329,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
           }
         }
 
-        if (i > 0) {
+        if (i > 1) {
           hoursTotal += y;
           y = '$' + y.toFixed(axes.yaxis.tickDecimals);
         } else {
@@ -405,7 +429,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
         endDateInt = +(endDate);
 
     var workDays = workingDaysBetweenDates(startDate, endDate),
-        totalBreakEven = workDays * 700;
+        totalBreakEven = workDays * breakEvenWeekday,
+        totalGoal = workDays * goalWeekday;
 
     $target.find('.total-hours').html(totalHours);
     $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
@@ -413,6 +438,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
     $target.find('.cashboard-billable-table tbody').html(rows);
 
     $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
+    $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
 
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate);
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.hours-by-day-by-project'), startDate, endDate);
