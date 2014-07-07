@@ -8,7 +8,7 @@ widgets.redmine_open_issues = function(data, $) {
       var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
       rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
       rows += '<td class="issue-number-column">' + issue.id + '</td>';
-      rows += '<td>' + issue.subject + '</td>';
+      rows += '<td class="redmine-subject-td"><div>' + issue.subject + '</div><div class="redmine-description"><hr />' + issue.description.replace(/(?:\r\n|\r|\n)/g, '<br />'); + '</div></td>';
       rows += '<td class="redmine-status-td"' + (issue.priority > 1 ? ' rel="tooltip" title="high priority"' : '') + '>';
       rows += issue.status;
       if (issue.priority > 1) {
@@ -30,4 +30,8 @@ widgets.redmine_open_issues = function(data, $) {
   $target.find('.redmine-table td').tooltip({placement: 'bottom'});
   $target.find('.redmine-title .badge').html(data.results.length);
   $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+
+  $(document).delegate('#widget-' + data.id + ' .redmine-subject-td', 'click', function() {
+    $(this).find('.redmine-description').slideToggle(250);
+  });
 };

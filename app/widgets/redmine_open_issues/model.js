@@ -1,4 +1,5 @@
-var http = require('http');
+var http = require('http'),
+    textile = require('textile-js');
 
 var statusOrder = {
   'Estimate Needed': 0,
@@ -66,7 +67,12 @@ exports.translate = function(data) {
   if (data.total_amount > data.limit) { console.log('WARNING: Total issues is greater than returned.'); }
 
   var issues = data.issues.map(function(x) {
-    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name] };
+    // Redmine description uses > for blockquote instead of standard textile bq. formatting.
+    var description = textile(x.description.replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>").replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;").replace(/^(<blockquote>)?>/gm, "$1"));
+    if (description == "") {
+      description = "<p><em>No description</em></p>";
+    }
+    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description };
   })
     .sort(function(a, b) {
       var firstOrder = statusOrder[a.status] - statusOrder[b.status],

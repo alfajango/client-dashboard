@@ -25,6 +25,7 @@
     "socket.io": "",
     "feedparser": "",
     "cookie": "",
-    "connect": ""
+    "connect": "",
+    "textile-js": ""
   }
 }

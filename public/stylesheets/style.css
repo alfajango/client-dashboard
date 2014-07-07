@@ -160,6 +160,12 @@ i.refresh-ok {
 .redmine-ticket-td {
   width: 50px;
 }
+.redmine-subject-td:hover {
+  cursor: pointer;
+}
+.redmine-description {
+  display: none;
+}
 
 .redmine-status-td {
   width: 150px;
