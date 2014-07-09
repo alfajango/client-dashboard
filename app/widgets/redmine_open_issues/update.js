@@ -1,3 +1,4 @@
+var redmineDescriptionBound = false;
 widgets.redmine_open_issues = function(data, $) {
   var $target = $('#widget-' + data.id),
       rows = "",
@@ -31,7 +32,10 @@ widgets.redmine_open_issues = function(data, $) {
   $target.find('.redmine-title .badge').html(data.results.length);
   $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
 
-  $(document).delegate('#widget-' + data.id + ' .redmine-subject-td', 'click', function() {
-    $(this).find('.redmine-description').slideToggle(250);
-  });
+  if (!redmineDescriptionBound) {
+    $(document).delegate('#widget-' + data.id + ' .redmine-subject-td', 'click', function() {
+      $(this).find('.redmine-description').slideToggle(250);
+    });
+    redmineDescriptionBound = false;
+  }
 };
