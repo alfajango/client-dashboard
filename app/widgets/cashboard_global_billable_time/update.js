@@ -1,7 +1,7 @@
-// Break-even is ~$4100/wk, so 4100 / number of weekdays in a week (5/7) = 820
-var breakEvenWeekday = 820,
-// Goal is ~$5100/wk, so 5100 / number of weekdays in a week (5/7) = 1020
-    goalWeekday = 1020;
+// Break-even is ~$7400/wk, so 4100 / number of weekdays in a week (5/7) = 1480
+var breakEvenWeekday = 1480,
+// Goal is ~$8900/wk, so 8900 / number of weekdays in a week (5/7) = 1780
+    goalWeekday = 1780;
 
 $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
   var $this = $(this),
