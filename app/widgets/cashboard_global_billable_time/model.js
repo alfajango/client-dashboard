@@ -39,13 +39,13 @@ exports.defaultSettings = {
 exports.fetch = function(service, callback, settings) {
   var cashboard = this,
       out = {id: service.id, name: service.name},
-      jsonData = {};
+      jsonData = {},
+      startDate = settings && settings.start_date ? settings.start_date : cashboard.defaultSettings.start_date(),
+      endDate = settings && settings.end_date ? settings.end_date : cashboard.defaultSettings.end_date();
 
   utils.when(
     function(done) {
-      var startDate = settings && settings.start_date ? settings.start_date : cashboard.defaultSettings.start_date(),
-          endDate = settings && settings.end_date ? settings.end_date : cashboard.defaultSettings.end_date(),
-          path = '/time_entries.json?billable=true&start_date=' + startDate + '&end_date=' + endDate;
+      var path = '/time_entries.json?billable=true&start_date=' + startDate + '&end_date=' + endDate;
       cashboard.fetchAPI('timeEntries', path, service, jsonData, done);
     },
     function(done) {
@@ -63,6 +63,26 @@ exports.fetch = function(service, callback, settings) {
     function(done) {
       var path = '/project_assignments.json';
       cashboard.fetchAPI('projectAssignments', path, service, jsonData, done);
+    },
+    function(done) {
+      var path = '/client_contacts.json';
+      cashboard.fetchAPI('clientContacts', path, service, jsonData, done);
+    },
+    function(done) {
+      var path = '/client_companies.json';
+      cashboard.fetchAPI('clientCompanies', path, service, jsonData, done);
+    },
+    function(done) {
+      var path = '/invoices.json?start_date_invoice=' + startDate + '&end_date_invoice=' + endDate;
+      cashboard.fetchAPI('invoices', path, service, jsonData, done);
+    },
+    function(done) {
+      var path = '/invoices.json?has_been_sent=true&has_been_paid=false&end_date_due=' + startDate;
+      cashboard.fetchAPI('unpaidInvoices', path, service, jsonData, done);
+    },
+    function(done) {
+      var path = '/payments.json?start_date=' + startDate + '&end_date=' + endDate;
+      cashboard.fetchAPI('payments', path, service, jsonData, done);
     }
   ).then(function() {
     out.results = cashboard.translate(jsonData);
@@ -108,6 +128,8 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
+  var cashboard = this,
+      results = {};
   if (data.timeEntries) {
     data.timeEntries.forEach(function(entry) {
       var lineItem = data.lineItems.filter(function(li) {
@@ -138,8 +160,40 @@ exports.translate = function(data) {
         entry.billable_rate = projectAssignment ? projectAssignment.bill_rate : 0;
       }
     });
-    return data.timeEntries;
+    results.timeEntries = data.timeEntries;
   }
+  if (data.invoices) {
+    data.invoices.forEach(function(invoice) {
+      invoice.client_name = cashboard.getClientName(invoice.client_type, invoice.client_id, data);
+    });
+
+    results.invoices = data.invoices;
+  }
+  if (data.payments) {
+    data.payments.forEach(function(payment) {
+      payment.client_name = cashboard.getClientName(payment.client_type, payment.client_id, data);
+    });
+    results.payments = data.payments;
+  }
+  return results;
+};
+
+exports.getClientName = function(client_type, client_id, data) {
+  var name,
+      contactType = client_type === "Person" ? "clientContacts" : "clientCompanies",
+      client = data[contactType].filter(function(c) {
+        return c.id == client_id;
+      })[0];
+
+  if (client) {
+    if (client_type === "Person" && client) {
+      name = client.first_name + " " + client.last_name;
+    } else if (client) {
+      name = client.name;
+    }
+  }
+
+  return name
 };
 
 // Write fetched results to db

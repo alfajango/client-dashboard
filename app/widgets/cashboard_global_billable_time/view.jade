@@ -94,13 +94,13 @@ form.form-inline.settings
   .span6
     ul.nav.nav-tabs
       li
-        a(href="#member-billable-content", 'data-toggle'="tab") Member (daily)
+        a(href="#member-billable-content", 'data-toggle'="tab") Member
       li.active
-        a(href="#cumulative-member-billable-content", 'data-toggle'="tab") Member (cumulative)
+        a(href="#cumulative-member-billable-content", 'data-toggle'="tab") Cumulative
       li
-        a(href="#project-billable-content", 'data-toggle'="tab") Project (d)
+        a(href="#project-billable-content", 'data-toggle'="tab") Project
       li
-        a(href="#cumulative-project-billable-content", 'data-toggle'="tab") Project (c)
+        a(href="#cumulative-project-billable-content", 'data-toggle'="tab") Cumulative
 
     div.tab-content
       div.tab-pane#member-billable-content
@@ -126,3 +126,62 @@ form.form-inline.settings
           .loading.large
             | Loading 
             img(src="/images/ajax-loader.gif")
+
+h2 Invoices &amp; Payments
+
+.row-fluid
+  .span12
+    a.accordian-toggle('data-toggle'="collapse", 'data-target'="#invoices-#{service.id}", 'href'="#invoices-#{service.id}")
+      | Invoice List
+    div.cashboard-billable-table-container.collapse('id'="invoices-#{service.id}")
+      table.table.table-bordered.cashboard-invoices-table
+        thead
+          tr
+            th Invoice Date
+            th Invoice Number
+            th Client
+            th Amount
+            th Balance
+            th Due Date
+        tbody
+          tr
+            td.data-row.right-align(colspan=6)
+              .loading.large
+                | Loading 
+                img(src="/images/ajax-loader.gif")
+.row-fluid
+  .span12
+    a.accordian-toggle('data-toggle'="collapse", 'data-target'="#payments-#{service.id}", 'href'="#payments-#{service.id}")
+      | Payments List
+    div.cashboard-billable-table-container.collapse('id'="payments-#{service.id}")
+      table.table.table-bordered.cashboard-payments-table
+        thead
+          tr
+            th Payment Date
+            th ID
+            th Client
+            th Amount
+            th Notes
+        tbody
+          tr
+            td.data-row.right-align(colspan=5)
+              .loading.large
+                | Loading 
+                img(src="/images/ajax-loader.gif")
+
+.row-fluid
+  .span6
+    h3 Summary
+    table.table.table-bordered.cashboard-invoice-summary-table
+      tr
+        th Invoiced
+        td.invoiced.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Payments Received
+        td.payments.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")

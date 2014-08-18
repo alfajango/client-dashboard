@@ -356,62 +356,132 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
   var $target = $('#widget-' + data.id),
       rows = "";
-  if (data.results && data.results.length > 0) {
-    var hoursByRate = {},
-        hoursByProject = {},
-        hoursByMember = {},
-        hoursByDayByMember = {},
-        hoursByDayByProject = {},
-        hoursByMemberByDay = {},
-        hoursByProjectByDay = {},
-        totalHours = 0,
-        totalBillable = 0;
-    $.each(data.results, function(i, entry) {
-      var createdAt = new Date(entry.created_on),
-          hours = entry.minutes / 60.0,
-          rate = parseFloat(entry.billable_rate),
-          pay_rate = parseFloat(entry.pay_rate),
-          billable = hours * (rate - pay_rate),
-          currDate = createdAt.getDate(),
-          currMonth = createdAt.getMonth(), //Months are zero based
-          currYear = createdAt.getFullYear()
-          created = new Date(currYear, currMonth, currDate),
-          createdInt = +(created), // Make sure both dates are compared as integers
-          formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate;
-      rows += '<tr' + (rate <= 0 ? ' class="zero-rate"' : '') + '>';
-      rows += '<td>' + formattedDate + '</td>';
-      rows += '<td>' + entry.person_name + '</td>';
-      rows += '<td>' + entry.project_name + '</td>';
-      rows += '<td>' + hours + '</td>';
-      rows += '<td>$' + rate.formatMoney(2, '.', ',') + '</td>';
-      rows += '<td>($' + pay_rate.formatMoney(2, '.', ',') + ')</td>';
-      rows += '<td>$' + billable.formatMoney(2, '.', ',') + '</td>';
-      rows += '<td>' + entry.description + '</td>';
-      rows += '</tr>';
+  if (data.results) {
+    if (data.results.timeEntries && data.results.timeEntries.length > 0) {
+      var hoursByRate = {},
+          hoursByProject = {},
+          hoursByMember = {},
+          hoursByDayByMember = {},
+          hoursByDayByProject = {},
+          hoursByMemberByDay = {},
+          hoursByProjectByDay = {},
+          totalHours = 0,
+          totalBillable = 0,
+          totalInvoiced = 0,
+          totalPayments = 0;
+      $.each(data.results.timeEntries, function(i, entry) {
+        var createdAt = new Date(entry.created_on),
+            hours = entry.minutes / 60.0,
+            rate = parseFloat(entry.billable_rate),
+            pay_rate = parseFloat(entry.pay_rate),
+            billable = hours * (rate - pay_rate),
+            currDate = createdAt.getDate(),
+            currMonth = createdAt.getMonth(), //Months are zero based
+            currYear = createdAt.getFullYear()
+            created = new Date(currYear, currMonth, currDate),
+            createdInt = +(created), // Make sure both dates are compared as integers
+            formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate;
+        rows += '<tr' + (rate <= 0 ? ' class="zero-rate"' : '') + '>';
+        rows += '<td>' + formattedDate + '</td>';
+        rows += '<td>' + entry.person_name + '</td>';
+        rows += '<td>' + entry.project_name + '</td>';
+        rows += '<td>' + hours + '</td>';
+        rows += '<td>$' + rate.formatMoney(2, '.', ',') + '</td>';
+        rows += '<td>($' + pay_rate.formatMoney(2, '.', ',') + ')</td>';
+        rows += '<td>$' + billable.formatMoney(2, '.', ',') + '</td>';
+        rows += '<td>' + entry.description + '</td>';
+        rows += '</tr>';
 
-      totalHours += hours;
-      totalBillable += billable;
+        totalHours += hours;
+        totalBillable += billable;
 
-      group(hoursByRate, rate, hours);
-      group(hoursByProject, entry.project_name, hours);
-      group(hoursByMember, entry.person_name, hours);
+        group(hoursByRate, rate, hours);
+        group(hoursByProject, entry.project_name, hours);
+        group(hoursByMember, entry.person_name, hours);
 
-      var personHours = {};
-      personHours[entry.person_name] = hours;
-      group(hoursByDayByMember, formattedDate, personHours)
+        var personHours = {};
+        personHours[entry.person_name] = hours;
+        group(hoursByDayByMember, formattedDate, personHours)
 
-      var projectHours = {};
-      projectHours[entry.project_name] = hours;
-      group(hoursByDayByProject, formattedDate, projectHours)
+        var projectHours = {};
+        projectHours[entry.project_name] = hours;
+        group(hoursByDayByProject, formattedDate, projectHours)
 
-      var dayHours = {};
-      dayHours[createdInt] = billable;
-      group(hoursByMemberByDay, entry.person_name, dayHours)
+        var dayHours = {};
+        dayHours[createdInt] = billable;
+        group(hoursByMemberByDay, entry.person_name, dayHours)
 
-      var dayHours = {};
-      dayHours[createdInt] = billable;
-      group(hoursByProjectByDay, entry.project_name, dayHours)
-    });
+        var dayHours = {};
+        dayHours[createdInt] = billable;
+        group(hoursByProjectByDay, entry.project_name, dayHours)
+      });
+    } else {
+      var msg = '<div class="alert alert-error" title="No results">No results</div>';
+      $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=8>' + msg + '</td></tr>');
+      $target.find('.cashboard-billable-summary-table td').html(msg);
+      $target.find('.cashboard-billable-table .loading.large, .cashboard-billable-summary-table .loading.large').hide();
+    }
+
+    if (data.results.invoices && data.results.invoices.length > 0) {
+      var invoiceRows = "";
+      $.each(data.results.invoices, function(i, invoice) {
+        var invoicedAt = new Date(invoice.invoice_date),
+            invoicedDate =  invoicedAt.getDate(),
+            invoicedMonth = invoicedAt.getMonth(), //Months are zero based
+            invoicedYear =  invoicedAt.getFullYear()
+            formattedInvoicedDate = invoicedYear + "-" + (invoicedMonth + 1) + "-" + invoicedDate,
+            dueAt = new Date(invoice.due_date),
+            dueDate = dueAt.getDate(),
+            dueMonth = dueAt.getMonth(), //Months are zero based
+            dueYear = dueAt.getFullYear()
+            formattedDueDate = dueYear + "-" + (dueMonth + 1) + "-" + dueDate,
+            total = parseFloat(invoice.total),
+            balance = parseFloat(invoice.balance);
+
+        invoiceRows += '<tr>'
+        invoiceRows += '<td>' + formattedInvoicedDate + '</td>';
+        invoiceRows += '<td>' + invoice.assigned_id + '</td>';
+        invoiceRows += '<td>' + invoice.client_name + '</td>';
+        invoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
+        invoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';
+        invoiceRows += '<td>' + formattedDueDate + '</td>';
+        invoiceRows += '</tr>';
+
+        totalInvoiced += total;
+      });
+    } else {
+      var msg = '<div class="alert alert-error" title="No results">No results</div>';
+      $target.find('.cashboard-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+      $target.find('.cashboard-invoice-summary-table td.invoiced').html(msg);
+      $target.find('.cashboard-invoices-table .loading.large, .cashboard-invoice-summary-table .invoices .loading.large').hide();
+    }
+
+    if (data.results.invoices && data.results.invoices.length > 0) {
+      var paymentRows = "";
+      $.each(data.results.payments, function(i, payment) {
+        var createdAt = new Date(payment.created_on),
+            currDate = createdAt.getDate(),
+            currMonth = createdAt.getMonth(), //Months are zero based
+            currYear = createdAt.getFullYear()
+            formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate,
+            amount = parseFloat(payment.amount);
+
+        paymentRows += '<tr>'
+        paymentRows += '<td>' + formattedDate + '</td>';
+        paymentRows += '<td>' + payment.assigned_id + '</td>';
+        paymentRows += '<td>' + payment.client_name + '</td>';
+        paymentRows += '<td>$' + amount.formatMoney(2, '.', ',') + '</td>';
+        paymentRows += '<td>' + payment.notes + '</td>';
+        paymentRows += '</tr>';
+
+        totalPayments += amount;
+      });
+    } else {
+      var msg = '<div class="alert alert-error" title="No results">No results</div>';
+      $target.find('.cashboard-payments-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+      $target.find('.cashboard-invoice-summary-table td.payments').html(msg);
+      $target.find('.cashboard-payments-table .loading.large, .cashboard-invoice-summary-table .payments .loading.large').hide();
+    }
 
     console.log(hoursByRate);
     console.log(hoursByProject);
@@ -446,15 +516,20 @@ widgets.cashboard_global_billable_time = function(data, $) {
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.cumulative-hours-by-day-by-member'), startDate, endDate, true);
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.cumulative-hours-by-day-by-project'), startDate, endDate, true);
 
+
+    $target.find('.invoiced').html('$' + totalInvoiced.formatMoney(2, '.', ','));
+    $target.find('.payments').html('$' + totalPayments.formatMoney(2, '.', ','));
+    $target.find('.cashboard-invoices-table tbody').html(invoiceRows);
+    $target.find('.cashboard-payments-table tbody').html(paymentRows);
+
   } else if (data.error) {
     var msg = '<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>';
     $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=8></td>' + msg + '</tr>');
     $target.find('.cashboard-billable-summary-table td').html(msg);
-    $target.find('.loading.large').hide();
-  } else {
-    var msg = '<div class="alert alert-error" title="No results">No results</div>';
-    $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=8>' + msg + '</td></tr>');
-    $target.find('.cashboard-billable-summary-table td').html(msg);
+    $target.find('.cashboard-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+    $target.find('.cashboard-invoice-summary-table td.invoiced').html(msg);
+    $target.find('.cashboard-payments-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+    $target.find('.cashboard-invoice-summary-table td.payments').html(msg);
     $target.find('.loading.large').hide();
   }
   var $button = $target.find('.refresh-service[data-service="cashboard_global_billable_time"]');
