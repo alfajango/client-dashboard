@@ -13,13 +13,15 @@ widgets.redmine_open_issues = function(data, $) {
       rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
       rows += '<td class="issue-number-column">' + issue.id + '</td>';
       rows += '<td class="redmine-subject-td"><div>' + issue.subject + '</div><div class="redmine-description"><hr />' + issue.description.replace(/(?:\r\n|\r|\n)/g, '<br />'); + '</div></td>';
-      rows += '<td class="redmine-status-td"' + (issue.priority > 1 ? ' rel="tooltip" title="high priority"' : '') + '>';
+      rows += '<td class="redmine-status-td">';
       rows += issue.status;
-      if (issue.priority > 1) {
-        rows += ' <i class="icon-star-empty"></i>';
-      }
       if (issue.progress > 0) {
         rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
+      }
+      rows += '</td>';
+      rows += '<td class="redmine-priority-td"' + (issue.priority > 1 ? ' rel="tooltip" title="high priority"' : '') + '>';
+      if (issue.priority > 1) {
+        rows += ' <i class="icon-star-empty"></i>' + issue.priority;
       }
       rows += '</td>';
       rows += '</tr>';

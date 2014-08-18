@@ -9,9 +9,11 @@ var statusOrder = {
   'Blocked': 4,
   'In Progress': 5,
   'Feedback': 6,
-  'Pushed to Staging': 7,
-  'Pushed to Production': 8,
-  'Resolved': 9
+  'Pull Request': 7,
+  'Pushed to Staging': 8,
+  'Pushed to Production': 9,
+  'Done': 10,
+  'Resolved': 11
 };
 
 var priorityOrder = {
@@ -75,8 +77,8 @@ exports.translate = function(data) {
     return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description };
   })
     .sort(function(a, b) {
-      var firstOrder = statusOrder[a.status] - statusOrder[b.status],
-          secondOrder = b.priority - a.priority;
+      var firstOrder = b.priority - a.priority,
+          secondOrder = statusOrder[a.status] - statusOrder[b.status];
       if (firstOrder === 0) {
         if (secondOrder === 0) {
           return a.id - b.id;
