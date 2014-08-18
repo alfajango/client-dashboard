@@ -8,30 +8,30 @@ style(type='text/css')
   .form-inline .control-label {
     display: inline-block;
   }
-.pull-right
-  form.form-inline.settings
-    fieldset
-      .control-group
-        .btn-group
-          a.btn.cashboard-global-time-shortcut#cashboard-global-last-month('href'="#cashboard-global-last-month") Last Month
-          a.btn.cashboard-global-time-shortcut#cashboard-global-last-week('href'="#cashboard-global-last-week") Last Week
-          a.btn.cashboard-global-time-shortcut#cashboard-global-this-month('href'="#cashboard-global-this-month") This Month
-          a.btn.cashboard-global-time-shortcut#cashboard-global-this-week('href'="#cashboard-global-this-week") This Week
-      .control-group
-        label.control-label &nbsp; Start date &nbsp;
-        .controls
-          input.datepicker.span2(type="text", name="start_date", value="#{service.defaultSettings()['start_date']()}")
-      .control-group
-        label.control-label &nbsp; End date &nbsp;
-        .controls
-          .input-append
-            i.icon-ok.refresh-ok.pull-right
-            &nbsp;
-            input.datepicker.span2(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
-            button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
-              i.icon-filter
 
 h2 Billable Time
+
+form.form-inline.settings
+  fieldset
+    .control-group
+      .btn-group
+        a.btn.cashboard-global-time-shortcut#cashboard-global-last-month('href'="#cashboard-global-last-month") Last Month
+        a.btn.cashboard-global-time-shortcut#cashboard-global-last-week('href'="#cashboard-global-last-week") Last Week
+        a.btn.cashboard-global-time-shortcut#cashboard-global-this-month('href'="#cashboard-global-this-month") This Month
+        a.btn.cashboard-global-time-shortcut#cashboard-global-this-week('href'="#cashboard-global-this-week") This Week
+    .control-group
+      label.control-label &nbsp; Start date &nbsp;
+      .controls
+        input.datepicker.span2(type="text", name="start_date", value="#{service.defaultSettings()['start_date']()}")
+    .control-group
+      label.control-label &nbsp; End date &nbsp;
+      .controls
+        .input-append
+          i.icon-ok.refresh-ok.pull-right
+          &nbsp;
+          input.datepicker.span2(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
+          button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
+            i.icon-filter
 
 .row-fluid
   .span12
@@ -91,32 +91,38 @@ h2 Billable Time
             | Loading 
             img(src="/images/ajax-loader-small.gif")
 
-.row-fluid
   .span6
-    h3 Member Billable
-    div.hours-by-day-by-member.cashboard-global-graph
-      .loading.large
-        | Loading 
-        img(src="/images/ajax-loader.gif")
+    ul.nav.nav-tabs
+      li
+        a(href="#member-billable-content", 'data-toggle'="tab") Member (daily)
+      li.active
+        a(href="#cumulative-member-billable-content", 'data-toggle'="tab") Member (cumulative)
+      li
+        a(href="#project-billable-content", 'data-toggle'="tab") Project (d)
+      li
+        a(href="#cumulative-project-billable-content", 'data-toggle'="tab") Project (c)
 
-  .span6
-    h3 Cumulative Member Billable
-    div.cumulative-hours-by-day-by-member.cashboard-global-graph
-      .loading.large
-        | Loading 
-        img(src="/images/ajax-loader.gif")
+    div.tab-content
+      div.tab-pane#member-billable-content
+        div.hours-by-day-by-member.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
 
-.row-fluid
-  .span6
-    h3 Project Billable
-    div.hours-by-day-by-project.cashboard-global-graph
-      .loading.large
-        | Loading 
-        img(src="/images/ajax-loader.gif")
+      div.tab-pane.active#cumulative-member-billable-content
+        div.cumulative-hours-by-day-by-member.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
 
-  .span6
-    h3 Cumulative Project Billable
-    div.cumulative-hours-by-day-by-project.cashboard-global-graph
-      .loading.large
-        | Loading 
-        img(src="/images/ajax-loader.gif")
+      div.tab-pane#project-billable-content
+        div.hours-by-day-by-project.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
+
+      div.tab-pane#cumulative-project-billable-content
+        div.cumulative-hours-by-day-by-project.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
