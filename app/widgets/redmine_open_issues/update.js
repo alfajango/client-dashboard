@@ -21,8 +21,9 @@ widgets.redmine_open_issues = function(data, $) {
       rows += '</td>';
       rows += '<td class="redmine-priority-td"' + (issue.priority > 1 ? ' rel="tooltip" title="high priority"' : '') + '>';
       if (issue.priority > 1) {
-        rows += ' <i class="icon-star-empty"></i>' + issue.priority;
+        rows += ' <i class="icon-star-empty"></i>';
       }
+      rows += issue.priority
       rows += '</td>';
       rows += '</tr>';
     });
