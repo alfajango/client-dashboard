@@ -367,6 +367,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
           hoursByProjectByDay = {},
           totalHours = 0,
           totalBillable = 0,
+          totalGrossBillable = 0,
           totalInvoiced = 0,
           totalDueInvoices = 0,
           totalPayments = 0;
@@ -376,6 +377,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
             rate = parseFloat(entry.billable_rate),
             pay_rate = parseFloat(entry.pay_rate),
             billable = hours * (rate - pay_rate),
+            grossBillable = hours * rate,
             currDate = createdAt.getDate(),
             currMonth = createdAt.getMonth(), //Months are zero based
             currYear = createdAt.getFullYear()
@@ -395,6 +397,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         totalHours += hours;
         totalBillable += billable;
+        totalGrossBillable += grossBillable;
 
         group(hoursByRate, rate, hours);
         group(hoursByProject, entry.project_name, hours);
@@ -539,7 +542,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
     $target.find('.total-hours').html(totalHours);
     $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
-    $target.find('.average-hourly-rate').html('$' + (totalBillable / totalHours).formatMoney(2, '.', ','));
+    $target.find('.average-hourly-rate').html('$' + (totalGrossBillable / totalHours).formatMoney(2, '.', ','));
     $target.find('.cashboard-billable-table tbody').html(rows);
 
     $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
