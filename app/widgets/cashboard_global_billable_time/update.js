@@ -444,7 +444,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         invoiceRows += '<tr>'
         invoiceRows += '<td>' + formattedInvoicedDate + '</td>';
-        invoiceRows += '<td>' + invoice.assigned_id + '</td>';
+        invoiceRows += '<td><a target="_blank" href="' + invoice.link + '">' + invoice.assigned_id + '</a></td>';
         invoiceRows += '<td>' + invoice.client_name + '</td>';
         invoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
         invoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';
@@ -478,7 +478,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         dueInvoiceRows += '<tr>'
         dueInvoiceRows += '<td>' + formattedInvoicedDate + '</td>';
-        dueInvoiceRows += '<td>' + invoice.assigned_id + '</td>';
+        dueInvoiceRows += '<td><a target="_blank" href="' + invoice.link + '">' + invoice.assigned_id + '</a></td>';
         dueInvoiceRows += '<td>' + invoice.client_name + '</td>';
         dueInvoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
         dueInvoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';
@@ -506,7 +506,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         paymentRows += '<tr>'
         paymentRows += '<td>' + formattedDate + '</td>';
-        paymentRows += '<td>' + payment.assigned_id + '</td>';
+        paymentRows += '<td><a target="_blank" href="' + payment.link + '">' + payment.assigned_id + '</a></td>';
         paymentRows += '<td>' + payment.client_name + '</td>';
         paymentRows += '<td>$' + amount.formatMoney(2, '.', ',') + '</td>';
         paymentRows += '<td>' + payment.notes + '</td>';

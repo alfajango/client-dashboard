@@ -17,7 +17,7 @@ widgets.cashboard_global_receivable = function(data, $) {
           var uninvoicedTime = parseFloat(project.uninvoiced_item_cost),
               uninvoicedExpense = parseFloat(project.uninvoiced_expense_cost);
           projectRows += '<tr>';
-          projectRows += '<td>' + project.name + '</td>';
+          projectRows += '<td><a target="_blank" href="' + project.link + '">' + project.name + '</a></td>';
           projectRows += '<td>' + uninvoicedTime.formatMoney(2, '.', ',') + '</td>';
           projectRows += '<td>' + uninvoicedExpense.formatMoney(2, '.', ',') + '</td>';
           projectRows += '</tr>';
@@ -54,7 +54,7 @@ widgets.cashboard_global_receivable = function(data, $) {
 
           invoiceRows += '<tr' + (dueAt < now ? ' class="zero-rate"' : '') + '>';
           invoiceRows += '<td>' + formattedInvoicedDate + '</td>';
-          invoiceRows += '<td>' + invoice.assigned_id + '</td>';
+          invoiceRows += '<td><a target="_blank" href="' + invoice.link + '">' + invoice.assigned_id + '</a></td>';
           invoiceRows += '<td>' + invoice.client_name + '</td>';
           invoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
           invoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';

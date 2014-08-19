@@ -85,7 +85,7 @@ exports.fetch = function(service, callback, settings) {
       cashboard.fetchAPI('payments', path, service, jsonData, done);
     }
   ).then(function() {
-    out.results = cashboard.translate(jsonData);
+    out.results = cashboard.translate(jsonData, service);
     out.error = jsonData.error;
     console.log("RETURNING RESPONSE");
     callback(out);
@@ -127,7 +127,7 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
 };
 
 // Translate fetched response to db store format
-exports.translate = function(data) {
+exports.translate = function(data, service) {
   var cashboard = this,
       results = {};
   if (data.timeEntries) {
@@ -165,6 +165,7 @@ exports.translate = function(data) {
   if (data.invoices) {
     data.invoices.forEach(function(invoice) {
       invoice.client_name = cashboard.getClientName(invoice.client_type, invoice.client_id, data);
+      invoice.link = 'https://' + service.user + '.cashboardapp.com/provider/invoices/show/' + invoice.assigned_id;
     });
 
     results.invoices = data.invoices;
@@ -172,6 +173,7 @@ exports.translate = function(data) {
   if (data.dueInvoices) {
     data.dueInvoices.forEach(function(invoice) {
       invoice.client_name = cashboard.getClientName(invoice.client_type, invoice.client_id, data);
+      invoice.link = 'https://' + service.user + '.cashboardapp.com/provider/invoices/show/' + invoice.assigned_id;
     });
 
     results.dueInvoices = data.dueInvoices;
@@ -179,6 +181,7 @@ exports.translate = function(data) {
   if (data.payments) {
     data.payments.forEach(function(payment) {
       payment.client_name = cashboard.getClientName(payment.client_type, payment.client_id, data);
+      payment.link = 'https://' + service.user + '.cashboardapp.com/provider/payments/show/' + payment.assigned_id;
     });
     results.payments = data.payments;
   }
