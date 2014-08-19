@@ -132,9 +132,30 @@ h2 Invoices &amp; Payments
 .row-fluid
   .span12
     a.accordian-toggle('data-toggle'="collapse", 'data-target'="#invoices-#{service.id}", 'href'="#invoices-#{service.id}")
-      | Invoice List
+      | Invoices List
     div.cashboard-billable-table-container.collapse('id'="invoices-#{service.id}")
       table.table.table-bordered.cashboard-invoices-table
+        thead
+          tr
+            th Invoice Date
+            th Invoice Number
+            th Client
+            th Amount
+            th Balance
+            th Due Date
+        tbody
+          tr
+            td.data-row.right-align(colspan=6)
+              .loading.large
+                | Loading 
+                img(src="/images/ajax-loader.gif")
+
+.row-fluid
+  .span12
+    a.accordian-toggle('data-toggle'="collapse", 'data-target'="#due-invoices-#{service.id}", 'href'="#due-invoices-#{service.id}")
+      | Due Invoices List
+    div.cashboard-billable-table-container.collapse('id'="due-invoices-#{service.id}")
+      table.table.table-bordered.cashboard-due-invoices-table
         thead
           tr
             th Invoice Date
@@ -176,6 +197,12 @@ h2 Invoices &amp; Payments
       tr
         th Invoiced
         td.invoiced.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Invoices Due
+        td.due-invoices.right-align
           .loading
             | Loading 
             img(src="/images/ajax-loader-small.gif")

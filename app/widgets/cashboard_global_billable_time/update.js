@@ -368,6 +368,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
           totalHours = 0,
           totalBillable = 0,
           totalInvoiced = 0,
+          totalDueInvoices = 0,
           totalPayments = 0;
       $.each(data.results.timeEntries, function(i, entry) {
         var createdAt = new Date(entry.created_on),
@@ -456,7 +457,41 @@ widgets.cashboard_global_billable_time = function(data, $) {
       $target.find('.cashboard-invoices-table .loading.large, .cashboard-invoice-summary-table .invoices .loading.large').hide();
     }
 
-    if (data.results.invoices && data.results.invoices.length > 0) {
+    if (data.results.dueInvoices && data.results.dueInvoices.length > 0) {
+      var dueInvoiceRows = "";
+      $.each(data.results.dueInvoices, function(i, invoice) {
+        var invoicedAt = new Date(invoice.invoice_date),
+            invoicedDate =  invoicedAt.getDate(),
+            invoicedMonth = invoicedAt.getMonth(), //Months are zero based
+            invoicedYear =  invoicedAt.getFullYear()
+            formattedInvoicedDate = invoicedYear + "-" + (invoicedMonth + 1) + "-" + invoicedDate,
+            dueAt = new Date(invoice.due_date),
+            dueDate = dueAt.getDate(),
+            dueMonth = dueAt.getMonth(), //Months are zero based
+            dueYear = dueAt.getFullYear()
+            formattedDueDate = dueYear + "-" + (dueMonth + 1) + "-" + dueDate,
+            total = parseFloat(invoice.total),
+            balance = parseFloat(invoice.balance);
+
+        dueInvoiceRows += '<tr>'
+        dueInvoiceRows += '<td>' + formattedInvoicedDate + '</td>';
+        dueInvoiceRows += '<td>' + invoice.assigned_id + '</td>';
+        dueInvoiceRows += '<td>' + invoice.client_name + '</td>';
+        dueInvoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
+        dueInvoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';
+        dueInvoiceRows += '<td>' + formattedDueDate + '</td>';
+        dueInvoiceRows += '</tr>';
+
+        totalDueInvoices += total;
+      });
+    } else {
+      var msg = '<div class="alert alert-error" title="No results">No results</div>';
+      $target.find('.cashboard-due-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+      $target.find('.cashboard-invoice-summary-table td.due-invoices').html(msg);
+      $target.find('.cashboard-due-invoices-table .loading.large, .cashboard-invoice-summary-table .due-invoices .loading.large').hide();
+    }
+
+    if (data.results.payments && data.results.payments.length > 0) {
       var paymentRows = "";
       $.each(data.results.payments, function(i, payment) {
         var createdAt = new Date(payment.created_on),
@@ -518,8 +553,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
 
     $target.find('.invoiced').html('$' + totalInvoiced.formatMoney(2, '.', ','));
+    $target.find('.due-invoices').html('$' + totalDueInvoices.formatMoney(2, '.', ','));
     $target.find('.payments').html('$' + totalPayments.formatMoney(2, '.', ','));
     $target.find('.cashboard-invoices-table tbody').html(invoiceRows);
+    $target.find('.cashboard-due-invoices-table tbody').html(dueInvoiceRows);
     $target.find('.cashboard-payments-table tbody').html(paymentRows);
 
   } else if (data.error) {
@@ -530,6 +567,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
     $target.find('.cashboard-invoice-summary-table td.invoiced').html(msg);
     $target.find('.cashboard-payments-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
     $target.find('.cashboard-invoice-summary-table td.payments').html(msg);
+    $target.find('.cashboard-due-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+    $target.find('.cashboard-invoice-summary-table td.due-invoices').html(msg);
     $target.find('.loading.large').hide();
   }
   var $button = $target.find('.refresh-service[data-service="cashboard_global_billable_time"]');

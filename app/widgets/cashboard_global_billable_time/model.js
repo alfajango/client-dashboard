@@ -77,8 +77,8 @@ exports.fetch = function(service, callback, settings) {
       cashboard.fetchAPI('invoices', path, service, jsonData, done);
     },
     function(done) {
-      var path = '/invoices.json?has_been_sent=true&has_been_paid=false&end_date_due=' + startDate;
-      cashboard.fetchAPI('unpaidInvoices', path, service, jsonData, done);
+      var path = '/invoices.json?start_date_due=' + startDate + '&end_date_due=' + endDate;
+      cashboard.fetchAPI('dueInvoices', path, service, jsonData, done);
     },
     function(done) {
       var path = '/payments.json?start_date=' + startDate + '&end_date=' + endDate;
@@ -168,6 +168,13 @@ exports.translate = function(data) {
     });
 
     results.invoices = data.invoices;
+  }
+  if (data.dueInvoices) {
+    data.dueInvoices.forEach(function(invoice) {
+      invoice.client_name = cashboard.getClientName(invoice.client_type, invoice.client_id, data);
+    });
+
+    results.dueInvoices = data.dueInvoices;
   }
   if (data.payments) {
     data.payments.forEach(function(payment) {
