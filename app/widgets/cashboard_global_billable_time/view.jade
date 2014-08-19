@@ -8,6 +8,20 @@ style(type='text/css')
   .form-inline .control-label {
     display: inline-block;
   }
+  .tab-content {
+    position: relative;
+    width: 100%;
+  }
+  .tab-content > .tab-pane {
+    display: block;
+    position: absolute;
+    left: -10000px;
+    width: 100%;
+  }
+  .tab-content > .tab-pane.active {
+    position: relative;
+    left: 0;
+  }
 
 form.form-inline.settings
   fieldset
