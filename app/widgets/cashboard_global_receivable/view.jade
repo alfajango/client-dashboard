@@ -1,0 +1,73 @@
+.pull-right
+  i.icon-ok.refresh-ok.pull-left
+  button.btn.btn-small.refresh-service('data-service'='cashboard_global_receivable', 'data-id'="#{service.id}")
+    i.icon-retweet
+
+h2 Receivable
+
+.row-fluid
+  .span12
+    a.accordian-toggle('data-toggle'="collapse", 'data-target'="#projects-#{service.id}", 'href'="#projects-#{service.id}")
+      | Uninvoiced Projects List
+    div.cashboard-billable-table-container.collapse('id'="projects-#{service.id}")
+      table.table.table-bordered.cashboard-projects-table
+        thead
+          tr
+            th Project
+            th Uninvoiced Hours
+            th Uninvoiced Expenses
+        tbody
+          tr
+            td.data-row.right-align(colspan=3)
+              .loading.large
+                | Loading 
+                img(src="/images/ajax-loader.gif")
+
+.row-fluid
+  .span12
+    a.accordian-toggle('data-toggle'="collapse", 'data-target'="#unpaid-invoices-#{service.id}", 'href'="#unpaid-invoices-#{service.id}")
+      | Unpaid Invoices List
+    div.cashboard-billable-table-container.collapse('id'="unpaid-invoices-#{service.id}")
+      table.table.table-bordered.cashboard-unpaid-invoices-table
+        thead
+          tr
+            th Invoice Date
+            th Invoice Number
+            th Client
+            th Amount
+            th Balance
+            th Due Date
+        tbody
+          tr
+            td.data-row.right-align(colspan=6)
+              .loading.large
+                | Loading 
+                img(src="/images/ajax-loader.gif")
+
+.row-fluid
+  .span6
+    table.table.table-bordered.cashboard-table
+      tr
+        th Uninvoiced Time
+        td.uninvoiced-time.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Uninvoiced Expenses
+        td.uninvoiced-expenses.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Unpaid Invoices
+        td.unpaid-invoices.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Unpaid Invoices (past-due)
+        td.unpaid-due-invoices.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")

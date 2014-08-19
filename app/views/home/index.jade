@@ -128,6 +128,12 @@ block content
 
         include ../../widgets/cashboard_global_billable_time/view.jade
 
+  - if (project.hasService('cashboard_global_receivable'))
+    each service in project.filteredServices('cashboard_global_receivable')
+      div(id="widget-#{service.id}")
+
+        include ../../widgets/cashboard_global_receivable/view.jade
+
   .row-fluid
     - if (project.hasService('redmine_open_issues'))
       .span12
