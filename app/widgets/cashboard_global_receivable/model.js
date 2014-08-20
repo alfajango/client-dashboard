@@ -80,11 +80,17 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
 // Translate fetched response to db store format
 exports.translate = function(data, service) {
   var cashboard = this,
-      uninvoicedProjects = data.projects.filter(function(p) {
-        return (p.uninvoiced_item_cost > 0 || p.uninvoiced_expense_cost > 0);
-      }).forEach(function(project) {
-        project.link = 'https://' + service.user + '.cashboardapp.com/provider/projects/show/' + project.id;
-      });
+      uninvoicedProjects = [];
+
+  if (data.projects) {
+    uninvoicedProjects = data.projects.filter(function(p) {
+      return (p.uninvoiced_item_cost > 0 || p.uninvoiced_expense_cost > 0);
+    });
+
+    uninvoicedProjects.forEach(function(project) {
+      project.link = 'https://' + service.user + '.cashboardapp.com/provider/projects/show/' + project.id;
+    });
+  }
 
   if (data.unpaidInvoices) {
     data.unpaidInvoices.forEach(function(invoice) {
