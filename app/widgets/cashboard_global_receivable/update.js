@@ -58,6 +58,7 @@ widgets.cashboard_global_receivable = function(data, $) {
           invoiceRows += '<td>' + invoice.client_name + '</td>';
           invoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
           invoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';
+          invoiceRows += '<td>' + (invoice.has_been_sent ? '✓' : '') + '</td>';
           invoiceRows += '<td>' + formattedDueDate + '</td>';
           invoiceRows += '</tr>';
 
@@ -74,7 +75,7 @@ widgets.cashboard_global_receivable = function(data, $) {
         var msg = '<div class="alert alert-error" title="No results">No results</div>';
         $target.find('.unpaid-invoices').html(msg);
         $target.find('.unpaid-due-invoices').html(msg);
-        $target.find('.cashboard-unpaid-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+        $target.find('.cashboard-unpaid-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
       }
 
     } else {
@@ -83,7 +84,7 @@ widgets.cashboard_global_receivable = function(data, $) {
       $target.find('.uninvoiced-expenses').html(msg);
       $target.find('.unpaid-invoices').html(msg);
       $target.find('.unpaid-due-invoices').html(msg);
-      $target.find('.cashboard-unpaid-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+      $target.find('.cashboard-unpaid-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
       $target.find('.cashboard-projects-table tbody').html('<tr><td colspan=3>' + msg + '</td></tr>');
     }
 

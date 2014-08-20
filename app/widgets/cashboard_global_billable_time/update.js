@@ -448,6 +448,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
         invoiceRows += '<td>' + invoice.client_name + '</td>';
         invoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
         invoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';
+        invoiceRows += '<td>' + (invoice.has_been_sent ? '✓' : '') + '</td>';
         invoiceRows += '<td>' + formattedDueDate + '</td>';
         invoiceRows += '</tr>';
 
@@ -455,7 +456,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
       });
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
-      $target.find('.cashboard-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+      $target.find('.cashboard-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
       $target.find('.cashboard-invoice-summary-table td.invoiced').html(msg);
       $target.find('.cashboard-invoices-table .loading.large, .cashboard-invoice-summary-table .invoices .loading.large').hide();
     }
@@ -482,6 +483,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
         dueInvoiceRows += '<td>' + invoice.client_name + '</td>';
         dueInvoiceRows += '<td>$' + total.formatMoney(2, '.', ',') + '</td>';
         dueInvoiceRows += '<td>$' + balance.formatMoney(2, '.', ',') + '</td>';
+        dueInvoiceRows += '<td>' + (invoice.has_been_sent ? '✓' : '') + '</td>';
         dueInvoiceRows += '<td>' + formattedDueDate + '</td>';
         dueInvoiceRows += '</tr>';
 
@@ -489,7 +491,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
       });
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
-      $target.find('.cashboard-due-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+      $target.find('.cashboard-due-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
       $target.find('.cashboard-invoice-summary-table td.due-invoices').html(msg);
       $target.find('.cashboard-due-invoices-table .loading.large, .cashboard-invoice-summary-table .due-invoices .loading.large').hide();
     }
@@ -566,11 +568,11 @@ widgets.cashboard_global_billable_time = function(data, $) {
     var msg = '<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>';
     $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=8></td>' + msg + '</tr>');
     $target.find('.cashboard-billable-summary-table td').html(msg);
-    $target.find('.cashboard-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+    $target.find('.cashboard-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
     $target.find('.cashboard-invoice-summary-table td.invoiced').html(msg);
     $target.find('.cashboard-payments-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
     $target.find('.cashboard-invoice-summary-table td.payments').html(msg);
-    $target.find('.cashboard-due-invoices-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
+    $target.find('.cashboard-due-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
     $target.find('.cashboard-invoice-summary-table td.due-invoices').html(msg);
     $target.find('.loading.large').hide();
   }
