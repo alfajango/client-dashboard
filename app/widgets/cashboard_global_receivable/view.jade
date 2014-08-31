@@ -8,7 +8,7 @@ h2
   small  current
 
 .row-fluid
-  .span12
+  .span6
     a.accordian-toggle('data-toggle'="collapse", 'data-target'="#projects-#{service.id}", 'href'="#projects-#{service.id}")
       | Uninvoiced Projects List
     div.cashboard-billable-table-container.collapse('id'="projects-#{service.id}")
@@ -25,8 +25,6 @@ h2
                 | Loading 
                 img(src="/images/ajax-loader.gif")
 
-.row-fluid
-  .span12
     a.accordian-toggle('data-toggle'="collapse", 'data-target'="#unpaid-invoices-#{service.id}", 'href'="#unpaid-invoices-#{service.id}")
       | Unpaid Invoices List
     div.cashboard-billable-table-container.collapse('id'="unpaid-invoices-#{service.id}")
@@ -47,8 +45,6 @@ h2
                 | Loading 
                 img(src="/images/ajax-loader.gif")
 
-.row-fluid
-  .span6
     table.table.table-bordered.cashboard-table
       tr
         th Uninvoiced Time
@@ -74,3 +70,23 @@ h2
           .loading
             | Loading 
             img(src="/images/ajax-loader-small.gif")
+
+  .span6
+    ul.nav.nav-tabs
+      li.active
+        a(href="#uninvoiced-content", 'data-toggle'="tab") Uninvoiced
+      li
+        a(href="#unpaid-content", 'data-toggle'="tab") Unpaid
+
+    div.tab-content
+      div.tab-pane.active#uninvoiced-content
+        div.uninvoiced-by-project.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
+
+      div.tab-pane#unpaid-content
+        div.unpaid-by-customer.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")

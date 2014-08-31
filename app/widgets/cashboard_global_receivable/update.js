@@ -1,4 +1,45 @@
 widgets.cashboard_global_receivable = function(data, $) {
+  function group(obj, key, value) {
+    if (!(obj[key])) {
+      obj[key] = value;
+    } else {
+      if (typeof(value) === "number") {
+        obj[key] = obj[key] + value;
+      } else {
+        Object.keys(value).forEach(function(subKey) {
+          group(obj[key], subKey, value[subKey]);
+        });
+      }
+    }
+  }
+
+  function generatePieChart(data, $target) {
+    plotData = $.map(data, function(value, key) {
+      return {label: key, data: value};
+    });
+    console.log("plotting pie", data, plotData);
+
+    $.plot($target, plotData, {
+      series: {
+        pie: {
+          show: true,
+          label: {
+            formatter: function (label, slice) {
+              return "<div style='font-size:x-small;text-align:center;padding:2px;color:" + slice.color + ";'>" + label + "<br/>" + slice.data[0][1].formatMoney(2, '.', ',') + "</div>";
+            }
+          },
+          combine: {
+            color: '#999',
+            threshold: 0.03
+          }
+        }
+      },
+      legend: {
+        show: false
+      }
+    });
+  }
+
   var $target = $('#widget-' + data.id);
   if (data.error) {
     $target.find('.uninvoiced-time').html('<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>');
@@ -9,7 +50,9 @@ widgets.cashboard_global_receivable = function(data, $) {
         uninvoicedTimeTotal = 0,
         uninvoicedExpenseTotal = 0
         unpaidInvoiceTotal = 0,
-        unpaidDueInvoiceTotal = 0;
+        unpaidDueInvoiceTotal = 0,
+        uninvoicedByProject = {},
+        unpaidByCustomer = {};
 
     if (data.results) {
       if (data.results.uninvoicedProjects && data.results.uninvoicedProjects.length) {
@@ -24,11 +67,15 @@ widgets.cashboard_global_receivable = function(data, $) {
 
           uninvoicedTimeTotal += uninvoicedTime;
           uninvoicedExpenseTotal += uninvoicedExpense;
+
+          group(uninvoicedByProject, project.name, uninvoicedTime + uninvoicedExpense);
         });
 
         $target.find('.uninvoiced-time').html('$' + uninvoicedTimeTotal.formatMoney(2, '.', ','));
         $target.find('.uninvoiced-expenses').html('$' + uninvoicedExpenseTotal.formatMoney(2, '.', ','));
         $target.find('.cashboard-projects-table tbody').html(projectRows);
+
+        generatePieChart(uninvoicedByProject, $target.find('.uninvoiced-by-project'));
       } else {
         var msg = '<div class="alert alert-error" title="No results">No results</div>';
         $target.find('.uninvoiced-time').html(msg);
@@ -66,11 +113,15 @@ widgets.cashboard_global_receivable = function(data, $) {
           if (dueAt < now) {
             unpaidDueInvoiceTotal += total;
           }
+
+          group(unpaidByCustomer, invoice.client_name, total);
         });
 
         $target.find('.unpaid-invoices').html('$' + unpaidInvoiceTotal.formatMoney(2, '.', ','));
         $target.find('.unpaid-due-invoices').html('$' + unpaidDueInvoiceTotal.formatMoney(2, '.', ','));
         $target.find('.cashboard-unpaid-invoices-table tbody').html(invoiceRows);
+
+        generatePieChart(unpaidByCustomer, $target.find('.unpaid-by-customer'));
       } else {
         var msg = '<div class="alert alert-error" title="No results">No results</div>';
         $target.find('.unpaid-invoices').html(msg);
