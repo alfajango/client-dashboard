@@ -54,6 +54,10 @@ $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
 
 widgets.cashboard_global_billable_time = function(data, $) {
   var GOLDEN_RATIO = 0.618033988749895;
+  function nl2br(text) {
+    return text.replace(/\n/g, "<br />");
+  }
+
   function group(obj, key, value) {
     if (!(obj[key])) {
       obj[key] = value;
@@ -383,16 +387,19 @@ widgets.cashboard_global_billable_time = function(data, $) {
             currYear = createdAt.getFullYear()
             created = new Date(currYear, currMonth, currDate),
             createdInt = +(created), // Make sure both dates are compared as integers
-            formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate;
-        rows += '<tr class="' + (rate <= 0 ? 'zero-rate' : '') + (entry.minutes % 15 ? ' non-fifteen' : '') + '">';
+            formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate,
+            sentenceMatch = entry.description.match(/(^|[\*\.\n])\s*[\w]+/g),
+            sentences = ( sentenceMatch && sentenceMatch.length ) || 0,
+            sentencesPerHour = parseFloat(sentences) / hours;
+        rows += '<tr class="' + (rate <= 0 ? 'zero-rate' : '') + (entry.minutes % 15 ? ' non-fifteen' : '') + (sentencesPerHour < 0.5 ? ' short-description' : '') + '">';
         rows += '<td>' + formattedDate + '</td>';
         rows += '<td>' + entry.person_name + '</td>';
         rows += '<td>' + entry.project_name + '</td>';
-        rows += '<td>' + hours + '</td>';
-        rows += '<td>$' + rate.formatMoney(2, '.', ',') + '</td>';
+        rows += '<td><div class="time-hours">' + hours + '</div></td>';
+        rows += '<td><div class="time-rate">$' + rate.formatMoney(2, '.', ',') + '</div></td>';
         rows += '<td>($' + pay_rate.formatMoney(2, '.', ',') + ')</td>';
         rows += '<td>$' + billable.formatMoney(2, '.', ',') + '</td>';
-        rows += '<td>' + entry.description + '</td>';
+        rows += '<td class="description-cell"><div class="sentences-per-hour">' + sentencesPerHour.toFixed(1) + '</div> ' + nl2br(entry.description) + '</td>';
         rows += '</tr>';
 
         totalHours += hours;

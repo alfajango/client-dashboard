@@ -138,10 +138,43 @@ h2 .badge {
   background: #e8f7ff;
 }
 .zero-rate td {
-  background: #F2DEDE;
+  background: #F8D6D6;
+}
+.zero-rate .time-rate {
+  padding: 2px 5px;
+  background: #D33;
+  color: #fff;
 }
 .non-fifteen td {
   background: #F9FD8F;
+}
+.non-fifteen .time-hours {
+  padding: 2px 5px;
+  background: #FAE70A;
+}
+.short-description td {
+  background: #EADCFD;
+}
+.description-cell {
+  position: relative;
+}
+.sentences-per-hour {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #eee;
+  padding: 2px 5px;
+  -webkit-border-radius: 0 0 0 3px;
+  -moz-border-radius: 0 0 0 3px;
+  border-radius: 0 0 0 3px;
+}
+.zero-rate .sentences-per-hour,
+.non-fifteen .sentences-per-hour {
+  background: #fff;
+}
+.short-description .sentences-per-hour {
+  background: #7756E0;
+  color: #fff;
 }
 
 #invoice, #expenses {
