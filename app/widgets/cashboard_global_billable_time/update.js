@@ -384,7 +384,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
             created = new Date(currYear, currMonth, currDate),
             createdInt = +(created), // Make sure both dates are compared as integers
             formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate;
-        rows += '<tr' + (rate <= 0 ? ' class="zero-rate"' : '') + '>';
+        rows += '<tr class="' + (rate <= 0 ? 'zero-rate' : '') + (entry.minutes % 15 ? ' non-fifteen' : '') + '">';
         rows += '<td>' + formattedDate + '</td>';
         rows += '<td>' + entry.person_name + '</td>';
         rows += '<td>' + entry.project_name + '</td>';

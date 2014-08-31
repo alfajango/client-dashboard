@@ -140,6 +140,9 @@ h2 .badge {
 .zero-rate td {
   background: #F2DEDE;
 }
+.non-fifteen td {
+  background: #F9FD8F;
+}
 
 #invoice, #expenses {
   text-align: right;
