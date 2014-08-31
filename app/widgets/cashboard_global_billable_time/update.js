@@ -358,6 +358,29 @@ widgets.cashboard_global_billable_time = function(data, $) {
     });
   }
 
+  function generatePieChart(data, $target) {
+    plotData = $.map(data, function(value, key) {
+      return {label: key, data: value};
+    });
+    console.log("plotting pie", data, plotData);
+
+    $.plot($target, plotData, {
+      series: {
+        pie: {
+          show: true,
+          label: {
+            formatter: function (label, slice) {
+              return "<div style='font-size:x-small;text-align:center;padding:2px;color:" + slice.color + ";'>" + label + "<br/>" + slice.data[0][1].formatMoney(2, '.', ',') + "</div>";
+            }
+          }
+        }
+      },
+      legend: {
+        show: false
+      }
+    });
+  }
+
   var $target = $('#widget-' + data.id),
       rows = "";
   if (data.results) {
@@ -369,6 +392,9 @@ widgets.cashboard_global_billable_time = function(data, $) {
           hoursByDayByProject = {},
           hoursByMemberByDay = {},
           hoursByProjectByDay = {},
+          invoicesByCustomer = {},
+          dueInvoicesByCustomer = {},
+          paymentsByCustomer = {},
           totalHours = 0,
           totalBillable = 0,
           totalGrossBillable = 0,
@@ -465,6 +491,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
         invoiceRows += '</tr>';
 
         totalInvoiced += total;
+
+        group(invoicesByCustomer, invoice.client_name, total)
       });
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
@@ -500,6 +528,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
         dueInvoiceRows += '</tr>';
 
         totalDueInvoices += total;
+
+        group(dueInvoicesByCustomer, invoice.client_name, total)
       });
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
@@ -527,6 +557,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
         paymentRows += '</tr>';
 
         totalPayments += amount;
+
+        group(paymentsByCustomer, payment.client_name, amount)
       });
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
@@ -569,6 +601,11 @@ widgets.cashboard_global_billable_time = function(data, $) {
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.cumulative-hours-by-day-by-member'), startDate, endDate, true);
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.cumulative-hours-by-day-by-project'), startDate, endDate, true);
 
+    console.log("stuff", invoicesByCustomer, dueInvoicesByCustomer, paymentsByCustomer);
+
+    generatePieChart(invoicesByCustomer, $target.find('.invoices-by-customer'));
+    generatePieChart(dueInvoicesByCustomer, $target.find('.due-invoices-by-customer'));
+    generatePieChart(paymentsByCustomer, $target.find('.payments-by-customer'));
 
     $target.find('.invoiced').html('$' + totalInvoiced.formatMoney(2, '.', ','));
     $target.find('.due-invoices').html('$' + totalDueInvoices.formatMoney(2, '.', ','));

@@ -155,7 +155,7 @@ h2
   small  date range
 
 .row-fluid
-  .span12
+  .span6
     a.accordian-toggle('data-toggle'="collapse", 'data-target'="#invoices-#{service.id}", 'href'="#invoices-#{service.id}")
       | Invoices List
     div.cashboard-billable-table-container.collapse('id'="invoices-#{service.id}")
@@ -176,8 +176,6 @@ h2
                 | Loading 
                 img(src="/images/ajax-loader.gif")
 
-.row-fluid
-  .span12
     a.accordian-toggle('data-toggle'="collapse", 'data-target'="#due-invoices-#{service.id}", 'href'="#due-invoices-#{service.id}")
       | Due Invoices List
     div.cashboard-billable-table-container.collapse('id'="due-invoices-#{service.id}")
@@ -197,8 +195,7 @@ h2
               .loading.large
                 | Loading 
                 img(src="/images/ajax-loader.gif")
-.row-fluid
-  .span12
+
     a.accordian-toggle('data-toggle'="collapse", 'data-target'="#payments-#{service.id}", 'href'="#payments-#{service.id}")
       | Payments List
     div.cashboard-billable-table-container.collapse('id'="payments-#{service.id}")
@@ -217,8 +214,6 @@ h2
                 | Loading 
                 img(src="/images/ajax-loader.gif")
 
-.row-fluid
-  .span6
     h3 Summary
     table.table.table-bordered.cashboard-invoice-summary-table
       tr
@@ -239,3 +234,31 @@ h2
           .loading
             | Loading 
             img(src="/images/ajax-loader-small.gif")
+
+  .span6
+    ul.nav.nav-tabs
+      li.active
+        a(href="#invoices-content", 'data-toggle'="tab") Invoices
+      li
+        a(href="#due-invoices-content", 'data-toggle'="tab") Due Invoices
+      li
+        a(href="#payments-content", 'data-toggle'="tab") Payments
+
+    div.tab-content
+      div.tab-pane.active#invoices-content
+        div.invoices-by-customer.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
+
+      div.tab-pane#due-invoices-content
+        div.due-invoices-by-customer.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
+
+      div.tab-pane#payments-content
+        div.payments-by-customer.cashboard-global-graph
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
