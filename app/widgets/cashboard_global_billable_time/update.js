@@ -372,6 +372,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
           totalHours = 0,
           totalBillable = 0,
           totalGrossBillable = 0,
+          totalUninvoicedNow = 0,
           totalInvoiced = 0,
           totalDueInvoices = 0,
           totalPayments = 0;
@@ -400,11 +401,15 @@ widgets.cashboard_global_billable_time = function(data, $) {
         rows += '<td>($' + pay_rate.formatMoney(2, '.', ',') + ')</td>';
         rows += '<td>$' + billable.formatMoney(2, '.', ',') + '</td>';
         rows += '<td class="description-cell"><div class="sentences-per-hour">' + sentencesPerHour.toFixed(1) + '</div> ' + nl2br(entry.description) + '</td>';
+        rows += '<td><div class="time-invoiced">' + (entry.invoice_line_item_id ? '⎘' : '') + '</div></td>';
         rows += '</tr>';
 
         totalHours += hours;
         totalBillable += billable;
         totalGrossBillable += grossBillable;
+        if (!entry.invoice_line_item_id) {
+          totalUninvoicedNow += billable;
+        }
 
         group(hoursByRate, rate, hours);
         group(hoursByProject, entry.project_name, hours);
@@ -552,6 +557,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
     $target.find('.total-hours').html(totalHours);
     $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
     $target.find('.average-hourly-rate').html('$' + (totalGrossBillable / totalHours).formatMoney(2, '.', ','));
+    $target.find('.total-uninvoiced-now').html('$' + totalUninvoicedNow.formatMoney(2, '.', ','));
     $target.find('.cashboard-billable-table tbody').html(rows);
 
     $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');

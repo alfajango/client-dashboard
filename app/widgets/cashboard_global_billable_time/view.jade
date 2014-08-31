@@ -61,9 +61,10 @@ form.form-inline.settings
             th Pay Rate
             th Total
             th Notes
+            th Inv
         tbody
           tr
-            td.data-row.right-align(colspan=8)
+            td.data-row.right-align(colspan=9)
               .loading.large
                 | Loading 
                 img(src="/images/ajax-loader.gif")
@@ -85,6 +86,12 @@ h2
       tr
         th Total Billable
         td.total-billable.right-align
+          .loading
+            | Loading 
+            img(src="/images/ajax-loader-small.gif")
+      tr
+        th Uninvoiced
+        td.total-uninvoiced-now.right-align
           .loading
             | Loading 
             img(src="/images/ajax-loader-small.gif")

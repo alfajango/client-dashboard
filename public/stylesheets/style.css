@@ -176,6 +176,9 @@ h2 .badge {
   background: #7756E0;
   color: #fff;
 }
+.time-invoiced {
+  font-size: 2em;
+}
 
 #invoice, #expenses {
   text-align: right;
