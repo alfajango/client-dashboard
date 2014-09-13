@@ -238,6 +238,13 @@ table .alert {
   font-size: 11px;
 }
 
+.cashboard-global-billable-time input[type=text] {
+  width: 6em;
+}
+.cashboard-global-billable-time .control-group:first-child {
+  margin-right: 10px;
+}
+
 .cashboard-billable-summary {
   text-align: center;
 }
@@ -271,6 +278,9 @@ table .alert {
   .cashboard-global-billable-time .btn-group {
     width: 100%;
   }
+  .cashboard-global-billable-time .control-group:first-child {
+    margin-right: 0;
+  }
   .cashboard-global-time-shortcut {
     box-sizing: border-box;
     width: 50%;
@@ -278,13 +288,6 @@ table .alert {
 }
 
 @media (max-width: 480px) {
-  .cashboard-global-billable-time .end-date {
-    width: calc(100% - 67px);
-  }
-  .cashboard-global-billable-time .end-date input {
-    width: calc(100% - 41px);
-  }
-
   .cashboard-global-billable-time .nav-tabs li a {
     padding-right: 6px;
     padding-left: 6px;
