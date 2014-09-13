@@ -186,6 +186,9 @@ h2 .badge {
 }
 
 .refresh-service.disabled i {
+  display: block;
+  width: 14px;
+  height: 14px;
   -webkit-animation:spin 4s linear infinite;
   -moz-animation:spin 4s linear infinite;
   animation:spin 4s linear infinite;
