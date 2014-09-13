@@ -124,13 +124,13 @@ block content
 
   - if (project.hasService('cashboard_global_billable_time'))
     each service in project.filteredServices('cashboard_global_billable_time')
-      div(id="widget-#{service.id}")
+      div.cashboard-global-billable-time(id="widget-#{service.id}")
 
         include ../../widgets/cashboard_global_billable_time/view.jade
 
   - if (project.hasService('cashboard_global_receivable'))
     each service in project.filteredServices('cashboard_global_receivable')
-      div(id="widget-#{service.id}")
+      div.cashboard-global-receivable(id="widget-#{service.id}")
 
         include ../../widgets/cashboard_global_receivable/view.jade
 
@@ -138,7 +138,7 @@ block content
     - if (project.hasService('redmine_open_issues'))
       .span12
         each service in project.filteredServices('redmine_open_issues')
-          div(id="widget-#{service.id}")
+          div.redmine-open-issues(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='redmine_open_issues', 'data-id'="#{service.id}")
@@ -150,7 +150,7 @@ block content
     - if (project.hasService('errbit_unresolved_exceptions'))
       .span8
         each service in project.filteredServices('errbit_unresolved_exceptions')
-          div(id="widget-#{service.id}")
+          div.errbit-unresolved-exceptions(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='errbit_unresolved_exceptions', 'data-id'="#{service.id}")
@@ -161,7 +161,7 @@ block content
     - if (project.hasService('cashboard_uninvoiced_amounts'))
       .span4
         each service in project.filteredServices('cashboard_uninvoiced_amounts')
-          div(id="widget-#{service.id}")
+          div.cashboard-uninvoiced-amounts(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='cashboard_uninvoiced_amounts', 'data-id'="#{service.id}")
@@ -172,7 +172,7 @@ block content
     - if (project.hasService('aremysitesup_instant_status'))
       .span4
         each service in project.filteredServices('aremysitesup_instant_status')
-          div(id="widget-#{service.id}")
+          div.aremysitesup-instant-status(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='aremysitesup_instant_status', 'data-id'="#{service.id}")
@@ -183,7 +183,7 @@ block content
     - if (project.hasService('semaphore_build_status'))
       .span5
         each service in project.filteredServices('semaphore_build_status')
-          div(id="widget-#{service.id}")
+          div.semaphore-build-status(id="widget-#{service.id}")
             .pull-right
               i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='semaphore_build_status', 'data-id'="#{service.id}")

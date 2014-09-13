@@ -242,7 +242,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
       });
     }
 
-    console.log(plotSeries);
+    console.log("plotting bars", $target, plotSeries);
 
     var plot = $.plot($target, plotSeries, {
       series: {
@@ -362,7 +362,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
     plotData = $.map(data, function(value, key) {
       return {label: key, data: value};
     });
-    console.log("plotting pie", data, plotData);
+    if (!plotData.length) { console.log("empty"); plotData = [{label: "nuthin' to see here", data: 1}]; }
+    console.log("plotting pie", $target, plotData);
 
     $.plot($target, plotData, {
       series: {

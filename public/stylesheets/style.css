@@ -41,6 +41,7 @@ body {
 .navbar a.brand {
   color: #78B347;
   text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.25);
+  max-width: calc(100% - 70px);
 }
 .navbar .nav > li > a, .navbar .nav > li > a:hover {
   color: #78B347 !important;
@@ -225,4 +226,30 @@ table .alert {
   width: 100%;
   height: 300px;
   font-size: 11px;
+}
+
+@media (max-width: 767px) {
+  .cashboard-global-billable-time .control-group,
+  .cashboard-global-billable-time .btn-group {
+    width: 100%;
+  }
+  .cashboard-global-time-shortcut {
+    box-sizing: border-box;
+    width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cashboard-global-billable-time .end-date {
+    width: calc(100% - 67px);
+  }
+  .cashboard-global-billable-time .end-date input {
+    width: calc(100% - 41px);
+  }
+
+  .cashboard-global-billable-time .nav-tabs li a {
+    padding-right: 6px;
+    padding-left: 6px;
+    font-size: 10px;
+  }
 }
