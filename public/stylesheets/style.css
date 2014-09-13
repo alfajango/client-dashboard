@@ -228,6 +228,25 @@ table .alert {
   font-size: 11px;
 }
 
+.cashboard-billable-summary {
+  text-align: center;
+}
+.cashboard-billable-summary .profit {
+  color: green;
+}
+.cashboard-billable-summary .profit::before {
+  content: "+";
+  color: green
+}
+.cashboard-billable-summary .loss {
+  color: red;
+}
+.cashboard-billable-summary .loss::before {
+  content: "-";
+  display: inline-block;
+  color: red;
+}
+
 @media (max-width: 767px) {
   .cashboard-global-billable-time .control-group,
   .cashboard-global-billable-time .btn-group {

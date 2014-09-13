@@ -7,9 +7,9 @@ $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
   var $this = $(this),
       $parent = $this.closest('form'),
       shortcut = $this.attr('href').replace('#cashboard-global-', ''),
+      d = new Date(),
       start,
       end,
-      d = new Date(),
       date = d.getDate(),
       day = d.getDay(),
       month = d.getMonth(),
@@ -41,12 +41,8 @@ $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
       break;
   }
 
-
-  start = formatted(start);
-  end = formatted(end);
-
-  $parent.find('input[name="start_date"]').val(start);
-  $parent.find('input[name="end_date"]').val(end);
+  $parent.find('input[name="start_date"]').val( formatted(start) );
+  $parent.find('input[name="end_date"]').val( formatted(end) );
   $parent.find('button').click();
 
   e.preventDefault();
@@ -581,11 +577,14 @@ widgets.cashboard_global_billable_time = function(data, $) {
         startDate = new Date(startDateVal[0], (startDateVal[1] - 1), startDateVal[2]),
         endDate = new Date(endDateVal[0], (endDateVal[1] - 1), endDateVal[2]),
         startDateInt = +(startDate),
-        endDateInt = +(endDate);
+        endDateInt = +(endDate),
+        today = new Date();
 
     var workDays = workingDaysBetweenDates(startDate, endDate),
         totalBreakEven = workDays * breakEvenWeekday,
-        totalGoal = workDays * goalWeekday;
+        totalGoal = workDays * goalWeekday,
+        totalDiff = totalBillable - totalBreakEven,
+        totalDiffClass = totalDiff > 0 ? "profit" : "loss";
 
     $target.find('.total-hours').html(totalHours);
     $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
@@ -595,6 +594,15 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
     $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
     $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
+
+    $target.find('.cashboard-billable-summary h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + '</span>');
+    if (today > startDate && today < endDate) {
+      var workDaysToday = workingDaysBetweenDates(startDate, today),
+          breakEvenToday = workDaysToday * breakEvenWeekday,
+          diffToday = totalBillable - breakEvenToday,
+          diffTodayClass = diffToday > 0 ? "profit" : "loss";
+      $target.find('.cashboard-billable-summary h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
+    }
 
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate);
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.hours-by-day-by-project'), startDate, endDate);
