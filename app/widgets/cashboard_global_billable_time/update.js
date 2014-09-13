@@ -595,14 +595,14 @@ widgets.cashboard_global_billable_time = function(data, $) {
     $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
     $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
 
-    $target.find('.cashboard-billable-summary h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + '</span>');
+    $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(totalDiffClass).find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + '</span>');
     if (today > startDate && today < endDate) {
       var workDaysToday = workingDaysBetweenDates(startDate, today),
           breakEvenToday = workDaysToday * breakEvenWeekday,
           diffToday = totalBillable - breakEvenToday,
           diffTodayClass = diffToday > 0 ? "profit" : "loss";
       if (breakEvenToday < totalBreakEven) {
-        $target.find('.cashboard-billable-summary h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
+        $target.find('.cashboard-billable-summary').addClass(diffTodayClass).find('h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
       }
     }
 
@@ -612,7 +612,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.cumulative-hours-by-day-by-member'), startDate, endDate, true);
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.cumulative-hours-by-day-by-project'), startDate, endDate, true);
 
-    console.log("stuff", invoicesByCustomer, dueInvoicesByCustomer, paymentsByCustomer);
+    console.log("invoices data", invoicesByCustomer, dueInvoicesByCustomer, paymentsByCustomer);
 
     generatePieChart(invoicesByCustomer, $target.find('.invoices-by-customer'));
     generatePieChart(dueInvoicesByCustomer, $target.find('.due-invoices-by-customer'));

@@ -241,20 +241,29 @@ table .alert {
 .cashboard-billable-summary {
   text-align: center;
 }
+.cashboard-billable-summary.profit {
+  background: #64953B;
+}
+.cashboard-billable-summary.loss {
+  background: #a24f40;
+}
+.cashboard-billable-summary h2 {
+  font-size: 3em;
+  font-weight: 200;
+}
 .cashboard-billable-summary .profit {
-  color: green;
+  color: white;
 }
 .cashboard-billable-summary .profit::before {
-  content: "+";
-  color: green
+  content: "+ ";
+  color: white
 }
 .cashboard-billable-summary .loss {
-  color: red;
+  color: white;
 }
 .cashboard-billable-summary .loss::before {
-  content: "-";
-  display: inline-block;
-  color: red;
+  content: "- ";
+  color: white;
 }
 
 @media (max-width: 767px) {
