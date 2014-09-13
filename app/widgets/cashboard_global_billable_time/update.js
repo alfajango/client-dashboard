@@ -601,7 +601,9 @@ widgets.cashboard_global_billable_time = function(data, $) {
           breakEvenToday = workDaysToday * breakEvenWeekday,
           diffToday = totalBillable - breakEvenToday,
           diffTodayClass = diffToday > 0 ? "profit" : "loss";
-      $target.find('.cashboard-billable-summary h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
+      if (breakEvenToday < totalBreakEven) {
+        $target.find('.cashboard-billable-summary h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
+      }
     }
 
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate);
