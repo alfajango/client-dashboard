@@ -41,11 +41,10 @@ form.form-inline.settings
       label.control-label &nbsp; End date &nbsp;
       .controls.end-date
         .input-append
-          i.icon-ok.refresh-ok.pull-right
-          &nbsp;
           input.datepicker.span2(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
           button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
             i.icon-filter
+          i.icon-ok.refresh-ok
 
 .row-fluid
   .span12

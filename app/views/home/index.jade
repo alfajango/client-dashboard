@@ -97,9 +97,11 @@ block head
     $(document).delegate('.refresh-service', 'click', function(e) {
       var $this = $(this),
           service = $this.data('service'),
-          id = $this.data('id');
-      $this.addClass('disabled').text('Refreshing...');
-      $this.parents('form').find('input,textarea,select').prop('readonly', true);
+          id = $this.data('id')
+          $form = $this.parents('form');
+      $this.addClass('disabled');
+      $form.find('input,textarea,select').prop('readonly', true);
+      $form.find('.btn').addClass('disabled');
       emitters[service + '-' + id]();
     });
     $(document).delegate('.errbit-description-toggle', 'click', function(e) {
@@ -140,9 +142,9 @@ block content
         each service in project.filteredServices('redmine_open_issues')
           div.redmine-open-issues(id="widget-#{service.id}")
             .pull-right
-              i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='redmine_open_issues', 'data-id'="#{service.id}")
-                i.icon-retweet
+                i.icon-refresh
+              i.icon-ok.refresh-ok
 
             include ../../widgets/redmine_open_issues/view.jade
 
@@ -152,9 +154,9 @@ block content
         each service in project.filteredServices('errbit_unresolved_exceptions')
           div.errbit-unresolved-exceptions(id="widget-#{service.id}")
             .pull-right
-              i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='errbit_unresolved_exceptions', 'data-id'="#{service.id}")
-                i.icon-retweet
+                i.icon-refresh
+              i.icon-ok.refresh-ok
 
             include ../../widgets/errbit_unresolved_exceptions/view.jade
 
@@ -163,9 +165,9 @@ block content
         each service in project.filteredServices('cashboard_uninvoiced_amounts')
           div.cashboard-uninvoiced-amounts(id="widget-#{service.id}")
             .pull-right
-              i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='cashboard_uninvoiced_amounts', 'data-id'="#{service.id}")
-                i.icon-retweet
+                i.icon-refresh
+              i.icon-ok.refresh-ok
 
             include ../../widgets/cashboard_uninvoiced_amounts/view.jade
 
@@ -174,9 +176,9 @@ block content
         each service in project.filteredServices('aremysitesup_instant_status')
           div.aremysitesup-instant-status(id="widget-#{service.id}")
             .pull-right
-              i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='aremysitesup_instant_status', 'data-id'="#{service.id}")
-                i.icon-retweet
+                i.icon-refresh
+              i.icon-ok.refresh-ok
 
             include ../../widgets/aremysitesup_instant_status/view.jade
 
@@ -185,8 +187,8 @@ block content
         each service in project.filteredServices('semaphore_build_status')
           div.semaphore-build-status(id="widget-#{service.id}")
             .pull-right
-              i.icon-ok.refresh-ok.pull-left
               button.btn.btn-small.refresh-service('data-service'='semaphore_build_status', 'data-id'="#{service.id}")
-                i.icon-retweet
+                i.icon-refresh
+              i.icon-ok.refresh-ok
 
             include ../../widgets/semaphore_build_status/view.jade

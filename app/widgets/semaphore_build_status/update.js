@@ -9,6 +9,6 @@ widgets.semaphore_build_status = function(data, $) {
     out += data.results.project_name + ' [' + data.results.branch_name + '] test suite ' + data.results.status;
     out += (passed ? ' <i class="icon-thumbs-up"></i>' : ' <i class="icon-exclamation-sign"></i>');
     $target.find('.semaphore-build-status').html(out);
-    $target.find('.refresh-service[data-service="semaphore_build_status"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+    $target.find('.refresh-service[data-service="semaphore_build_status"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
   }
 };

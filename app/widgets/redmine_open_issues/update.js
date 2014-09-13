@@ -36,5 +36,5 @@ widgets.redmine_open_issues = function(data, $) {
   $target.find('.redmine-table tr').tooltip({placement: 'bottom'});
   $target.find('.redmine-table td').tooltip({placement: 'bottom'});
   $target.find('.redmine-title .badge').html(data.results.length);
-  $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+  $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
 };

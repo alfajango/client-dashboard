@@ -139,6 +139,6 @@ widgets.cashboard_global_receivable = function(data, $) {
       $target.find('.cashboard-projects-table tbody').html('<tr><td colspan=3>' + msg + '</td></tr>');
     }
 
-    $target.find('.refresh-service[data-service="cashboard_global_receivable"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+    $target.find('.refresh-service[data-service="cashboard_global_receivable"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
   }
 };

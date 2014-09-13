@@ -27,5 +27,5 @@ widgets.errbit_unresolved_exceptions = function(data, $) {
     .html(data.results.length)
     .removeClass('badge-success').removeClass('badge-warning')
     .addClass(data.results.length === 0 ? 'badge-success' : 'badge-warning');
-  $target.find('.refresh-service[data-service="errbit_unresolved_exceptions"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+  $target.find('.refresh-service[data-service="errbit_unresolved_exceptions"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
 };

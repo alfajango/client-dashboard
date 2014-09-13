@@ -10,6 +10,6 @@ widgets.aremysitesup_instant_status = function(data, $) {
     out += url.host + ' is ' + data.results.status;
     out += (up ? ' <i class="icon-thumbs-up"></i>' : ' <i class="icon-exclamation-sign"></i>');
     $target.find('.aremysitesup-status').html(out);
-    $target.find('.refresh-service[data-service="aremysitesup_instant_status"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+    $target.find('.refresh-service[data-service="aremysitesup_instant_status"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
   }
 };

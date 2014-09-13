@@ -6,6 +6,6 @@ widgets.cashboard_uninvoiced_amounts = function(data, $) {
   } else {
     $target.find('.uninvoiced-time').html('$' + data.results.invoice.formatMoney(2, '.', ','));
     $target.find('.uninvoiced-expenses').html('$' + data.results.expenses.formatMoney(2, '.', ','));
-    $target.find('.refresh-service[data-service="cashboard_uninvoiced_amounts"]').removeClass('disabled').html('<i class="icon-retweet"></i>').siblings('.refresh-ok').show().delay('250').fadeOut();
+    $target.find('.refresh-service[data-service="cashboard_uninvoiced_amounts"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
   }
 };
