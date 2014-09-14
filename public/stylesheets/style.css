@@ -21,9 +21,17 @@ body {
   }
 }
 
+@media (max-width: 979px) {
+  .navbar-fixed-top {
+    margin-bottom: 0;
+  }
+}
+
 @media (max-width: 767px) {
   .header {
     padding: 10px;
+    margin-left: -20px;
+    margin-right: -20px;
   }
 }
 
@@ -71,7 +79,6 @@ td.issue-number-column {
 }
 
 .small-form {
-  margin-top: 30%;
   padding: 0;
 }
 .small-form .form-header {
