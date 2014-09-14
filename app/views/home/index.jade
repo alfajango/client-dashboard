@@ -26,7 +26,25 @@ block head
       console.error('Unable to connect Socket.IO', reason);
       if (reason.location) {
         window.location = reason.location;
+      } else {
+        location.reload();
       }
+    });
+
+    socket.on('disconnect', function() {
+      console.info('disconnected');
+    });
+
+    socket.on('reconnecting', function() {
+      console.info('reconnecting');
+    });
+
+    socket.on('reconnect', function() {
+      console.info('reconnected');
+    });
+
+    socket.on('reconnect_failed', function() {
+      console.info('reconnect failed');
     });
 
     socket.on('connect', function (){
