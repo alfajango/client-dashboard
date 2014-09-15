@@ -264,23 +264,25 @@ table .alert {
 .cashboard-billable-summary.loss {
   background: #a24f40;
 }
+.cashboard-billable-summary small {
+  color: #fff;
+}
 .cashboard-billable-summary h2 {
   font-size: 3em;
   font-weight: 200;
+  color: #fff;
 }
 .cashboard-billable-summary .profit {
-  color: white;
 }
 .cashboard-billable-summary .profit::before {
   content: "+ ";
-  color: white
+  color: #fff;
 }
 .cashboard-billable-summary .loss {
-  color: white;
 }
 .cashboard-billable-summary .loss::before {
   content: "- ";
-  color: white;
+  color: #fff;
 }
 
 @media (max-width: 767px) {
