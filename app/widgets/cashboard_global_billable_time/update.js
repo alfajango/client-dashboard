@@ -454,11 +454,47 @@ widgets.cashboard_global_billable_time = function(data, $) {
         dayHours[createdInt] = billable;
         group(hoursByProjectByDay, entry.project_name, dayHours)
       });
+
+      var startDateVal = $target.find('input[name="start_date"]').val().split('-'),
+          endDateVal = $target.find('input[name="end_date"]').val().split('-'),
+          startDate = new Date(startDateVal[0], (startDateVal[1] - 1), startDateVal[2]),
+          endDate = new Date(endDateVal[0], (endDateVal[1] - 1), endDateVal[2]),
+          startDateInt = +(startDate),
+          endDateInt = +(endDate),
+          today = new Date();
+
+      var workDays = workingDaysBetweenDates(startDate, endDate),
+          totalBreakEven = workDays * breakEvenWeekday,
+          totalGoal = workDays * goalWeekday,
+          totalDiff = totalBillable - totalBreakEven,
+          totalDiffClass = totalDiff > 0 ? "profit" : "loss";
+
+      $target.find('.total-hours').html(totalHours);
+      $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
+      $target.find('.average-hourly-rate').html('$' + (totalGrossBillable / totalHours).formatMoney(2, '.', ','));
+      $target.find('.total-uninvoiced-now').html('$' + totalUninvoicedNow.formatMoney(2, '.', ','));
+      $target.find('.cashboard-billable-table tbody').html(rows);
+
+      $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
+      $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
+
+      $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(totalDiffClass).find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + '</span>');
+      if (today > startDate && today < endDate) {
+        var workDaysToday = workingDaysBetweenDates(startDate, today),
+            breakEvenToday = workDaysToday * breakEvenWeekday,
+            diffToday = totalBillable - breakEvenToday,
+            diffTodayClass = diffToday > 0 ? "profit" : "loss";
+        if (breakEvenToday < totalBreakEven) {
+          $target.find('.cashboard-billable-summary').addClass(diffTodayClass).find('h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
+        }
+      }
+
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
       $target.find('.cashboard-billable-table tbody').html('<tr><td colspan=8>' + msg + '</td></tr>');
       $target.find('.cashboard-billable-summary-table td').html(msg);
       $target.find('.cashboard-billable-table .loading.large, .cashboard-billable-summary-table .loading.large').hide();
+      $target.find('.cashboard-billable-summary').removeClass('profit loss').find('h2').html(msg);
     }
 
     if (data.results.invoices && data.results.invoices.length > 0) {
@@ -491,6 +527,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         group(invoicesByCustomer, invoice.client_name, total)
       });
+
+      $target.find('.invoiced').html('$' + totalInvoiced.formatMoney(2, '.', ','));
+      $target.find('.cashboard-invoices-table tbody').html(invoiceRows);
+
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
       $target.find('.cashboard-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
@@ -528,6 +568,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         group(dueInvoicesByCustomer, invoice.client_name, total)
       });
+
+      $target.find('.due-invoices').html('$' + totalDueInvoices.formatMoney(2, '.', ','));
+      $target.find('.cashboard-due-invoices-table tbody').html(dueInvoiceRows);
+
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
       $target.find('.cashboard-due-invoices-table tbody').html('<tr><td colspan=7>' + msg + '</td></tr>');
@@ -557,6 +601,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
         group(paymentsByCustomer, payment.client_name, amount)
       });
+
+      $target.find('.payments').html('$' + totalPayments.formatMoney(2, '.', ','));
+      $target.find('.cashboard-payments-table tbody').html(paymentRows);
+
     } else {
       var msg = '<div class="alert alert-error" title="No results">No results</div>';
       $target.find('.cashboard-payments-table tbody').html('<tr><td colspan=6>' + msg + '</td></tr>');
@@ -572,40 +620,6 @@ widgets.cashboard_global_billable_time = function(data, $) {
     console.log(hoursByMemberByDay);
     console.log(hoursByProjectByDay);
 
-    var startDateVal = $target.find('input[name="start_date"]').val().split('-'),
-        endDateVal = $target.find('input[name="end_date"]').val().split('-'),
-        startDate = new Date(startDateVal[0], (startDateVal[1] - 1), startDateVal[2]),
-        endDate = new Date(endDateVal[0], (endDateVal[1] - 1), endDateVal[2]),
-        startDateInt = +(startDate),
-        endDateInt = +(endDate),
-        today = new Date();
-
-    var workDays = workingDaysBetweenDates(startDate, endDate),
-        totalBreakEven = workDays * breakEvenWeekday,
-        totalGoal = workDays * goalWeekday,
-        totalDiff = totalBillable - totalBreakEven,
-        totalDiffClass = totalDiff > 0 ? "profit" : "loss";
-
-    $target.find('.total-hours').html(totalHours);
-    $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
-    $target.find('.average-hourly-rate').html('$' + (totalGrossBillable / totalHours).formatMoney(2, '.', ','));
-    $target.find('.total-uninvoiced-now').html('$' + totalUninvoicedNow.formatMoney(2, '.', ','));
-    $target.find('.cashboard-billable-table tbody').html(rows);
-
-    $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
-    $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
-
-    $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(totalDiffClass).find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + '</span>');
-    if (today > startDate && today < endDate) {
-      var workDaysToday = workingDaysBetweenDates(startDate, today),
-          breakEvenToday = workDaysToday * breakEvenWeekday,
-          diffToday = totalBillable - breakEvenToday,
-          diffTodayClass = diffToday > 0 ? "profit" : "loss";
-      if (breakEvenToday < totalBreakEven) {
-        $target.find('.cashboard-billable-summary').addClass(diffTodayClass).find('h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
-      }
-    }
-
     generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate);
     generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.hours-by-day-by-project'), startDate, endDate);
 
@@ -617,13 +631,6 @@ widgets.cashboard_global_billable_time = function(data, $) {
     generatePieChart(invoicesByCustomer, $target.find('.invoices-by-customer'));
     generatePieChart(dueInvoicesByCustomer, $target.find('.due-invoices-by-customer'));
     generatePieChart(paymentsByCustomer, $target.find('.payments-by-customer'));
-
-    $target.find('.invoiced').html('$' + totalInvoiced.formatMoney(2, '.', ','));
-    $target.find('.due-invoices').html('$' + totalDueInvoices.formatMoney(2, '.', ','));
-    $target.find('.payments').html('$' + totalPayments.formatMoney(2, '.', ','));
-    $target.find('.cashboard-invoices-table tbody').html(invoiceRows);
-    $target.find('.cashboard-due-invoices-table tbody').html(dueInvoiceRows);
-    $target.find('.cashboard-payments-table tbody').html(paymentRows);
 
   } else if (data.error) {
     var msg = '<div class="alert alert-error" title="' + data.error + '">There was a problem retrieving amount</div>';
