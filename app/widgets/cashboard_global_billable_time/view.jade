@@ -37,9 +37,9 @@ form.form-inline.settings
       .controls
         .input-append.input-prepend
           span.add-on From
-          input.datepicker.span2(type="text", name="start_date", value="#{service.defaultSettings()['start_date']()}")
+          input.datepicker.span2(type="text", name="start_date", readonly="true", value="#{service.defaultSettings()['start_date']()}")
           span.add-on To
-          input.datepicker.span2(type="text", name="end_date", value="#{service.defaultSettings()['end_date']()}")
+          input.datepicker.span2(type="text", name="end_date", readonly="true", value="#{service.defaultSettings()['end_date']()}")
           button.btn.btn-small.refresh-service('data-service'='cashboard_global_billable_time', 'data-id'="#{service.id}")
             i.icon-filter
         i.icon-ok.refresh-ok
