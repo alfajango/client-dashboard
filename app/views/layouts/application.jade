@@ -16,7 +16,14 @@ html
     script(src='/vendor/flot/js/jquery.flot.time.js')
     script(src='/vendor/flot/js/jquery.flot.crosshair.js')
     script(src='/vendor/flot/js/jquery.flot.pie.js')
-    link(rel='apple-touch-icon-precomposed', href='/images/mobile-icon.png')
+    // Android web app tags
+    meta(name="mobile-web-app-capable", content="yes")
+    link(rel="icon", sizes="192x192", href="/mobile-icon-192x192.png")
+    // Apple web app tags
+    link(rel="apple-touch-icon", sizes="192x192", href="/mobile-icon-192x192.png")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style", content="black-translucent")
+
     block head
 
     if analytics_account
