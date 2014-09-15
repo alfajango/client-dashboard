@@ -379,26 +379,34 @@ widgets.cashboard_global_billable_time = function(data, $) {
   }
 
   var $target = $('#widget-' + data.id),
-      rows = "";
+      rows = "",
+      startDateVal = $target.find('input[name="start_date"]').val().split('-'),
+      endDateVal = $target.find('input[name="end_date"]').val().split('-'),
+      startDate = new Date(startDateVal[0], (startDateVal[1] - 1), startDateVal[2]),
+      endDate = new Date(endDateVal[0], (endDateVal[1] - 1), endDateVal[2]),
+      startDateInt = +(startDate),
+      endDateInt = +(endDate),
+      today = new Date(),
+      hoursByRate = {},
+      hoursByProject = {},
+      hoursByMember = {},
+      hoursByDayByMember = {},
+      hoursByDayByProject = {},
+      hoursByMemberByDay = {},
+      hoursByProjectByDay = {},
+      invoicesByCustomer = {},
+      dueInvoicesByCustomer = {},
+      paymentsByCustomer = {},
+      totalHours = 0,
+      totalBillable = 0,
+      totalGrossBillable = 0,
+      totalUninvoicedNow = 0,
+      totalInvoiced = 0,
+      totalDueInvoices = 0,
+      totalPayments = 0;
+
   if (data.results) {
     if (data.results.timeEntries && data.results.timeEntries.length > 0) {
-      var hoursByRate = {},
-          hoursByProject = {},
-          hoursByMember = {},
-          hoursByDayByMember = {},
-          hoursByDayByProject = {},
-          hoursByMemberByDay = {},
-          hoursByProjectByDay = {},
-          invoicesByCustomer = {},
-          dueInvoicesByCustomer = {},
-          paymentsByCustomer = {},
-          totalHours = 0,
-          totalBillable = 0,
-          totalGrossBillable = 0,
-          totalUninvoicedNow = 0,
-          totalInvoiced = 0,
-          totalDueInvoices = 0,
-          totalPayments = 0;
       $.each(data.results.timeEntries, function(i, entry) {
         var createdAt = new Date(entry.created_on),
             hours = entry.minutes / 60.0,
@@ -454,14 +462,6 @@ widgets.cashboard_global_billable_time = function(data, $) {
         dayHours[createdInt] = billable;
         group(hoursByProjectByDay, entry.project_name, dayHours)
       });
-
-      var startDateVal = $target.find('input[name="start_date"]').val().split('-'),
-          endDateVal = $target.find('input[name="end_date"]').val().split('-'),
-          startDate = new Date(startDateVal[0], (startDateVal[1] - 1), startDateVal[2]),
-          endDate = new Date(endDateVal[0], (endDateVal[1] - 1), endDateVal[2]),
-          startDateInt = +(startDate),
-          endDateInt = +(endDate),
-          today = new Date();
 
       var workDays = workingDaysBetweenDates(startDate, endDate),
           totalBreakEven = workDays * breakEvenWeekday,
