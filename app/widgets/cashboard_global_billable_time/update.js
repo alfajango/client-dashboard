@@ -51,7 +51,7 @@ $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
 widgets.cashboard_global_billable_time = function(data, $) {
   var GOLDEN_RATIO = 0.618033988749895;
   function nl2br(text) {
-    return text.replace(/\n/g, "<br />");
+    return text && text.replace(/\n/g, "<br />");
   }
 
   function group(obj, key, value) {
@@ -420,7 +420,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
             created = new Date(currYear, currMonth, currDate),
             createdInt = +(created), // Make sure both dates are compared as integers
             formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate,
-            sentenceMatch = entry.description.match(/(^|[\*\.\n])\s*[\w]+/g),
+            sentenceMatch = entry.description && entry.description.match(/(^|[\*\.\n])\s*[\w]+/g),
             sentences = ( sentenceMatch && sentenceMatch.length ) || 0,
             sentencesPerHour = parseFloat(sentences) / hours;
         rows += '<tr class="' + (rate <= 0 ? 'zero-rate' : '') + (entry.minutes % 15 ? ' non-fifteen' : '') + (sentencesPerHour < 0.5 ? ' short-description' : '') + '">';
