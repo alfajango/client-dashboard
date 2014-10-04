@@ -648,6 +648,6 @@ widgets.cashboard_global_billable_time = function(data, $) {
       $form = $button.parents('form');
   $button.removeClass('disabled').html('<i class="icon-filter"></i>');
   $form.find('.refresh-ok').show().delay('250').fadeOut();
-  $form.find('input,textarea,select').prop('readonly', false);
+  $form.find('input,textarea,select').not('.datepicker').prop('readonly', false);
   $form.find('.btn').removeClass('disabled');
 };
