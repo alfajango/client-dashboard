@@ -70,8 +70,10 @@ exports.translate = function(data) {
 
   var issues = data.issues.map(function(x) {
     // Redmine description uses > for blockquote instead of standard textile bq. formatting.
-    var description = textile(x.description.replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>").replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;").replace(/^(<blockquote>)?>/gm, "$1"));
-    if (description == "") {
+    var description;
+    if (x.description && x.description !== "") {
+      description = textile(x.description.replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>").replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;").replace(/^(<blockquote>)?>/gm, "$1"));
+    } else {
       description = "<p><em>No description</em></p>";
     }
     return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description };
