@@ -29,6 +29,10 @@ block content
         label.control-label Service Token
         .controls
           input(type="text", name="service[token]", value=(service ? service.token : ""))
+      .control-group
+        label.control-label Config Data
+        .controls
+          textarea(name="service[config]")= service && service.config ? service.config : "{}"
 
       .control-group
         .controls

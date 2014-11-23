@@ -3,7 +3,8 @@ var ServiceSchema = new Schema({
   url:              String,
   identifier:       String,
   user:             String,
-  token:            String
+  token:            String,
+  config:           Schema.Types.Mixed
 });
 
 ServiceSchema.methods.fetch = function(callback, settings) {
