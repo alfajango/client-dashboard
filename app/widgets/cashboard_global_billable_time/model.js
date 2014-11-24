@@ -85,12 +85,61 @@ exports.fetch = function(service, callback, settings) {
       cashboard.fetchAPI('payments', path, service, jsonData, done);
     }
   ).then(function() {
+    var config = JSON.parse(service.config);
+
     out.results = cashboard.translate(jsonData, service);
+    out.breakEvenDates = cashboard.breakEvenDates(startDate, endDate, config);
+    out.goalDates = cashboard.goalDates(out.breakEvenDates);
     out.error = jsonData.error;
     console.log("RETURNING RESPONSE");
     callback(out);
   });
 
+};
+
+exports.arrFind = function(arr, test) {
+  var result = null;
+  arr.some(function(el, i) {
+    return test.call(this, el, i, arr) ? ((result = el), true) : false;
+  });
+  return result;
+}
+
+exports.breakEvenDates = function(startDateStr, endDateStr, config) {
+  var startDate = new Date(startDateStr + " EST"),
+      endDate = new Date(endDateStr + " EST"),
+      today = new Date(),
+      breakEvenDates = {},
+      total = 0,
+      totalToday = 0;
+  for (var day = startDate; day <= endDate; day.setDate(day.getDate() + 1)) {
+    var key, amount;
+    if ([0,6].indexOf(day.getDay()) >= 0) {
+      amount = 0;
+    } else {
+      key = this.arrFind(Object.keys(config).reverse(), function(k) { return (new Date(k)) <= day; });
+      // Divide by number of workdays in a week to distribute over workdays and not weekends.
+      amount = config[key] / 5;
+    }
+    total = total + amount;
+    if (today > day) {
+      totalToday = totalToday + amount;
+    }
+    breakEvenDates[(day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate())] = amount;
+  }
+  breakEvenDates.total = total;
+  breakEvenDates.totalToday = totalToday;
+  return breakEvenDates;
+};
+
+exports.goalDates = function(breakEvenDates) {
+  var keys = Object.keys(breakEvenDates),
+      goalDates = {};
+  for (var i=0; i<keys.length; i++) {
+    var key = keys[i];
+    goalDates[key] = breakEvenDates[key] * 1.2;
+  }
+  return goalDates;
 };
 
 exports.fetchAPI = function(name, path, service, jsonData, done) {

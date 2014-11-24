@@ -1,8 +1,3 @@
-// Break-even is ~$7400/wk, so 4100 / number of weekdays in a week (5/7) = 1480
-var breakEvenWeekday = 1480,
-// Goal is ~$8900/wk, so 8900 / number of weekdays in a week (5/7) = 1780
-    goalWeekday = 1780;
-
 $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
   var $this = $(this),
       $parent = $this.closest('form'),
@@ -140,7 +135,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
     return days;
   }
 
-  function generateStackedTimePlotFor(obj, $target, origStartDate, origEndDate, cumulative) {
+  function generateStackedTimePlotFor(obj, $target, origStartDate, origEndDate, breakEvenDates, goalDates, cumulative) {
     var startDate = new Date(origStartDate.getTime()),
         endDate = new Date(origEndDate.getTime()),
         plotSeries = [],
@@ -192,8 +187,9 @@ widgets.cashboard_global_billable_time = function(data, $) {
           formattedDay = dayYear + "-" + (dayMonth + 1) + "-" + dayDate,
           dayInt = +(day);
 
-      var breakEvenAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : breakEvenWeekday;
-      var goalAmount = [0,6].indexOf(day.getDay()) >= 0 ? 0 : goalWeekday;
+      var breakEvenAmount = breakEvenDates[formattedDay];
+      var goalAmount = goalDates[formattedDay];
+      console.log("amounts", breakEvenAmount, goalAmount);
       if (cumulative) {
         var data = plotSeries[0]['data'];
         if (data.length) { breakEvenAmount += data[data.length-1][1]; }
@@ -463,9 +459,8 @@ widgets.cashboard_global_billable_time = function(data, $) {
         group(hoursByProjectByDay, entry.project_name, dayHours)
       });
 
-      var workDays = workingDaysBetweenDates(startDate, endDate),
-          totalBreakEven = workDays * breakEvenWeekday,
-          totalGoal = workDays * goalWeekday,
+      var totalBreakEven = data.breakEvenDates.total,
+          totalGoal = data.goalDates.total,
           totalDiff = totalBillable - totalBreakEven,
           totalDiffClass = totalDiff > 0 ? "profit" : "loss";
 
@@ -480,8 +475,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
       $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(totalDiffClass).find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + '</span>');
       if (today > startDate && today < endDate) {
-        var workDaysToday = workingDaysBetweenDates(startDate, today),
-            breakEvenToday = workDaysToday * breakEvenWeekday,
+        var breakEvenToday = data.breakEvenDates.totalToday,
             diffToday = totalBillable - breakEvenToday,
             diffTodayClass = diffToday > 0 ? "profit" : "loss";
         if (breakEvenToday < totalBreakEven) {
@@ -620,11 +614,11 @@ widgets.cashboard_global_billable_time = function(data, $) {
     console.log(hoursByMemberByDay);
     console.log(hoursByProjectByDay);
 
-    generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate);
-    generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.hours-by-day-by-project'), startDate, endDate);
+    generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.hours-by-day-by-member'), startDate, endDate, data.breakEvenDates, data.goalDates);
+    generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.hours-by-day-by-project'), startDate, endDate, data.breakEvenDates, data.goalDates);
 
-    generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.cumulative-hours-by-day-by-member'), startDate, endDate, true);
-    generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.cumulative-hours-by-day-by-project'), startDate, endDate, true);
+    generateStackedTimePlotFor(hoursByMemberByDay, $target.find('.cumulative-hours-by-day-by-member'), startDate, endDate, data.breakEvenDates, data.goalDates, true);
+    generateStackedTimePlotFor(hoursByProjectByDay, $target.find('.cumulative-hours-by-day-by-project'), startDate, endDate, data.breakEvenDates, data.goalDates, true);
 
     console.log("invoices data", invoicesByCustomer, dueInvoicesByCustomer, paymentsByCustomer);
 
