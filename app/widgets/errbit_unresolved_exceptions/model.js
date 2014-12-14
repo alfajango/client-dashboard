@@ -20,6 +20,7 @@ exports.fetch = function(service, callback) {
   };
 
   var req = http.get(options, function(res) {
+    res.setEncoding('utf8');
     if (res.statusCode == 200) {
       var data = "";
       res.on('data', function(chunk) {

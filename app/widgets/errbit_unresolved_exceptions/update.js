@@ -1,7 +1,7 @@
 widgets.errbit_unresolved_exceptions = function(data, $) {
   var $target = $('#widget-' + data.id),
       rows = "";
-  if (data.results.length > 0) {
+  if (data.results && data.results.length > 0) {
     $.each(data.results, function(i, exception) {
       var issueTicket = exception.issue_link.match(/\/(\d+)[$\?]/);
       rows += '<tr>';
@@ -18,7 +18,7 @@ widgets.errbit_unresolved_exceptions = function(data, $) {
       rows += '</table></tr>';
     });
   } else if (data.error) {
-    rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving errors</div></td></tr>'
+    rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving unresolved errors</div></td></tr>'
   } else {
     rows += '<tr><td colspan=4><div class="alert alert-success">No unresolved errors <i class="icon-thumbs-up"></i></div></td></tr>';
   }
