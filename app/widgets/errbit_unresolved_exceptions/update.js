@@ -24,8 +24,8 @@ widgets.errbit_unresolved_exceptions = function(data, $) {
   }
   $target.find('.errbit-table tbody').html(rows);
   $target.find('.errbit-title .badge')
-    .html(data.results.length)
+    .html((data.results && data.results.length) || "N/A")
     .removeClass('badge-success').removeClass('badge-warning')
-    .addClass(data.results.length === 0 ? 'badge-success' : 'badge-warning');
+    .addClass(data.results && data.results.length === 0 ? 'badge-success' : 'badge-warning');
   $target.find('.refresh-service[data-service="errbit_unresolved_exceptions"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
 };
