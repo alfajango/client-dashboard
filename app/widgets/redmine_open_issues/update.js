@@ -7,7 +7,7 @@ widgets.redmine_open_issues = function(data, $) {
       rows = "",
       now = new Date(),
       yesterday = now - (1000 * 60 * 60 * 24);
-  if (data.results.length > 0) {
+  if (data.restuls && data.results.length > 0) {
     $.each(data.results, function(i, issue) {
       var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
       rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
