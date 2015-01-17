@@ -396,6 +396,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
       totalHours = 0,
       totalBillable = 0,
       totalGrossBillable = 0,
+      totalPaidOut = 0,
       totalUninvoicedNow = 0,
       totalInvoiced = 0,
       totalDueInvoices = 0,
@@ -410,6 +411,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
             pay_rate = parseFloat(entry.pay_rate),
             billable = hours * (rate - pay_rate),
             grossBillable = hours * rate,
+            paidOut = hours * pay_rate,
             currDate = createdAt.getDate(),
             currMonth = createdAt.getMonth(), //Months are zero based
             currYear = createdAt.getFullYear()
@@ -434,6 +436,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
         totalHours += hours;
         totalBillable += billable;
         totalGrossBillable += grossBillable;
+        totalPaidOut += paidOut;
         if (!entry.invoice_line_item_id) {
           totalUninvoicedNow += billable;
         }
@@ -466,6 +469,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
       $target.find('.total-hours').html(totalHours);
       $target.find('.total-billable').html('$' + totalBillable.formatMoney(2, '.', ','));
+      $target.find('.paid-out').html('($' + totalPaidOut.formatMoney(2, '.', ',') + ')');
       $target.find('.average-hourly-rate').html('$' + (totalGrossBillable / totalHours).formatMoney(2, '.', ','));
       $target.find('.total-uninvoiced-now').html('$' + totalUninvoicedNow.formatMoney(2, '.', ','));
       $target.find('.cashboard-billable-table tbody').html(rows);
