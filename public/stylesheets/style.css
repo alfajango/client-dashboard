@@ -242,6 +242,13 @@ i.refresh-ok {
   text-align: center;
 }
 
+.redmine-title-td:hover {
+  cursor: pointer;
+}
+.redmine-document-description {
+  display: none;
+}
+
 .aremysitesup-status {
 }
 table .alert {
