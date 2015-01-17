@@ -6,14 +6,17 @@ widgets.redmine_open_issues = function(data, $) {
   var $target = $('#widget-' + data.id),
       rows = "",
       now = new Date(),
-      yesterday = now - (1000 * 60 * 60 * 24);
+      yesterday = now - (1000 * 60 * 60 * 24),
+      totalIssues;
   if (data.results && data.results.versions && data.results.versions.length > 0) {
+    totalIssues = 0;
     $.each(data.results.versions, function(i, version) {
       if (version.status === "closed" || version.issues.length === 0) {
         return true;
       }
       rows += '<tr class="redmine-version"><td colspan=4>' + version.name + '</td></tr>';
       $.each(version.issues, function(i, issue) {
+        totalIssues++;
         var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
         rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
         rows += '<td class="issue-number-column">' + issue.id + '</td>';
@@ -41,6 +44,6 @@ widgets.redmine_open_issues = function(data, $) {
   $target.find('.redmine-table tbody').html(rows);
   $target.find('.redmine-table tr').tooltip({placement: 'bottom'});
   $target.find('.redmine-table td').tooltip({placement: 'bottom'});
-  $target.find('.redmine-title .badge').html((data.results && data.results.length) || "N/A");
+  $target.find('.redmine-title .badge').html(totalIssues || "N/A");
   $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
 };
