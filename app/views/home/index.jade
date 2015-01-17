@@ -178,6 +178,17 @@ block content
 
             include ../../widgets/errbit_unresolved_exceptions/view.jade
 
+    - if (project.hasService('redmine_documents'))
+      .span8
+        each service in project.filteredServices('redmine_documents')
+          div.redmine-open-issues(id="widget-#{service.id}")
+            .pull-right
+              button.btn.btn-small.refresh-service('data-service'='redmine_documents', 'data-id'="#{service.id}")
+                i.icon-refresh
+              i.icon-ok.refresh-ok
+
+            include ../../widgets/redmine_documents/view.jade
+
     - if (project.hasService('cashboard_uninvoiced_amounts'))
       .span4
         each service in project.filteredServices('cashboard_uninvoiced_amounts')
@@ -210,14 +221,3 @@ block content
               i.icon-ok.refresh-ok
 
             include ../../widgets/semaphore_build_status/view.jade
-  - if (project.hasService('redmine_documents'))
-    .row-fluid
-      .span12
-        each service in project.filteredServices('redmine_documents')
-          div.redmine-open-issues(id="widget-#{service.id}")
-            .pull-right
-              button.btn.btn-small.refresh-service('data-service'='redmine_documents', 'data-id'="#{service.id}")
-                i.icon-refresh
-              i.icon-ok.refresh-ok
-
-            include ../../widgets/redmine_documents/view.jade
