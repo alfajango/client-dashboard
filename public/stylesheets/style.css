@@ -249,6 +249,17 @@ i.refresh-ok {
   display: none;
 }
 
+.redmine-documents-modals .modal.fade.in {
+  width: calc(100% - 40px);
+  margin-left: calc(-50% + 20px);
+  height: calc(100% - 40px);
+  margin-top: 0;
+  top: 20px;
+}
+.redmine-documents-modals .modal .modal-body {
+  max-height: calc(100% - 86px);
+}
+
 .aremysitesup-status {
 }
 table .alert {
