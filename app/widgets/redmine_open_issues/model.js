@@ -39,7 +39,7 @@ exports.fetch = function(service, callback) {
       redmine.fetchAPI('versions', path, service, jsonData, done);
     }
   ).then(function() {
-    out.results = redmine.translate(jsonData);
+    out.results = redmine.translate(jsonData, service);
     out.error = jsonData.error;
     callback(out)
   });
@@ -89,7 +89,7 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
 };
 
 // Translate fetched response to db store format
-exports.translate = function(data) {
+exports.translate = function(data, service) {
   if (data.total_amount > data.limit) { console.log('WARNING: Total issues is greater than returned.'); }
   var results = {
         versions: []
@@ -116,7 +116,14 @@ exports.translate = function(data) {
     // Redmine description uses > for blockquote instead of standard textile bq. formatting.
     var description;
     if (x.description && x.description !== "") {
-      description = textile(x.description.replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>").replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;").replace(/^(<blockquote>)?>/gm, "$1"));
+      description = textile(
+        x.description
+        .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
+        .replace(/!(\/[^\s]+)!/gm, "!http://" + service.url + "$1!")
+        .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
+        .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
+        .replace(/^(<blockquote>)?>/gm, "$1")
+      );
     } else {
       description = "<p><em>No description</em></p>";
     }
