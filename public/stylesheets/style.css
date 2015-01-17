@@ -234,6 +234,13 @@ i.refresh-ok {
   margin-bottom: 0;
   height: 8px;
 }
+.redmine-version {
+  background: #eee;
+  font-weight: bold;
+}
+.redmine-version td {
+  text-align: center;
+}
 
 .aremysitesup-status {
 }

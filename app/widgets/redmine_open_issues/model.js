@@ -24,16 +24,35 @@ var priorityOrder = {
   'Immediate': 4
 };
 
-// Fetch issues from service endpoint
 exports.fetch = function(service, callback) {
   var redmine = this,
+      jsonData = {},
       out = {id: service.id, name: service.name};
+
+  utils.when(
+    function(done) {
+      var path = '/projects/' + service.identifier + '/issues.json?status_id=open&limit=100';
+      redmine.fetchAPI('issues', path, service, jsonData, done);
+    },
+    function(done) {
+      var path = '/projects/' + service.identifier + '/versions.json';
+      redmine.fetchAPI('versions', path, service, jsonData, done);
+    }
+  ).then(function() {
+    out.results = redmine.translate(jsonData);
+    out.error = jsonData.error;
+    callback(out)
+  });
+};
+
+// Fetch issues from service endpoint
+exports.fetchAPI = function(name, path, service, jsonData, done) {
+  var redmine = this;
 
   var options = {
     host: service.url,
     port: 80,
-    path: '/projects/' + service.identifier + '/issues.json?status_id=open&limit=100', // query parameter doesn't work as advertised
-    query: 'status_id=open&limit=100',
+    path: path,
     headers: {
       'Accept': 'application/json',
       'X-Redmine-API-Key': service.token
@@ -49,26 +68,51 @@ exports.fetch = function(service, callback) {
       res.on('end', function(){
         try {
         var resData = JSON.parse(data);
-        out.results = redmine.translate(resData);
+        jsonData[name] = resData[name];
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
-          out.error = err.message;
+          jsonData.error = err.message;
         }
-        callback(out);
+        console.log('DONE: ' + name);
+        done();
       });
+    } else {
+      console.log('Status code: ' + res.statusCode);
+      jsonData.error = res.statusCode;
+      done();
     }
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
-    out.error = e.message;
-    callback(out);
+    jsonData.error = e.message;
+    done();
   });
 };
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
   if (data.total_amount > data.limit) { console.log('WARNING: Total issues is greater than returned.'); }
+  var results = {
+        versions: []
+      },
+      issues;
 
-  var issues = data.issues.map(function(x) {
+  if (data.versions) {
+    results.versions = data.versions.map(function(s) {
+      return {
+        id: s.id,
+        name: s.name,
+        status: s.status,
+        due_date: s.due_date
+      }
+    }).sort(function(a, b) {
+      var aDueDate = a.due_date || "0",
+          bDueDate = b.due_date || "0";
+      return (aDueDate < bDueDate ? -1 : (aDueDate > bDueDate ? 1 : 0));
+    });
+  }
+  results.versions.push( {id: undefined, name: "Backlog", status: "open", due_date: null} );
+
+  issues = data.issues.map(function(x) {
     // Redmine description uses > for blockquote instead of standard textile bq. formatting.
     var description;
     if (x.description && x.description !== "") {
@@ -76,7 +120,8 @@ exports.translate = function(data) {
     } else {
       description = "<p><em>No description</em></p>";
     }
-    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description };
+    var version = x.fixed_version && x.fixed_version.id;
+    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description, version_id: version };
   })
     .sort(function(a, b) {
       var firstOrder = b.priority - a.priority,
@@ -91,7 +136,12 @@ exports.translate = function(data) {
         return firstOrder;
       }
     });
-  return issues;
+  results.versions.forEach(function(version) {
+    version.issues = issues.filter(function(issue) {
+      return issue.version_id == version.id;
+    });
+  });
+  return results;
 };
 
 // Write fetched results to db
