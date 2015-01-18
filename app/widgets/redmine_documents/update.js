@@ -1,3 +1,15 @@
+$(document)
+  .delegate('[data-toggle="modal"]', 'click', function(e) {
+    var hash = $(this).data('target').replace(/^#/, ''),
+        url = window.location.href.replace(/#.*/, '') + '#' + hash;
+    history.pushState(null, null, url);
+  })
+  .delegate('.modal', 'hide', function(e) {
+    var url = window.location.href.replace(/#.*/, '');
+    history.pushState(null, null, url);
+  });
+
+
 widgets.redmine_documents = function(data, $) {
   var $target = $('#widget-' + data.id),
       rows = "",
@@ -25,4 +37,8 @@ widgets.redmine_documents = function(data, $) {
   $target.find('.redmine-documents-title .badge').html(totalDocuments || "N/A");
   $target.find('.refresh-service[data-service="redmine_documents"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
   $target.find('.redmine-documents-modals').html(modals);
+
+  if (window.location.hash !== "") {
+    $(window.location.hash).modal('show');
+  }
 };

@@ -261,6 +261,12 @@ i.refresh-ok {
     margin-left: -481px;
   }
 }
+@media (max-width: 480px) {
+  .redmine-documents-modals .modal {
+    position: fixed;
+    left: 50%;
+  }
+}
 .redmine-documents-modals .modal.fade.in {
   top: 20px;
 }
