@@ -20,21 +20,12 @@ module.exports = function(app) {
           }, {});
           done();
         });
-      },
-      function(done) {
-        Client.find({})
-          .sort('name', 1)
-          .exec( function(err, collection) {
-            clients = collection;
-            done();
-          });
       }
     ).then(function() {
       res.render('admin/index', {
         title: 'Admin',
         message: req.flash(),
-        users: users,
-        clients: clients
+        users: users
       });
     });
   });

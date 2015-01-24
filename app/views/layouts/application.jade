@@ -72,6 +72,16 @@ html
               if currentUser.admin
                 li.dropdown
                   a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
+                    | Select Client
+                    b.caret
+                  ul.dropdown-menu
+                    each client in clients
+                      - if (client.projects)
+                        li(style="background: #{client.projects[0].headerBG};")
+                          a(href="/?client_id=#{client.id}", style="color: #{client.projects[0].headerColor};")
+                            = client.name
+                li.dropdown
+                  a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
                     | Admin
                     b.caret
                   ul.dropdown-menu

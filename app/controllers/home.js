@@ -1,4 +1,5 @@
 var Client = mongoose.model('Client'),
+    Project = mongoose.model('Project'),
     User = mongoose.model('User'),
     MongoStore = require('connect-mongodb');
 
