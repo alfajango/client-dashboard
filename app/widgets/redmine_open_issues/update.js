@@ -8,13 +8,20 @@ widgets.redmine_open_issues = function(data, $) {
       now = new Date(),
       yesterday = now - (1000 * 60 * 60 * 24),
       totalIssues;
-  if (data.results && data.results.versions && data.results.versions.length > 0) {
+  if (data.error) {
+    rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div></td></tr>'
+  } else if (data.results && data.results.versions && data.results.versions.length > 0) {
     totalIssues = 0;
     $.each(data.results.versions, function(i, version) {
-      if (version.status === "closed" || version.issues.length === 0) {
+      if (version.status === "closed") {
         return true;
       }
       rows += '<tr class="redmine-version"><td colspan=4>' + version.name + '</td></tr>';
+
+      if (version.issues.length === 0) {
+        rows += '<tr><td colspan=4><div class="alert alert-success">No current tasks</div></td></tr>';
+      }
+
       $.each(version.issues, function(i, issue) {
         totalIssues++;
         var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
@@ -36,10 +43,8 @@ widgets.redmine_open_issues = function(data, $) {
         rows += '</tr>';
       });
     });
-  } else if (data.error) {
-    rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div></td></tr>'
   } else {
-    rows += '<tr><td colspan=4><div class="alert alert-success">No current tasks</div></td></tr>';
+    rows += '<tr><td colspan=4><div class="alert alert-success">No open tasks</div></td></tr>';
   }
   $target.find('.redmine-table tbody').html(rows);
   $target.find('.redmine-table tr').tooltip({placement: 'bottom'});

@@ -94,7 +94,7 @@ exports.translate = function(data, service) {
   var results = {
         versions: []
       },
-      issues;
+      issues = [];
 
   if (data.versions) {
     results.versions = data.versions.map(function(s) {
@@ -112,37 +112,40 @@ exports.translate = function(data, service) {
   }
   results.versions.push( {id: undefined, name: "Backlog", status: "open", due_date: null} );
 
-  issues = data.issues.map(function(x) {
-    // Redmine description uses > for blockquote instead of standard textile bq. formatting.
-    var description;
-    if (x.description && x.description !== "") {
-      description = textile(
-        x.description
-        .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
-        .replace(/!(\/[^\s]+)!/gm, "!http://" + service.url + "$1!")
-        .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
-        .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
-        .replace(/^(<blockquote>)?>/gm, "$1")
-      );
-    } else {
-      description = "<p><em>No description</em></p>";
-    }
-    var version = x.fixed_version && x.fixed_version.id;
-    return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description, version_id: version };
-  })
-    .sort(function(a, b) {
-      var firstOrder = b.priority - a.priority,
-          secondOrder = statusOrder[a.status] - statusOrder[b.status];
-      if (firstOrder === 0) {
-        if (secondOrder === 0) {
-          return a.id - b.id;
-        } else {
-          return secondOrder;
-        }
+  if (data.issues) {
+    issues = data.issues.map(function(x) {
+      // Redmine description uses > for blockquote instead of standard textile bq. formatting.
+      var description;
+      if (x.description && x.description !== "") {
+        description = textile(
+          x.description
+          .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
+          .replace(/!(\/[^\s]+)!/gm, "!http://" + service.url + "$1!")
+          .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
+          .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
+          .replace(/^(<blockquote>)?>/gm, "$1")
+        );
       } else {
-        return firstOrder;
+        description = "<p><em>No description</em></p>";
       }
-    });
+      var version = x.fixed_version && x.fixed_version.id;
+      return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description, version_id: version };
+    })
+      .sort(function(a, b) {
+        var firstOrder = b.priority - a.priority,
+            secondOrder = statusOrder[a.status] - statusOrder[b.status];
+        if (firstOrder === 0) {
+          if (secondOrder === 0) {
+            return a.id - b.id;
+          } else {
+            return secondOrder;
+          }
+        } else {
+          return firstOrder;
+        }
+      });
+  }
+
   results.versions.forEach(function(version) {
     version.issues = issues.filter(function(issue) {
       return issue.version_id == version.id;
