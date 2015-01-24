@@ -19,7 +19,7 @@ widgets.redmine_open_issues = function(data, $) {
       rows += '<tr class="redmine-version"><td colspan=4>' + version.name + '</td></tr>';
 
       if (version.issues.length === 0) {
-        rows += '<tr><td colspan=4><div class="alert alert-success">No current tasks</div></td></tr>';
+        rows += '<tr><td colspan=4><div class="alert alert-success">No open tasks</div></td></tr>';
       }
 
       $.each(version.issues, function(i, issue) {
