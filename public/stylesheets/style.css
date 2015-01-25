@@ -281,6 +281,13 @@ i.refresh-ok {
 .redmine-documents-modals .modal .modal-body {
   max-height: calc(100% - 86px);
 }
+.redmine-documents-share-url {
+  margin-right: 15px;
+  font-size: 13px;
+}
+.redmine-documents-share-url i {
+  color: #0088CD;
+}
 
 .aremysitesup-status {
 }
