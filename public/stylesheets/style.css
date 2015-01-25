@@ -54,6 +54,14 @@ body {
 .navbar .nav > li > a, .navbar .nav > li > a:hover {
   color: #78B347 !important;
 }
+.caret {
+  opacity: 0.6;
+}
+.navbar .nav li.dropdown .dropdown-toggle .caret, .navbar .nav li.dropdown.open .caret {
+  border-top-color: #78B347;
+  border-bottom-color: #78B347;
+}
+
 .main-content {
   /* Account for fixed navbar */
   padding-top: 20px;
