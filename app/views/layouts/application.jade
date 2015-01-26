@@ -79,7 +79,7 @@ html
                     b.caret
                   ul.dropdown-menu
                     each client in clients
-                      - if (client.projects)
+                      - if (client.projects && client.projects[0])
                         li(style="background: #{client.projects[0].headerBG};")
                           a(href="/?client_id=#{client.id}", style="color: #{client.projects[0].headerColor};")
                             = client.name
