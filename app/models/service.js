@@ -15,4 +15,8 @@ ServiceSchema.methods.defaultSettings = function() {
   return widgets[this.name].model.defaultSettings;
 };
 
+ServiceSchema.methods.proxies = function() {
+  return widgets[this.name].model.proxies;
+};
+
 mongoose.model('Service', ServiceSchema);

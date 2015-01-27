@@ -85,6 +85,14 @@ module.exports = function(app) {
     });
   });
 
+  app.get('/proxy/:widget', auth.ensureAuthenticated, getProjects, function(req, res) {
+    var project = req.projects.id(req.query.project_id),
+        service = project.services.id(req.query.service_id),
+        proxyFunction = service.proxies()[req.query.proxy];
+
+    proxyFunction(service, req, res);
+  });
+
   // TODO: Namespace the return object per user,
   // so we don't get crossed messages!
   io.sockets.on('connection', function(socket) {
