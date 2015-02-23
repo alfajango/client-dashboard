@@ -418,7 +418,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
             created = new Date(currYear, currMonth, currDate),
             createdInt = +(created), // Make sure both dates are compared as integers
             formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate,
-            sentenceMatch = entry.description && entry.description.match(/((^|[\*\.\n])\s*[\w]+)|(,\s*\w{3,})/g),
+            sentenceMatch = entry.description && entry.description.match(/((^|[\*\.;\n])\s*[\w]+)|(,\s*\w{3,})/g),
             sentences = ( sentenceMatch && sentenceMatch.length ) || 0,
             sentencesPerHour = parseFloat(sentences) / hours;
         rows += '<tr class="' + (rate <= 0 ? 'zero-rate' : '') + (entry.minutes % 15 ? ' non-fifteen' : '') + (!sentencesPerHour || sentencesPerHour < 0.5 ? ' short-description' : '') + '">';
