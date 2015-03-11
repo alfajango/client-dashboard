@@ -112,6 +112,7 @@ exports.translate = function(data, service) {
             .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
             .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
             .replace(/^(<blockquote>)?>/gm, "$1")
+            .replace(/\r?\n/gm, "\n")
         );
       } else {
         description = "<p><em>No description</em></p>";
