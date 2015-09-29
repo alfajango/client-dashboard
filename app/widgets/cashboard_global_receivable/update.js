@@ -49,8 +49,8 @@ widgets.cashboard_global_receivable = function(data, $) {
         projectRows = "",
         uninvoicedTimeTotal = 0,
         uninvoicedExpenseTotal = 0
-        unpaidInvoiceTotal = 0,
-        unpaidDueInvoiceTotal = 0,
+        unpaidInvoiceBalance = 0,
+        unpaidDueInvoiceBalance = 0,
         uninvoicedByProject = {},
         unpaidByCustomer = {};
 
@@ -109,16 +109,16 @@ widgets.cashboard_global_receivable = function(data, $) {
           invoiceRows += '<td>' + formattedDueDate + '</td>';
           invoiceRows += '</tr>';
 
-          unpaidInvoiceTotal += total;
+          unpaidInvoiceBalance += balance;
           if (dueAt < now) {
-            unpaidDueInvoiceTotal += total;
+            unpaidDueInvoiceBalance += balance;
           }
 
-          group(unpaidByCustomer, invoice.client_name, total);
+          group(unpaidByCustomer, invoice.client_name, balance);
         });
 
-        $target.find('.unpaid-invoices').html('$' + unpaidInvoiceTotal.formatMoney(2, '.', ','));
-        $target.find('.unpaid-due-invoices').html('$' + unpaidDueInvoiceTotal.formatMoney(2, '.', ','));
+        $target.find('.unpaid-invoices').html('$' + unpaidInvoiceBalance.formatMoney(2, '.', ','));
+        $target.find('.unpaid-due-invoices').html('$' + unpaidDueInvoiceBalance.formatMoney(2, '.', ','));
         $target.find('.cashboard-unpaid-invoices-table tbody').html(invoiceRows);
 
         generatePieChart(unpaidByCustomer, $target.find('.unpaid-by-customer'));
