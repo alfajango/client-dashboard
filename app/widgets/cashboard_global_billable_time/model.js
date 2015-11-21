@@ -199,14 +199,30 @@ exports.translate = function(data, service) {
         return pa.person_id === entry.person_id && pa.project_id === lineItem.project_id;
       })[0];
 
-      entry.pay_rate = projectAssignment ? projectAssignment.pay_rate : 0;
+      if (projectAssignment) {
+        if (projectAssignment.pay_rate > 0) {
+          entry.pay_rate = projectAssignment.pay_rate;
+        } else {
+          entry.pay_rate = person.default_pay_rate;
+        }
+      } else {
+        entry.pay_rate = 0;
+      }
 
       if (project.billing_code === 0) {
         entry.billable_rate = 0;
       } else if (project.billing_code === 1) {
         entry.billable_rate = lineItem.price_per;
       } else if (project.billing_code === 2) {
-        entry.billable_rate = projectAssignment ? projectAssignment.bill_rate : 0;
+        if (projectAssignment) {
+          if (projectAssignment.bill_rate > 0) {
+            entry.billable_rate = projectAssignment.bill_rate;
+          } else {
+            entry.billable_rate = person.default_bill_rate;
+          }
+        } else {
+          entry.billable_rate = 0;
+        }
       }
     });
     results.timeEntries = data.timeEntries;
