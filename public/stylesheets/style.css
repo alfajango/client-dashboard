@@ -320,6 +320,8 @@ table .alert {
 }
 .cashboard-billable-summary small {
   color: #fff;
+  font-size: 12px;
+  font-weight: lighter;
 }
 .cashboard-billable-summary h2 {
   font-size: 3em;

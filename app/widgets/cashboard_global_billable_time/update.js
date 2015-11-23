@@ -383,6 +383,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
       startDateInt = +(startDate),
       endDateInt = +(endDate),
       today = new Date(),
+      yesterday = today.setDate(today.getDate() - 1),
       hoursByRate = {},
       hoursByProject = {},
       hoursByMember = {},
@@ -477,13 +478,13 @@ widgets.cashboard_global_billable_time = function(data, $) {
       $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
       $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
 
-      $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(totalDiffClass).find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + '</span>');
-      if (today > startDate && today < endDate) {
-        var breakEvenToday = data.breakEvenDates.totalToday,
-            diffToday = totalBillable - breakEvenToday,
-            diffTodayClass = diffToday > 0 ? "profit" : "loss";
-        if (breakEvenToday < totalBreakEven) {
-          $target.find('.cashboard-billable-summary').addClass(diffTodayClass).find('h2').prepend('<span class="' + diffTodayClass + '">$' + Math.abs(diffToday).formatMoney(2, '.', ',') + ' <small>(today)</small></span> / ');
+      $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(totalDiffClass).find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + ' <small>(entire date range)</small></span>');
+      if (yesterday > startDate && yesterday < endDate) {
+        var breakEvenYesterday = data.breakEvenDates.totalYesterday,
+            diffYesterday = totalBillable - breakEvenYesterday,
+            diffYesterdayClass = diffYesterday > 0 ? "profit" : "loss";
+        if (breakEvenYesterday < totalBreakEven) {
+          $target.find('.cashboard-billable-summary').addClass(diffYesterdayClass).find('h2').prepend('<span class="' + diffYesterdayClass + '">$' + Math.abs(diffYesterday).formatMoney(2, '.', ',') + ' <small>(start to yesterday)</small></span> / ');
         }
       }
 

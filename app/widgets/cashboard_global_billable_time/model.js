@@ -109,9 +109,10 @@ exports.breakEvenDates = function(startDateStr, endDateStr, config) {
   var startDate = new Date(startDateStr + " EST"),
       endDate = new Date(endDateStr + " EST"),
       today = new Date(),
+      yesterday = today.setDate(today.getDate() - 1),
       breakEvenDates = {},
       total = 0,
-      totalToday = 0;
+      totalYesterday = 0;
   for (var day = startDate; day <= endDate; day.setDate(day.getDate() + 1)) {
     var key, amount;
     if ([0,6].indexOf(day.getDay()) >= 0) {
@@ -122,13 +123,13 @@ exports.breakEvenDates = function(startDateStr, endDateStr, config) {
       amount = config[key] / 5;
     }
     total = total + amount;
-    if (today > day) {
-      totalToday = totalToday + amount;
+    if (yesterday > day) {
+      totalYesterday = totalYesterday + amount;
     }
     breakEvenDates[(day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate())] = amount;
   }
   breakEvenDates.total = total;
-  breakEvenDates.totalToday = totalToday;
+  breakEvenDates.totalYesterday = totalYesterday;
   return breakEvenDates;
 };
 
