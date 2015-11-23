@@ -46,7 +46,7 @@ form.form-inline.settings
 
 .row-fluid
   .span12
-    a.accordian-toggle('data-toggle'="collapse", 'data-target'="#time-entries-#{service.id}", 'href'="#time-entries-#{service.id}")
+    a.accordian-toggle.cashboard-billable-entries-link('data-toggle'="collapse", 'data-target'="#time-entries-#{service.id}", 'href'="#time-entries-#{service.id}")
       | Detailed Time Entries
     div.cashboard-billable-table-container.collapse('id'="time-entries-#{service.id}")
       table.table.table-bordered.cashboard-billable-table

@@ -405,6 +405,11 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
   if (data.results) {
     if (data.results.timeEntries && data.results.timeEntries.length > 0) {
+      var zeroRate,
+          fractionalIncrement,
+          shortDescription,
+          $entriesLink = $target.find('.cashboard-billable-entries-link');
+
       $.each(data.results.timeEntries, function(i, entry) {
         var createdAt = new Date(entry.created_on),
             hours = entry.minutes / 60.0,
@@ -421,8 +426,10 @@ widgets.cashboard_global_billable_time = function(data, $) {
             formattedDate = currYear + "-" + (currMonth + 1) + "-" + currDate,
             sentenceMatch = entry.description && entry.description.match(/((^\s*[\*\-]?|[\.;])\s*[^\s]+[\w]+)|(,\s*\w{3,})/gm),
             sentences = ( sentenceMatch && sentenceMatch.length ) || 0,
-            sentencesPerHour = parseFloat(sentences) / hours;
-        rows += '<tr class="' + (rate <= 0 ? 'zero-rate' : '') + (entry.minutes % 15 ? ' non-fifteen' : '') + (!sentencesPerHour || sentencesPerHour < 0.5 ? ' short-description' : '') + '">';
+            sentencesPerHour = parseFloat(sentences) / hours,
+            acceptableIncrement = 15,
+            acceptableDescriptionRatio = 0.5;
+        rows += '<tr class="' + (rate <= 0 ? 'zero-rate' : '') + (entry.minutes % acceptableIncrement ? ' non-fifteen' : '') + (!sentencesPerHour || sentencesPerHour < acceptableDescriptionRatio ? ' short-description' : '') + '">';
         rows += '<td>' + formattedDate + '</td>';
         rows += '<td>' + entry.person_name + '</td>';
         rows += '<td>' + entry.project_name + '</td>';
@@ -433,6 +440,16 @@ widgets.cashboard_global_billable_time = function(data, $) {
         rows += '<td class="description-cell"><div class="sentences-per-hour">' + sentencesPerHour.toFixed(1) + '</div> ' + nl2br(entry.description) + '</td>';
         rows += '<td><div class="time-invoiced">' + (entry.invoice_line_item_id ? '⎘' : '') + '</div></td>';
         rows += '</tr>';
+
+        if (rate <= 0) {
+          zeroRate = true;
+        }
+        if (entry.minutes % acceptableIncrement) {
+          fractionalIncrement = true;
+        }
+        if (!sentencesPerHour || sentencesPerHour < acceptableDescriptionRatio) {
+          shortDescription = true;
+        }
 
         totalHours += hours;
         totalBillable += billable;
@@ -486,6 +503,17 @@ widgets.cashboard_global_billable_time = function(data, $) {
         if (breakEvenYesterday < totalBreakEven) {
           $target.find('.cashboard-billable-summary').addClass(diffYesterdayClass).find('h2').prepend('<span class="' + diffYesterdayClass + '">$' + Math.abs(diffYesterday).formatMoney(2, '.', ',') + ' <small>(start to yesterday)</small></span> / ');
         }
+      }
+
+      $entriesLink.find('.time-entry-warning').remove();
+      if (zeroRate) {
+        $entriesLink.append(' <span class="time-entry-warning zero-rate">!</span>');
+      }
+      if (fractionalIncrement) {
+        $entriesLink.append(' <span class="time-entry-warning non-fifteen">!</span>');
+      }
+      if (shortDescription) {
+        $entriesLink.append(' <span class="time-entry-warning short-description">!</span>');
       }
 
     } else {

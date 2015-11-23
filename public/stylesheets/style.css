@@ -153,6 +153,32 @@ h2 .badge {
 .recently-updated td {
   background: #e8f7ff;
 }
+
+.time-entry-warning {
+  font-weight: bold;
+  display: inline-block;
+  padding: 0 0.5em;
+  border: solid 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+.time-entry-warning.zero-rate {
+  background: #F8D6D6;
+  color: #D33;
+  border-color: #D33;
+}
+.time-entry-warning.non-fifteen {
+  background: #FAE70A;
+  color: #968B05;
+  border-color: #968B05;
+}
+.time-entry-warning.short-description {
+  background: #EADCFD;
+  color: #7756E0;
+  border-color: #7756E0;
+}
 .zero-rate td {
   background: #F8D6D6;
 }
