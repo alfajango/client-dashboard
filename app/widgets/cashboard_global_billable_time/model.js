@@ -87,7 +87,7 @@ exports.fetch = function(service, callback, settings) {
   ).then(function() {
     var config = JSON.parse(service.config);
 
-    out.results = cashboard.translate(jsonData, service);
+    out.results = cashboard.translate(jsonData, service, config);
     out.breakEvenDates = cashboard.breakEvenDates(startDate, endDate, config);
     out.goalDates = cashboard.goalDates(out.breakEvenDates);
     out.error = jsonData.error;
@@ -118,9 +118,9 @@ exports.breakEvenDates = function(startDateStr, endDateStr, config) {
     if ([0,6].indexOf(day.getDay()) >= 0) {
       amount = 0;
     } else {
-      key = this.arrFind(Object.keys(config).reverse(), function(k) { return (new Date(k)) <= day; });
+      key = this.arrFind(Object.keys(config.breakEvenAmounts).reverse(), function(k) { return (new Date(k)) <= day; });
       // Divide by number of workdays in a week to distribute over workdays and not weekends.
-      amount = config[key] / 5;
+      amount = config.breakEvenAmounts[key] / 5;
     }
     total = total + amount;
     if (yesterday > day) {
@@ -177,9 +177,12 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
 };
 
 // Translate fetched response to db store format
-exports.translate = function(data, service) {
+exports.translate = function(data, service, config) {
   var cashboard = this,
-      results = {};
+      results = {},
+      payRates = config.payRates,
+      billRates = config.billRates;
+
   if (data.timeEntries) {
     data.timeEntries.forEach(function(entry) {
       var lineItem = data.lineItems.filter(function(li) {
@@ -200,31 +203,55 @@ exports.translate = function(data, service) {
         return pa.person_id === entry.person_id && pa.project_id === lineItem.project_id;
       })[0];
 
-      if (projectAssignment) {
-        if (projectAssignment.pay_rate > 0) {
-          entry.pay_rate = projectAssignment.pay_rate;
-        } else {
-          entry.pay_rate = person.default_pay_rate;
-        }
-      } else {
-        entry.pay_rate = 0;
+      var oldPayRate = false,
+          oldBillRate = false,
+          day = new Date(entry.created_on);
+      if (payRates && payRates[person.id] && (payRates[person.id]["default"] || payRates[person.id][project.id])) {
+        var dates =  payRates[person.id][project.id] || payRates[person.id]["default"],
+            key = cashboard.arrFind(Object.keys(dates).reverse(), function(k) { return (new Date(k)) <= day; });
+        oldPayRate = dates[key];
+      }
+      // Probably change this in the future to allow billable rates by task instead of (or in addition to) by person.
+      if (billRates && billRates[project.id] && (billRates[project.id]["default"] || billRates[project.id][person.id])) {
+        var dates = billRates[project.id][person.id] || billRates[project.id]["default"],
+            key = cashboard.arrFind(Object.keys(dates).reverse(), function(k) { return (new Date(k)) <= day; });
+        oldBillRate = dates[key];
       }
 
-      if (project.billing_code === 0) {
-        entry.billable_rate = 0;
-      } else if (project.billing_code === 1) {
-        entry.billable_rate = lineItem.price_per;
-      } else if (project.billing_code === 2) {
+      if (oldPayRate) {
+        entry.pay_rate = oldPayRate;
+      } else {
         if (projectAssignment) {
-          if (projectAssignment.bill_rate > 0) {
-            entry.billable_rate = projectAssignment.bill_rate;
+          if (projectAssignment.pay_rate > 0) {
+            entry.pay_rate = projectAssignment.pay_rate;
           } else {
-            entry.billable_rate = person.default_bill_rate;
+            entry.pay_rate = person.default_pay_rate;
           }
         } else {
-          entry.billable_rate = 0;
+          entry.pay_rate = 0;
         }
       }
+
+      if (oldBillRate) {
+        entry.billable_rate = oldBillRate;
+      } else {
+        if (project.billing_code === 0) {
+          entry.billable_rate = 0;
+        } else if (project.billing_code === 1) {
+          entry.billable_rate = lineItem.price_per;
+        } else if (project.billing_code === 2) {
+          if (projectAssignment) {
+            if (projectAssignment.bill_rate > 0) {
+              entry.billable_rate = projectAssignment.bill_rate;
+            } else {
+              entry.billable_rate = person.default_bill_rate;
+            }
+          } else {
+            entry.billable_rate = 0;
+          }
+        }
+      }
+      //console.log("rates", "project: ", project.id, "person: ", person.id, "old bill rate: ", oldBillRate, "old pay rate: ", oldPayRate, "bill rate: ", entry.billable_rate, "pay rate: ", entry.pay_rate);
     });
     results.timeEntries = data.timeEntries;
   }
