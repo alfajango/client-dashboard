@@ -501,7 +501,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
             diffYesterday = totalBillable - breakEvenYesterday,
             diffYesterdayClass = diffYesterday > 0 ? "profit" : "loss";
         if (breakEvenYesterday < totalBreakEven) {
-          $target.find('.cashboard-billable-summary').addClass(diffYesterdayClass).find('h2').prepend('<span class="' + diffYesterdayClass + '">$' + Math.abs(diffYesterday).formatMoney(2, '.', ',') + ' <small>(start to yesterday)</small></span> / ');
+          $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(diffYesterdayClass).find('h2').prepend('<span class="' + diffYesterdayClass + '">$' + Math.abs(diffYesterday).formatMoney(2, '.', ',') + ' <small>(start to yesterday)</small></span> / ');
         }
       }
 
