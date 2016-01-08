@@ -337,30 +337,40 @@ table .alert {
 
 .cashboard-billable-summary {
   text-align: center;
-}
-.cashboard-billable-summary.profit {
-  background: #64953B;
-}
-.cashboard-billable-summary.loss {
-  background: #a24f40;
+  padding: 20px 20px 25px;
 }
 .cashboard-billable-summary small {
   color: #fff;
   font-size: 12px;
   font-weight: lighter;
+  display: inline-block;
+  line-height: 14px;
 }
 .cashboard-billable-summary h2 {
   font-size: 3em;
   font-weight: 200;
-  color: #fff;
 }
 .cashboard-billable-summary .profit {
+  background: #64953B;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 5px 5px;
+  min-height: 36px;
 }
 .cashboard-billable-summary .profit::before {
   content: "+ ";
   color: #fff;
 }
 .cashboard-billable-summary .loss {
+  background: #a24f40;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 5px 5px;
+  min-height: 36px;
 }
 .cashboard-billable-summary .loss::before {
   content: "- ";
