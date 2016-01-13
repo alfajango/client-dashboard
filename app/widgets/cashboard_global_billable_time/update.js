@@ -29,7 +29,7 @@ $(document).delegate('.cashboard-global-time-shortcut', 'click', function(e) {
       end = new Date(year, month+1, 0);
       break;
     default:
-      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      diff = d.getDate() - day + (day <= 1 ? -6:1); // adjust when day is sunday (0) or monday (1), then set to previous monday
       start = new Date(d.setDate(diff));
       end = new Date(start.getTime());
       end = new Date(end.setDate(start.getDate() + 6));

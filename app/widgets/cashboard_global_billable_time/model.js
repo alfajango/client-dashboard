@@ -20,7 +20,7 @@ exports.defaultSettings = {
   start_date_raw: function() {
     var d = new Date(),
         day = d.getDay(),
-        diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+        diff = d.getDate() - day + (day <= 1 ? -6:1); // adjust when day is sunday (0) or monday (1), then set to previous monday
     return new Date(d.setDate(diff));
   },
   formatted: function(date) {
