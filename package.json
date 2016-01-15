@@ -10,9 +10,9 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "3.0.0beta6",
+    "express": "",
     "jade": "*",
-    "mongodb": "1.1.0-beta",
+    "mongodb": "",
     "mongoose": "",
     "underscore": "",
     "yaml-config": "",
