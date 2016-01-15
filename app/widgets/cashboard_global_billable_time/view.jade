@@ -75,10 +75,14 @@ h2
 .row-fluid
   .span12
     div.cashboard-billable-summary
-      h2
-        .loading.large
-          | Loading 
-          img(src="/images/ajax-loader.gif")
+      .cashboard-billable-progress-bar
+        .cashboard-billable-total
+          .cashboard-billable-breakeven
+        .cashboard-billable-progress
+        h2
+          .loading.large
+            | Loading 
+            img(src="/images/ajax-loader.gif")
 .row-fluid
   .span6
     h3 Summary
