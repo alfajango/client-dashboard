@@ -495,11 +495,25 @@ widgets.cashboard_global_billable_time = function(data, $) {
       $target.find('.total-break-even').html('($' + totalBreakEven.formatMoney(2, '.', ',') + ')');
       $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
 
-      $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(totalDiffClass).find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + ' <small>(entire date range)</small></span>');
+      $target.find('.cashboard-billable-summary').removeClass('profit loss in-period').addClass(totalDiffClass)
+        .find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + ' <small>(entire date range)</small></span>');
+
+      if (totalDiff >= 0) {
+        $target.find('.cashboard-billable-progress').width('100%');
+        $target.find('.cashboard-billable-total').width((totalBreakEven / totalBillable * 100) + '%');
+      } else {
+        $target.find('.cashboard-billable-total').width('100%');
+        $target.find('.cashboard-billable-progress').width((totalBillable / totalBreakEven * 100) + '%');
+      }
+
       if (yesterday > startDate && yesterday < endDate) {
         var breakEvenYesterday = data.breakEvenDates.totalYesterday,
             diffYesterday = totalBillable - breakEvenYesterday,
             diffYesterdayClass = diffYesterday > 0 ? "profit" : "loss";
+
+        $target.find('.cashboard-billable-summary').addClass('in-period');
+        $target.find('.cashboard-billable-breakeven').width((breakEvenYesterday / totalBreakEven * 100) + '%');
+
         if (breakEvenYesterday < totalBreakEven) {
           $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(diffYesterdayClass).find('h2').prepend('<span class="' + diffYesterdayClass + '">$' + Math.abs(diffYesterday).formatMoney(2, '.', ',') + ' <small>(start to yesterday)</small></span> / ');
         }
