@@ -1,4 +1,4 @@
-doctype 5
+doctype html
 html
   head
     title= title
@@ -27,7 +27,7 @@ html
     block head
 
     if analytics_account
-      script(type="text/javascript")
+      script.
 
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', '#{analytics_account}']);
@@ -41,7 +41,7 @@ html
         })();
 
     - if (typeof(project) != 'undefined' && project)
-      style
+      style.
         .header {
           background-color: #{project.headerBG};
           color: #{project.headerColor};
