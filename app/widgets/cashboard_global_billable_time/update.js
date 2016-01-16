@@ -496,7 +496,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
       $target.find('.total-goal').html('($' + totalGoal.formatMoney(2, '.', ',') + ')');
 
       $target.find('.cashboard-billable-summary').removeClass('profit loss in-period').addClass(totalDiffClass)
-        .find('h2').html('<span class="' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + ' <small>(entire date range)</small></span>');
+        .find('h2').html('<span class="cashboard-billable-summary-diff ' + totalDiffClass + '">$' + Math.abs(totalDiff).formatMoney(2, '.', ',') + ' <small>(from total break-even)</small></span>');
 
       if (totalDiff >= 0) {
         $target.find('.cashboard-billable-progress').width('100%');
@@ -511,11 +511,12 @@ widgets.cashboard_global_billable_time = function(data, $) {
             diffYesterday = totalBillable - breakEvenYesterday,
             diffYesterdayClass = diffYesterday > 0 ? "profit" : "loss";
 
-        $target.find('.cashboard-billable-summary').addClass('in-period');
-        $target.find('.cashboard-billable-breakeven').width((breakEvenYesterday / totalBreakEven * 100) + '%');
-
+        // When current day is in-period but only weekend exists between current day and end of period,
+        // the totalBreakEven won't change since it doesn't go up during the weekend.
         if (breakEvenYesterday < totalBreakEven) {
-          $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(diffYesterdayClass).find('h2').prepend('<span class="' + diffYesterdayClass + '">$' + Math.abs(diffYesterday).formatMoney(2, '.', ',') + ' <small>(start to yesterday)</small></span> / ');
+          $target.find('.cashboard-billable-summary').addClass('in-period');
+          $target.find('.cashboard-billable-breakeven').width((breakEvenYesterday / totalBreakEven * 100) + '%');
+          $target.find('.cashboard-billable-summary').removeClass('profit loss').addClass(diffYesterdayClass).find('h2').prepend('<span class="cashboard-billable-summary-diff ' + diffYesterdayClass + '">$' + Math.abs(diffYesterday).formatMoney(2, '.', ',') + ' <small>(as of yesterday)</small></span>');
         }
       }
 
