@@ -343,23 +343,29 @@ table .alert {
   color: #fff;
   font-size: 12px;
   font-weight: lighter;
-  display: inline-block;
+  display: block;
   line-height: 14px;
 }
 .cashboard-billable-summary h2 {
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: 200;
   position: absolute;
   width: 100%;
 }
-.cashboard-billable-summary .profit,
-.cashboard-billable-summary .loss {
+@media (min-width: 481px) {
+  .cashboard-billable-summary h2 {
+    font-size: 2em;
+  }
+}
+.cashboard-billable-summary-diff {
   color: #fff;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 14px 16px 8px;
   display: inline-block;
-  height: 59px;
-  line-height: 55px;
+  height: 53px;
+  line-height: 30px;
+}
+.cashboard-billable-summary-diff + .cashboard-billable-summary-diff {
+  border-left: solid 1px #999;
 }
 .cashboard-billable-summary .profit::before {
   content: "+ ";
@@ -372,7 +378,7 @@ table .alert {
 
 .cashboard-billable-progress-bar {
   width: 100%;
-  height: 87px;
+  height: 97px;
   position: relative;
 }
 .cashboard-billable-total,
@@ -388,6 +394,15 @@ table .alert {
   height: 85px;
   border: solid 1px #999;
 }
+.profit .cashboard-billable-total:after,
+.loss .cashboard-billable-total:after {
+  content: "break-even \21E5";
+  display: block;
+  position: absolute;
+  bottom: -17px;
+  right: -1px;
+  color: #999;
+}
 .profit .cashboard-billable-total,
 .loss .cashboard-billable-total {
   background: #aaa;
@@ -400,6 +415,14 @@ table .alert {
 }
 .in-period .cashboard-billable-breakeven {
   border-right: dashed 2px #999;
+}
+.in-period .cashboard-billable-breakeven:after {
+  content: "break-even as of yesterday \2192";
+  display: block;
+  position: absolute;
+  bottom: -7px;
+  right: 5px;
+  color: #999;
 }
 .cashboard-billable-progress {
   width: 0;
