@@ -14,5 +14,6 @@ with mongo installed:
     node app.js
 
 will seed an admin:
-user: test@example.com
-password: password
+
+        user: test@example.com
+        password: password
