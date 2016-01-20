@@ -3,7 +3,18 @@ var Client = mongoose.model('Client'),
     User = mongoose.model('User'),
     MongoStore = require('connect-mongodb');
 
-var queryFnx = function(err, client) {
+module.exports = function(app) {
+  var ensureClient = function(req, res, next) {
+    var clientQuery;
+    if (req.user.admin && req.query.client_id) {
+      clientQuery = Client.findById(req.query.client_id);
+    } else if (req.user.admin) {
+      req.flash('warn', "Choose a client");
+      res.redirect('/admin');
+    } else {
+      clientQuery = Client.findById(req.user.client);
+    }
+    clientQuery.exec(function(err, client) {
       if (err) {
         console.log(err);
       } else {
@@ -26,19 +37,7 @@ var queryFnx = function(err, client) {
         }
       }
       next();
-    }
-
-module.exports = function(app) {
-  var ensureClient = function(req, res, next) {
-    var clientQuery;
-    if (req.user.admin && req.query.client_id) {
-      clientQuery = Client.findById(req.query.client_id, queryFnx);
-    } else if (req.user.admin) {
-      req.flash('warn', "Choose a client");
-      res.redirect('/admin');
-    } else {
-      clientQuery = Client.findById(req.user.client, queryFnx);
-    }
+    });
   };
 
   var getProjects = function(req, res, next) {
