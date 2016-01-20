@@ -49,11 +49,8 @@ module.exports = function(app, options) {
   }
   app.use(favicon(__dirname + '/public/favicon.ico'));
   app.use(morgan('combined'));
-  //app.use(bodyParser());
-  //app.use(bodyParser.json());
-  //app.use(bodyParser.raw());
-  //app.use(bodyParser.text());
-  //app.use(methodOverride);
+  app.use(bodyParser());
+  app.use(methodOverride());
   app.use(cookieParser());
   // Needed because otherwise, connect-mongodb won't
   // close the mongodb connection when jake script is done.
@@ -64,7 +61,7 @@ module.exports = function(app, options) {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: true,
+        secure: ('production' == env),
         maxAge: new Date(Date.now() + 3600000)
       },
       store: new MongoStore(
