@@ -49,7 +49,10 @@ module.exports = function(app, options) {
   }
   app.use(favicon(__dirname + '/public/favicon.ico'));
   app.use(morgan('combined'));
-  app.use(bodyParser());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  app.use(bodyParser.json());
   app.use(methodOverride(function(req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       // look in urlencoded POST bodies and delete it
