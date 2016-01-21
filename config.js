@@ -6,12 +6,12 @@ var express = require('express'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
   methodOverride = require('method-override'),
-  cookieParser = require('cookie-parser'),
   session = require('express-session'),
   middleware = require(__dirname + '/lib/middleware');
 
 exports = module.exports = passport = require('passport');
 exports = module.exports = passwordHash = require('password-hash');
+exports = module.exports = cookieParser = require('cookie-parser');
 
 module.exports = function(app, options) {
   if (!options) {
