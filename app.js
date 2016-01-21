@@ -52,5 +52,5 @@ widgets = require(__dirname + '/app/widgets')(active_widgets);
 
 app.get('/widgets/:widget', function(req, res) {
   var widget = req.params.widget;
-  res.sendFile('./app/widgets/' + widget + '/' + widgets[widget].update);
+  res.sendFile(__dirname + '/app/widgets/' + widget + '/' + widgets[widget].update);
 });
