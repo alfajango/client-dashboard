@@ -29,7 +29,7 @@ io = require('socket.io')({"transports": ["xhr-polling"], "polling duration": 10
 io.set('authorization', function (handshakeData, accept) {
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
-    handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], config.app_secret);
+    handshakeData.sessionID = cookieParser.signedCookie(handshakeData.cookie['express.sid'], config.app_secret);
 
     if (handshakeData.cookie['express.sid'] == handshakeData.sessionID) {
       return accept('Cookie is invalid.', false);
