@@ -1,5 +1,6 @@
 var express = require('express'),
   MongoStore = require('connect-mongodb'),
+  mongoose = require('mongoose'),
   flash = require('connect-flash'),
   errorhandler = require('errorhandler'),
   favicon = require('serve-favicon'),
