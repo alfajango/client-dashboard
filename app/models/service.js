@@ -1,10 +1,12 @@
-var ServiceSchema = new Schema({
+import mongoose from 'mongoose';
+
+var ServiceSchema = new mongoose.Schema({
   name:             String,
   url:              String,
   identifier:       String,
   user:             String,
   token:            String,
-  config:           Schema.Types.Mixed
+  config:           mongoose.Schema.Types.Mixed
 });
 
 ServiceSchema.methods.fetch = function(callback, settings) {

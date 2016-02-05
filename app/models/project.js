@@ -1,10 +1,12 @@
+import mongoose from 'mongoose';
+
 var ServiceSchema = mongoose.model('Service').schema;
 var IssueSchema = mongoose.model('Issue').schema;
 var StatusSchema = mongoose.model('Status').schema;
 var ExceptionSchema = mongoose.model('Exception').schema;
 var DeploySchema = mongoose.model('Deploy').schema;
 
-var ProjectSchema = new Schema({
+var ProjectSchema = new mongoose.Schema({
   name:             String,
   services:         [ServiceSchema],
   issues:           [IssueSchema],

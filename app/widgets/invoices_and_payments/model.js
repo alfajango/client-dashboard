@@ -14,6 +14,7 @@ exports.options = function(service, path) {
 };
 
 exports.fetch = function(service, callback) {
+  console.log('fetching')
   var widget = this,
       jsonData = {},
       response = {id: service.id, name: service.name};

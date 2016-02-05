@@ -1,3 +1,6 @@
+import mongoose from 'mongoose';
+import auth from '../../lib/authentication'
+
 var Client = mongoose.model('Client');
 var Project = mongoose.model('Project');
 var Service = mongoose.model('Service');

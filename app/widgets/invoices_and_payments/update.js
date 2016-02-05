@@ -1,8 +1,24 @@
+//import React from 'react';
+//import {render} from 'react-dom';
+//import { Provider } from 'react-redux';
+//import Widget from './widget.js';
+//import configureStore from './store/configureStore';
+//import './styles/styles.scss'; //Yep, that's right. You can import SASS/CSS files too! Webpack will run the associated loader and plug this into the page.
+
+//const store = configureStore();
+
 $(document).delegate('.redmine-subject-td', 'click', function() {
   $(this).find('.redmine-description').slideToggle(250);
 });
 
+console.log('widget loaded');
+
 widgets.invoices_and_payments = function(data, $) {
+  //render(
+  //  <Provider store={store}>
+  //    <Widget />
+  //  </Provider>, document.getElementById('#widget-' + data.id)
+  //);
   //var $target = $('#widget-' + data.id),
       //rows = "",
       //now = new Date(),

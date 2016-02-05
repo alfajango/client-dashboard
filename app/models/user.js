@@ -1,8 +1,11 @@
+import mongoose from 'mongoose';
+import passwordHash from 'password-hash';
+
 function validatePresenceOf(value) {
   return value && value.length;
 }
 
-var UserSchema = new Schema({
+var UserSchema = new mongoose.Schema({
   email: {
     type: String,
     validate: [validatePresenceOf, 'an email is required'],
@@ -11,7 +14,7 @@ var UserSchema = new Schema({
   hashedPassword: String,
   admin: Boolean,
   client: {
-    type: ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'Client'
   }
 });
@@ -28,4 +31,6 @@ UserSchema.virtual('password')
   })
   .get(function() { return this._password; });
 
-exports = module.exports = User = mongoose.model('User', UserSchema);
+//exports = module.exports = User = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);
+//export

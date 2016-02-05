@@ -1,3 +1,7 @@
+import mongoose from 'mongoose';
+import auth from '../../lib/authentication'
+import { socket } from '../../app'
+
 var Client = mongoose.model('Client'),
     Project = mongoose.model('Project'),
     User = mongoose.model('User'),
@@ -95,7 +99,7 @@ module.exports = function(app) {
 
   // TODO: Namespace the return object per user,
   // so we don't get crossed messages!
-  io.sockets.on('connection', function(socket) {
+  socket.on('connection', function(socket) {
     // reference to my initialized sessionStore in app.js
     var sessionStore = new MongoStore({db:mongoose.connection.db});
     var sessionId    = socket.request.sessionID;

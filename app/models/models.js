@@ -1,28 +1,30 @@
-var DeploySchema = new Schema({
+import mongoose from 'mongoose';
+
+var DeploySchema = new mongoose.Schema({
   createdAt:        Date,
   environment:      String,
   commitSha:        String,
   changes:          String
 });
 
-var ExceptionSchema = new Schema({
+var ExceptionSchema = new mongoose.Schema({
   title:            String,
   affecting:        String,
   occurrences:      Number
 });
 
-var StatusSchema = new Schema({
+var StatusSchema = new mongoose.Schema({
   createdAt:        Date,
   lastCheckedAt:    Date,
   state:            String,
   type:             String
 });
 
-var IssueSchema = new Schema({
+var IssueSchema = new mongoose.Schema({
   number:           Number,
   title:            String,
   status:           String,
-  deployId:         ObjectId,
+  deployId:         mongoose.Schema.ObjectId,
   progress:         Number
 });
 
