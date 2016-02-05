@@ -91,3 +91,38 @@ module.exports = function(app, options) {
   app.use(middleware.setLocals);
   app.use(flash());
 };
+
+var webpack = require("webpack");
+
+// returns a Compiler instance
+var compiler = webpack({
+  debug: true,
+  noInfo: false,
+  entry: './app/containers/App',
+  output: {
+    path: 'public/javascripts',
+    publicPath: '',
+    filename: 'components.js'
+  },
+  module: {
+    loaders: [{
+      test: /\.js$/,
+      //include: './app/containers',
+      loaders: ['react-hot', 'jsx?harmony']
+    }]
+  }
+});
+
+//compiler.run(function(err, stats) {
+//  // ...
+//  console.log(err)
+//  console.log(stats.compilation.errors[0])
+//});
+
+compiler.watch({ // watch options:
+  aggregateTimeout: 300, // wait so long for more changes
+  poll: true // use polling instead of native watchers
+  // pass a number to set the polling interval
+}, function(err, stats) {
+  console.log('recompiled')
+});
