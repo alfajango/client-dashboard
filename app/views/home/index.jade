@@ -232,3 +232,13 @@ block content
               i.icon-ok.refresh-ok
 
             include ../../widgets/semaphore_build_status/view.jade
+
+    - if (project.hasService('invoices_and_payments'))
+      each service in project.filteredServices('invoices_and_payments')
+        div(id="widget-#{service.id}")
+          .pull-right
+            button.btn.btn-small.refresh-service('data-service'='redmine_open_issues', 'data-id'="#{service.id}")
+              i.icon-refresh
+            i.icon-ok.refresh-ok
+
+          include ../../widgets/invoices_and_payments/view.jade
