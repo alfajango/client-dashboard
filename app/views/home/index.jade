@@ -153,6 +153,8 @@ block header
 
 block content
 
+  #react-demo-container
+
   - if (project.hasService('cashboard_global_billable_time'))
     each service in project.filteredServices('cashboard_global_billable_time')
       div.cashboard-global-billable-time(id="widget-#{service.id}")

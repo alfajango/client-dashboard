@@ -108,7 +108,7 @@ var compiler = webpack({
     loaders: [{
       test: /\.js$/,
       //include: './app/containers',
-      loaders: ['react-hot', 'jsx?harmony']
+      loaders: ['babel']
     }]
   }
 });

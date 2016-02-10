@@ -1,8 +1,13 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React, {PropTypes} from 'react';
+import {render} from 'react-dom';
+
 var Widget = require('../widgets/invoices_and_payments/widget');
 
-$(document).ready(function() {
-  ReactDOM.render(<Widget />, document.getElementById('widget-56b4cfbf1d912fe06e27a28c'));
-})
+const test_es6 = () => {
+  console.log("ES6 functions!");
+}
 
+$(document).ready(function() {
+  render(<Widget />, document.getElementById('react-demo-container'));
+  test_es6();
+})
