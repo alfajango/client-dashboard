@@ -98,11 +98,11 @@ var webpack = require("webpack");
 var compiler = webpack({
   debug: true,
   noInfo: false,
-  entry: './app/containers/App',
+  entry: './app/src/app',
   output: {
     path: 'public/javascripts',
     publicPath: '',
-    filename: 'components.js'
+    filename: 'app.js'
   },
   module: {
     loaders: [{
