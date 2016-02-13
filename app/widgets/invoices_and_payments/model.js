@@ -22,6 +22,10 @@ exports.fetch = function(service, callback) {
     function(done) {
       var path = '/invoices.json?client_type=Company&client_id=92815';
       widget.fetchAPI('invoices', service, path, jsonData, done);
+    },
+    function(done) {
+      var path = '/payments.json?client_type=Company&client_id=92815';
+      widget.fetchAPI('payments', service, path, jsonData, done);
     }
   ).then(function() {
     if (jsonData.error) {
@@ -75,6 +79,7 @@ exports.translate = function(data, service) {
       type: 'invoice',
       id: JSON.stringify(invoice.id),
       attributes: {
+        id: invoice.assigned_id,
         date: invoice.invoice_date,
         amount: invoice.total,
         due: invoice.due_date,
@@ -83,7 +88,22 @@ exports.translate = function(data, service) {
     }
   });
 
-  return invoices;
+  // date, amount, type, notes
+
+  var payments = data.payments.map(function(payment) {
+    return {
+      type: 'payment',
+      id: JSON.stringify(payment.id),
+      attributes: {
+        id: payment.assigned_id,
+        date: payment.created_on,
+        amount: payment.amount,
+        notes: payment.notes
+      }
+    }
+  });
+
+  return invoices.concat(payments);
 
   function status(invoice) {
     if (invoice.has_been_paid) {

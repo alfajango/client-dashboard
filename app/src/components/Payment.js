@@ -1,24 +1,22 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-const Invoice = ({ attributes }) => (
+const Payment = ({ attributes }) => (
   <tr>
     <td>{attributes.id}</td>
     <td>{attributes.amount}</td>
     <td>{attributes.date}</td>
-    <td>{attributes.due}</td>
-    <td>{attributes.status}</td>
+    <td>{attributes.notes}</td>
   </tr>
 )
 
-Invoice.propTypes = {
+Payment.propTypes = {
   id: PropTypes.string,
   attributes: PropTypes.shape({
     id: PropTypes.string,
     amount: PropTypes.number,
     date: PropTypes.string,
-    due: PropTypes.string,
-    status: PropTypes.string
+    notes: PropTypes.string
   })
 }
 
@@ -29,4 +27,4 @@ const mapStateToProps = (state, json) => {
   }
 }
 
-export default connect(mapStateToProps)(Invoice)
+export default connect(mapStateToProps)(Payment)
