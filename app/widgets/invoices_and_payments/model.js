@@ -16,17 +16,19 @@ exports.options = function(service, path) {
 exports.fetch = function(service, callback) {
   var widget = this,
       jsonData = {},
-      response = {id: service.id, name: service.name};
+      response = {meta: {serviceId: service.id, serviceName: service.name}};
 
   utils.when(
     function(done) {
-      console.log('endpoint 1')
       var path = '/invoices.json?client_type=Company&client_id=92815';
       widget.fetchAPI('invoices', service, path, jsonData, done);
     }
   ).then(function() {
-    response.results = widget.translate(jsonData, service);
-    response.error = jsonData.error;
+    if (jsonData.error) {
+      response.errors = [jsonData.error];
+    } else {
+      response.data = widget.translate(jsonData, service);
+    }
     callback(response)
   });
 };
@@ -81,11 +83,7 @@ exports.translate = function(data, service) {
     }
   });
 
-  var response = {
-    data: invoices
-  };
-
-  return response;
+  return invoices;
 
   function status(invoice) {
     if (invoice.has_been_paid) {
