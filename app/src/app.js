@@ -8,7 +8,6 @@ import Dashboard from './containers/Dashboard'
 let store = createStore(App)
 
 socket.on('serviceResponse', function(response) {
-  console.log(response)
   store.dispatch(receiveData(response));
 });
 
