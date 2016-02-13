@@ -16,7 +16,6 @@ html
     script(src='/vendor/flot/js/jquery.flot.time.js')
     script(src='/vendor/flot/js/jquery.flot.crosshair.js')
     script(src='/vendor/flot/js/jquery.flot.pie.js')
-    script(src='/javascripts/app.js')
     // Android web app tags
     meta(name="mobile-web-app-capable", content="yes")
     link(rel="shortcut icon", sizes="192x192", href="/images/mobile-icon-192x192.png")
@@ -116,3 +115,4 @@ html
           - for(msg in message)
             .alert(class="alert-#{msg}")= message[msg]
         block content
+  script(src='/javascripts/app.js')
