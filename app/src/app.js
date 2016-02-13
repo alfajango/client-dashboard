@@ -5,6 +5,7 @@ import {receiveData} from './actions'
 import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import Dashboard from './containers/Dashboard'
+import {IntlProvider} from 'react-intl';
 let store = createStore(App)
 
 socket.on('serviceResponse', function(response) {
@@ -13,7 +14,9 @@ socket.on('serviceResponse', function(response) {
 
 render(
   <Provider store={store}>
-    <Dashboard />
+    <IntlProvider locale="en">
+      <Dashboard locales={['en-US']} />
+    </IntlProvider>
   </Provider>,
   document.getElementById('dashboard')
 )

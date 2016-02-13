@@ -34,6 +34,7 @@
     "password-hash": "^1.2.2",
     "react": "0.14.6",
     "react-dom": "0.14.6",
+    "react-intl": "^2.0.0-beta-2",
     "react-redux": "4.0.6",
     "redux": "3.0.5",
     "serve-favicon": "^2.3.0",
