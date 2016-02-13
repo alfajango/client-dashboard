@@ -1,12 +1,27 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import {FormattedNumber, FormattedDate} from 'react-intl';
 
 const Invoice = ({ attributes }) => (
   <tr>
     <td>{attributes.id}</td>
-    <td>{attributes.amount}</td>
-    <td>{attributes.date}</td>
-    <td>{attributes.due}</td>
+    <td>
+      <FormattedNumber value={attributes.amount} style="currency" currency="USD" />
+    </td>
+    <td>
+      <FormattedDate
+        value={attributes.date}
+        day="numeric"
+        month="long"
+        year="numeric" />
+    </td>
+    <td>
+      <FormattedDate
+        value={attributes.due}
+        day="numeric"
+        month="long"
+        year="numeric" />
+    </td>
     <td>{attributes.status}</td>
   </tr>
 )
