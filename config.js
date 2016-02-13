@@ -49,7 +49,7 @@ module.exports = function(app, options) {
     app.use(middleware.ensureSSL);
   }
   app.use(favicon(__dirname + '/public/favicon.ico'));
-  app.use(morgan('combined'));
+  //app.use(morgan('combined'));
   app.use(bodyParser.urlencoded({
     extended: true
   }));
