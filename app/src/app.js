@@ -4,7 +4,7 @@ import App from './reducers'
 import {receiveData} from './actions'
 import {render} from 'react-dom'
 import {Provider} from 'react-redux'
-import Widget from '../widgets/invoices_and_payments/widget'
+import Dashboard from './containers/Dashboard'
 let store = createStore(App)
 
 socket.on('serviceResponse', function(response) {
@@ -12,10 +12,9 @@ socket.on('serviceResponse', function(response) {
   store.dispatch(receiveData(response));
 });
 
-// Change the InvoiceList id to your serviceId
 render(
   <Provider store={store}>
-    <Widget id="56b4cfbf1d912fe06e27a28c" />
+    <Dashboard />
   </Provider>,
-  document.getElementById('react-demo-container')
+  document.getElementById('dashboard')
 )
