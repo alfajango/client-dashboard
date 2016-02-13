@@ -9,7 +9,9 @@ class Widget extends Component {
     return (
       <div>
         {isFetching &&
-        <h2>Loading...</h2>
+          React.createElement('div', {className: 'loading large'},
+            'Loading ',
+            React.createElement('img', {src: '/images/ajax-loader.gif'}))
         }
         {!isFetching &&
         <InvoiceList>{invoices}</InvoiceList>
