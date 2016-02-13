@@ -81,7 +81,7 @@ exports.translate = function(data, service) {
       attributes: {
         id: invoice.assigned_id,
         date: invoice.invoice_date,
-        amount: invoice.total,
+        amount: Number(invoice.total),
         due: invoice.due_date,
         status: status(invoice)
       }
@@ -89,7 +89,6 @@ exports.translate = function(data, service) {
   });
 
   // date, amount, type, notes
-
   var payments = data.payments.map(function(payment) {
     return {
       type: 'payment',
@@ -97,7 +96,7 @@ exports.translate = function(data, service) {
       attributes: {
         id: payment.assigned_id,
         date: payment.created_on,
-        amount: payment.amount,
+        amount: Number(payment.amount),
         notes: payment.notes
       }
     }
