@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react'
+import React, { PropTypes } from 'react'
 import Invoice from './Invoice'
 import { connect } from 'react-redux'
 import { receiveData } from '../actions'
@@ -23,23 +23,12 @@ const InvoiceList = ({ isFetching, invoices }) => (
 )
 
 function mapStateToProps(state, ownProps) {
-  const { dataByService } = state
-  const {
-    isFetching,
-    invoices: invoices
-    } = dataByService[ownProps.id] || {
-    isFetching: true,
-    invoices: []
-  }
-
   return {
-    isFetching,
-    invoices
+    invoices: ownProps.children
   }
 }
 
 InvoiceList.propTypes = {
-  isFetching: PropTypes.bool,
   invoices: PropTypes.array
 }
 

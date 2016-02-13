@@ -3,10 +3,11 @@ import {
   INVALIDATE_INVOICES, RECEIVE_DATA, REQUEST_DATA
 } from './actions'
 
-function invoices(state = {
+function data(state = {
   isFetching: false,
   didInvalidate: false,
-  invoices: []
+  invoices: [],
+  payments: []
 }, action) {
   switch (action.type) {
     case INVALIDATE_INVOICES:
@@ -22,7 +23,8 @@ function invoices(state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        invoices: action.data,
+        invoices: action.data.filter(i => i.type == 'invoice'),
+        payments: action.data.filter(i => i.type == 'payment'),
         lastUpdated: action.receivedAt
       })
     default:
@@ -36,7 +38,7 @@ function dataByService(state = {}, action) {
     case REQUEST_DATA:
     case RECEIVE_DATA:
       return Object.assign({}, state, {
-        [action.serviceId]: invoices(state[action.serviceId], action)
+        [action.serviceId]: data(state[action.serviceId], action)
       })
     default:
       return state
