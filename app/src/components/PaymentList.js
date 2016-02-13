@@ -4,21 +4,24 @@ import { connect } from 'react-redux'
 import { receiveData } from '../actions'
 
 const PaymentList = ({ isFetching, payments }) => (
-  <table>
-    <thead>
+  <div>
+    <h2>Payments</h2>
+    <table>
+      <thead>
       <tr>
         <th>ID</th>
         <th>Amount</th>
         <th>Date</th>
         <th>Notes</th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       {payments.map(function(payment) {
         return <Payment key={payment.id}>{payment}</Payment>;
       })}
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 )
 
 function mapStateToProps(state, ownProps) {
