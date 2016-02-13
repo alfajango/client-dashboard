@@ -15,26 +15,47 @@ exports.options = function(service, path) {
 
 exports.fetch = function(service, callback) {
   var widget = this,
-      jsonData = {},
-      response = {meta: {serviceId: service.id, serviceName: service.name}};
+    jsonData = {},
+    response = {meta: {serviceId: service.id, serviceName: service.name, projectId: service.identifier}};
 
-  utils.when(
-    function(done) {
-      var path = '/invoices.json?client_type=Company&client_id=92815';
-      widget.fetchAPI('invoices', service, path, jsonData, done);
-    },
-    function(done) {
-      var path = '/payments.json?client_type=Company&client_id=92815';
-      widget.fetchAPI('payments', service, path, jsonData, done);
-    }
-  ).then(function() {
-    if (jsonData.error) {
-      response.errors = [jsonData.error];
-    } else {
-      response.data = widget.translate(jsonData, service);
-    }
-    callback(response)
-  });
+  if (service.identifier === '') {
+    callback({
+      errors: ['Missing service identifier clientId']
+    })
+  } else {
+    utils.when(
+      function(done) {
+        var path = '/projects/'+service.identifier;
+        widget.fetchAPI('project', service, path, jsonData, done);
+      }
+    ).then(function() {
+      if (jsonData.error) {
+        callback({
+          errors: ['projectId was not found']
+        })
+      } else {
+        response.meta.clientId = jsonData.project.client_id;
+        jsonData = {};
+        utils.when(
+          function(done) {
+            var path = '/invoices.json?client_type=Company&client_id=' + response.meta.clientId;
+            widget.fetchAPI('invoices', service, path, jsonData, done);
+          },
+          function(done) {
+            var path = '/payments.json?client_type=Company&client_id=' + response.meta.clientId;
+            widget.fetchAPI('payments', service, path, jsonData, done);
+          }
+        ).then(function() {
+          if (jsonData.error) {
+            response.errors = [jsonData.error];
+          } else {
+            response.data = widget.translate(jsonData, service);
+          }
+          callback(response)
+        });
+      }
+    })
+  }
 };
 
 // Fetch issues from service endpoint
