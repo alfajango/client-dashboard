@@ -8,8 +8,15 @@ class Widget extends Component {
     const { invoices, payments, isFetching } = this.props
     return (
       <div>
+        {isFetching &&
+        <h2>Loading...</h2>
+        }
+        {!isFetching &&
         <InvoiceList>{invoices}</InvoiceList>
+        }
+        {!isFetching &&
         <PaymentList>{payments}</PaymentList>
+        }
       </div>
     )
   }

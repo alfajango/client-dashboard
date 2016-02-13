@@ -4,7 +4,7 @@ import {
 } from './actions'
 
 function data(state = {
-  isFetching: false,
+  isFetching: true,
   didInvalidate: false,
   invoices: [],
   payments: []
