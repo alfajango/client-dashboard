@@ -124,6 +124,8 @@ compiler.watch({ // watch options:
   poll: true // use polling instead of native watchers
   // pass a number to set the polling interval
 }, function(err, stats) {
-  console.log(stats.compilation.errors)
+  if (stats.compilation.errors.length > 0) {
+    console.log(stats.compilation.errors)
+  }
   console.log('recompiled')
 });
