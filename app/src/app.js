@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStore } from 'redux'
 import App from './reducers'
-import {receiveData} from './actions'
+import {receiveData, receiveError} from './actions'
 import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import Dashboard from './containers/Dashboard'
@@ -9,7 +9,11 @@ import {IntlProvider} from 'react-intl';
 let store = createStore(App)
 
 socket.on('serviceResponse', function(response) {
-  store.dispatch(receiveData(response));
+  if (response.errors) {
+    store.dispatch(receiveError(response));
+  } else {
+    store.dispatch(receiveData(response));
+  }
 });
 
 render(
