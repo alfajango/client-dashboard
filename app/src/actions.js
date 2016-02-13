@@ -26,3 +26,13 @@ export function receiveData(data) {
     receivedAt: Date.now()
   }
 }
+
+export const RECEIVE_ERROR = 'RECEIVE_ERROR'
+
+export function receiveError(data) {
+  return {
+    type: RECEIVE_ERROR,
+    errors: data.errors,
+    receivedAt: Date.now()
+  }
+}
