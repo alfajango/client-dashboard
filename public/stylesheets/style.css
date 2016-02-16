@@ -456,3 +456,15 @@ table .alert {
     font-size: 10px;
   }
 }
+
+.status--green {
+  background-color: #78B347;
+}
+
+.status--yellow {
+  background-color: #F5F26D;
+}
+
+.status--red {
+  background-color: #E47D7D;
+}

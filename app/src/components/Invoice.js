@@ -1,30 +1,49 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import {FormattedNumber, FormattedDate} from 'react-intl';
+import classNames from 'classnames/bind';
 
-const Invoice = ({ attributes }) => (
-  <tr>
-    <td>{attributes.id}</td>
-    <td>
-      <FormattedNumber value={attributes.amount} style="currency" currency="USD" />
-    </td>
-    <td>
-      <FormattedDate
-        value={attributes.date}
-        day="numeric"
-        month="long"
-        year="numeric" />
-    </td>
-    <td>
-      <FormattedDate
-        value={attributes.due}
-        day="numeric"
-        month="long"
-        year="numeric" />
-    </td>
-    <td>{attributes.status}</td>
-  </tr>
-);
+class Invoice extends Component {
+  render() {
+    let a = this.props.attributes;
+    let statusClass = classNames({
+      'status': true,
+      'status--green': a.status == 'Paid',
+      'status--yellow': a.status != 'Paid' && !pastDue(a.due),
+      'status--red': a.status != 'Paid' && pastDue(a.due)
+    });
+    return (
+      <tr>
+        <td>{a.id}</td>
+        <td>
+          <FormattedNumber value={a.amount} style="currency" currency="USD" />
+        </td>
+        <td>
+          <FormattedDate
+            value={a.date}
+            day="numeric"
+            month="long"
+            year="numeric" />
+        </td>
+        <td>
+          <FormattedDate
+            value={a.due}
+            day="numeric"
+            month="long"
+            year="numeric" />
+        </td>
+        <td className={statusClass}>{a.status}</td>
+      </tr>
+    );
+
+    function pastDue(date) {
+      let y, m, d;
+      [y, m, d] = date.split('-');
+      let dueDate = new Date(y, m - 1, d);
+      return dueDate < Date.now()
+    }
+  }
+}
 
 Invoice.propTypes = {
   id: PropTypes.string,
