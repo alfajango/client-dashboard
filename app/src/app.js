@@ -6,7 +6,7 @@ import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import Dashboard from './containers/Dashboard'
 import {IntlProvider} from 'react-intl';
-const store = createStore(rootReducer);
+const store = (window.devToolsExtension ? window.devToolsExtension()(createStore) : createStore)(rootReducer);
 
 socket.on('serviceResponse', function(response) {
   console.info(response);
