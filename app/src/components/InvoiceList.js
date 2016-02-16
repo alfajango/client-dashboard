@@ -3,7 +3,7 @@ import Invoice from './Invoice'
 import { connect } from 'react-redux'
 import { receiveData } from '../actions'
 
-const InvoiceList = ({ isFetching, invoices }) => (
+const InvoiceList = ({ invoices }) => (
   <div>
     <table className="table table-bordered">
       <thead>

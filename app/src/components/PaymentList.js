@@ -3,7 +3,7 @@ import Payment from './Payment'
 import { connect } from 'react-redux'
 import { receiveData } from '../actions'
 
-const PaymentList = ({ isFetching, payments }) => (
+const PaymentList = ({ payments }) => (
   <div>
     <table className="table table-bordered">
       <thead>
