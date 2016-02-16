@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStore } from 'redux'
 import rootReducer from './reducers'
-import {receiveData, receiveError} from './actions'
+import {receiveData, receiveError, receiveStatus} from './actions'
 import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import Dashboard from './containers/Dashboard'
@@ -11,6 +11,8 @@ const store = createStore(rootReducer);
 socket.on('serviceResponse', function(response) {
   if (response.errors) {
     store.dispatch(receiveError(response));
+  } else if (response.status) {
+    store.dispatch(receiveStatus(response));
   } else {
     store.dispatch(receiveData(response));
   }

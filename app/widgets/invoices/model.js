@@ -21,38 +21,53 @@ exports.fetch = function(service, callback) {
     projectId = service.identifier;
 
   if (service.identifier === '') {
-    callback({
-      errors: ['Missing service identifier clientId']
-    })
+    updateError('Missing service identifier clientId')
   } else {
     var projectData = {};
     utils.when(
       function(done) {
+        updateStatus('Looking up project');
         var path = '/projects/' + service.identifier;
         widget.fetchAPI('project', service, path, projectData, done);
       }
     ).then(function() {
       if (projectData.error) {
-        callback({
-          errors: ['projectId was not found']
-        })
+        updateError('projectId was not found')
       } else {
         var data = {};
         utils.when(
           function(done) {
+            updateStatus('Loading invoices');
             var path = '/invoices.json?client_type=Company&client_id=' + projectData.data.client_id;
             widget.fetchAPI('invoices', service, path, data, done);
           }
         ).then(function() {
           if (data.error) {
-            response.errors = [data.error];
+            updateError(data.error);
           } else {
-            response.data = widget.translate(data.data);
+            updateData(widget.translate(data.data));
           }
-          callback(response);
         });
       }
     })
+  }
+
+  function updateData(data) {
+    callback(Object.assign({}, response, {
+      data: data
+    }))
+  }
+
+  function updateError(msg) {
+    callback(Object.assign({}, response, {
+      error: msg
+    }));
+  }
+
+  function updateStatus(msg) {
+    callback(Object.assign({}, response, {
+      status: msg
+    }));
   }
 };
 
@@ -69,7 +84,7 @@ exports.fetchAPI = function(name, service, path, jsonData, done) {
       });
       res.on('end', function() {
         try {
-          jsonData['data'] = JSON.parse(data);
+          jsonData.data = JSON.parse(data);
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
           jsonData.error = err.message;
