@@ -1,11 +1,12 @@
 import { combineReducers } from 'redux'
 import {
-  INVALIDATE_DATA, REQUEST_DATA, RECEIVE_DATA, RECEIVE_ERROR
+  INVALIDATE_DATA, REQUEST_DATA, RECEIVE_DATA, RECEIVE_STATUS, RECEIVE_ERROR
 } from './actions'
 
 function data(state = {
   isFetching: true,
   didInvalidate: false,
+  status: 'Loading',
   data: []
 }, action) {
   switch (action.type) {
@@ -18,10 +19,21 @@ function data(state = {
         isFetching: true,
         didInvalidate: false
       });
+    case RECEIVE_ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        status: action.error
+      });
+    case RECEIVE_STATUS:
+      return Object.assign({}, state, {
+        status: action.status
+      });
     case RECEIVE_DATA:
       return Object.assign({}, state.data, {
         isFetching: false,
         didInvalidate: false,
+        status: '',
         data: action.data,
         lastUpdated: action.receivedAt
       });
@@ -35,6 +47,7 @@ function dataByService(state = {}, action) {
     case INVALIDATE_DATA:
     case REQUEST_DATA:
     case RECEIVE_DATA:
+    case RECEIVE_STATUS:
       return Object.assign({}, state, {
         [action.serviceId]: data(state[action.serviceId], action)
       });

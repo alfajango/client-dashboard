@@ -4,13 +4,14 @@ import InvoiceList from '../../src/components/InvoiceList'
 
 class Widget extends Component {
   render() {
-    const { data, isFetching } = this.props;
+    const { data, status, isFetching } = this.props;
     return (
       <div>
         <h2>Invoices</h2>
         {isFetching &&
           React.createElement('div', {className: 'loading large'},
-            'Loading ',
+            status,
+            ' ',
             React.createElement('img', {src: '/images/ajax-loader.gif'}))
         }
         {!isFetching &&
@@ -23,20 +24,24 @@ class Widget extends Component {
 
 Widget.propTypes = {
   isFetching: PropTypes.bool,
+  status: PropTypes.string,
   data: PropTypes.array
 };
 
 function mapStateToProps(state, ownProps) {
   const {
     isFetching,
+    status,
     data,
     } = state.dataByService[ownProps.id] || {
     isFetching: true,
+    status: 'Loading',
     data: []
   };
 
   return {
     isFetching,
+    status,
     data
   }
 }

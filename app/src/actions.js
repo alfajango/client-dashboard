@@ -29,10 +29,22 @@ export function receiveData(response) {
 
 export const RECEIVE_ERROR = 'RECEIVE_ERROR';
 
-export function receiveError(data) {
+export function receiveError(response) {
   return {
     type: RECEIVE_ERROR,
-    errors: data.errors,
+    serviceId: response.serviceId,
+    errors: response.errors,
+    receivedAt: Date.now()
+  }
+}
+
+export const RECEIVE_STATUS = 'RECEIVE_STATUS';
+
+export function receiveStatus(response) {
+  return {
+    type: RECEIVE_STATUS,
+    serviceId: response.serviceId,
+    status: response.status,
     receivedAt: Date.now()
   }
 }
