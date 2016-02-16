@@ -5,7 +5,6 @@ import { receiveData } from '../actions'
 
 const PaymentList = ({ isFetching, payments }) => (
   <div>
-    <h2>Payments</h2>
     <table>
       <thead>
       <tr>
@@ -22,7 +21,7 @@ const PaymentList = ({ isFetching, payments }) => (
       </tbody>
     </table>
   </div>
-)
+);
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -32,6 +31,6 @@ function mapStateToProps(state, ownProps) {
 
 PaymentList.propTypes = {
   payments: PropTypes.array
-}
+};
 
 export default connect(mapStateToProps)(PaymentList)

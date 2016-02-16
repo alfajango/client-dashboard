@@ -1,32 +1,30 @@
 import { combineReducers } from 'redux'
 import {
-  INVALIDATE_INVOICES, RECEIVE_DATA, REQUEST_DATA
+  INVALIDATE_DATA, REQUEST_DATA, RECEIVE_DATA, RECEIVE_ERROR
 } from './actions'
 
 function data(state = {
   isFetching: true,
   didInvalidate: false,
-  invoices: [],
-  payments: []
+  data: []
 }, action) {
   switch (action.type) {
-    case INVALIDATE_INVOICES:
+    case INVALIDATE_DATA:
       return Object.assign({}, state, {
         didInvalidate: true
-      })
+      });
     case REQUEST_DATA:
       return Object.assign({}, state, {
         isFetching: true,
         didInvalidate: false
-      })
+      });
     case RECEIVE_DATA:
-      return Object.assign({}, state, {
+      return Object.assign({}, state.data, {
         isFetching: false,
         didInvalidate: false,
-        invoices: action.data.filter(i => i.type == 'invoice'),
-        payments: action.data.filter(i => i.type == 'payment'),
+        data: action.data,
         lastUpdated: action.receivedAt
-      })
+      });
     default:
       return state
   }
@@ -34,12 +32,12 @@ function data(state = {
 
 function dataByService(state = {}, action) {
   switch (action.type) {
-    case INVALIDATE_INVOICES:
+    case INVALIDATE_DATA:
     case REQUEST_DATA:
     case RECEIVE_DATA:
       return Object.assign({}, state, {
         [action.serviceId]: data(state[action.serviceId], action)
-      })
+      });
     default:
       return state
   }
@@ -47,6 +45,6 @@ function dataByService(state = {}, action) {
 
 const rootReducer = combineReducers({
   dataByService
-})
+});
 
 export default rootReducer

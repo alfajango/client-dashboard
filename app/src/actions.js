@@ -1,13 +1,13 @@
-export const INVALIDATE_INVOICES = 'INVALIDATE_INVOICES'
+export const INVALIDATE_DATA = 'INVALIDATE_DATA';
 
 export function invalidateInvoices(service) {
   return {
-    type: INVALIDATE_INVOICES,
+    type: INVALIDATE_DATA,
     service
   }
 }
 
-export const REQUEST_DATA = 'REQUEST_DATA'
+export const REQUEST_DATA = 'REQUEST_DATA';
 
 export function requestData(service) {
   return {
@@ -16,18 +16,18 @@ export function requestData(service) {
   }
 }
 
-export const RECEIVE_DATA = 'RECEIVE_DATA'
+export const RECEIVE_DATA = 'RECEIVE_DATA';
 
-export function receiveData(data) {
+export function receiveData(response) {
   return {
     type: RECEIVE_DATA,
-    serviceId: data.meta.serviceId,
-    data: data.data,
+    serviceId: response.serviceId,
+    data: response.data,
     receivedAt: Date.now()
   }
 }
 
-export const RECEIVE_ERROR = 'RECEIVE_ERROR'
+export const RECEIVE_ERROR = 'RECEIVE_ERROR';
 
 export function receiveError(data) {
   return {

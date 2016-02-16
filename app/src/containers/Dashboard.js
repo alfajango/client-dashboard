@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import InvoicesPayments from '../../widgets/invoices_and_payments/widget'
+import Invoices from '../../widgets/invoices/widget'
+import Payments from '../../widgets/payments/widget'
 
 class Dashboard extends Component {
   render() {
     return (
       <div>
-        <h1>Invoices and Payments</h1>
         {createComponents()}
       </div>
     )
@@ -20,8 +20,10 @@ function createComponents(services) {
 
 function widgetToComponent(widget) {
   switch (widget) {
-    case 'invoices_and_payments':
-      return InvoicesPayments
+    case 'invoices':
+      return Invoices;
+    case 'payments':
+      return Payments;
   }
 }
 

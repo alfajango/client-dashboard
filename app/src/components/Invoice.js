@@ -24,7 +24,7 @@ const Invoice = ({ attributes }) => (
     </td>
     <td>{attributes.status}</td>
   </tr>
-)
+);
 
 Invoice.propTypes = {
   id: PropTypes.string,
@@ -35,13 +35,13 @@ Invoice.propTypes = {
     due: PropTypes.string,
     status: PropTypes.string
   })
-}
+};
 
 const mapStateToProps = (state, json) => {
   return {
     id: json.children.id,
     attributes: json.children.attributes
   }
-}
+};
 
 export default connect(mapStateToProps)(Invoice)
