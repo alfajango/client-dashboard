@@ -1,23 +1,20 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import InvoiceList from '../../src/components/InvoiceList'
-import PaymentList from '../../src/components/PaymentList'
 
 class Widget extends Component {
   render() {
-    const { invoices, payments, isFetching } = this.props
+    const { data, isFetching } = this.props;
     return (
       <div>
+        <h2>Invoices</h2>
         {isFetching &&
           React.createElement('div', {className: 'loading large'},
             'Loading ',
             React.createElement('img', {src: '/images/ajax-loader.gif'}))
         }
         {!isFetching &&
-        <InvoiceList>{invoices}</InvoiceList>
-        }
-        {!isFetching &&
-        <PaymentList>{payments}</PaymentList>
+        <InvoiceList>{data}</InvoiceList>
         }
       </div>
     )
@@ -26,26 +23,21 @@ class Widget extends Component {
 
 Widget.propTypes = {
   isFetching: PropTypes.bool,
-  invoices: PropTypes.array,
-  payments: PropTypes.array
-}
+  data: PropTypes.array
+};
 
 function mapStateToProps(state, ownProps) {
-  const { dataByService } = state
   const {
     isFetching,
-    invoices,
-    payments
-    } = dataByService[ownProps.id] || {
+    data,
+    } = state.dataByService[ownProps.id] || {
     isFetching: true,
-    invoices: [],
-    payments: []
-  }
+    data: []
+  };
 
   return {
     isFetching,
-    invoices,
-    payments
+    data
   }
 }
 

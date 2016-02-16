@@ -5,8 +5,7 @@ import { receiveData } from '../actions'
 
 const InvoiceList = ({ isFetching, invoices }) => (
   <div>
-    <h2>Invoices</h2>
-    <table>
+    <table class="table table-bordered">
       <thead>
       <tr>
         <th>ID</th>
@@ -23,7 +22,7 @@ const InvoiceList = ({ isFetching, invoices }) => (
       </tbody>
     </table>
   </div>
-)
+);
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -33,6 +32,6 @@ function mapStateToProps(state, ownProps) {
 
 InvoiceList.propTypes = {
   invoices: PropTypes.array
-}
+};
 
 export default connect(mapStateToProps)(InvoiceList)

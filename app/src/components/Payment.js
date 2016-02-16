@@ -17,7 +17,7 @@ const Payment = ({ attributes }) => (
     </td>
     <td>{attributes.notes}</td>
   </tr>
-)
+);
 
 Payment.propTypes = {
   id: PropTypes.string,
@@ -27,13 +27,13 @@ Payment.propTypes = {
     date: PropTypes.string,
     notes: PropTypes.string
   })
-}
+};
 
 const mapStateToProps = (state, json) => {
   return {
     id: json.children.id,
     attributes: json.children.attributes
   }
-}
+};
 
 export default connect(mapStateToProps)(Payment)
