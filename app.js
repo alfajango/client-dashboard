@@ -59,6 +59,7 @@ var active_widgets = [
   'invoices',
   'payments'
 ];
+// Start using ES6 syntax, CommonJS no longer works after this point
 require("babel/register");
 widgets = require(__dirname + '/app/widgets')(active_widgets);
 
