@@ -9,6 +9,7 @@ import {IntlProvider} from 'react-intl';
 const store = createStore(rootReducer);
 
 socket.on('serviceResponse', function(response) {
+  console.info(response)
   if (response.errors) {
     store.dispatch(receiveError(response));
   } else if (response.status) {
