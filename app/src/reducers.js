@@ -23,11 +23,13 @@ function data(state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        status: action.error
+        status: action.error,
+        lastUpdated: action.receivedAt
       });
     case RECEIVE_STATUS:
       return Object.assign({}, state, {
-        status: action.status
+        status: action.status,
+        lastUpdated: action.receivedAt
       });
     case RECEIVE_DATA:
       return Object.assign({}, state.data, {
