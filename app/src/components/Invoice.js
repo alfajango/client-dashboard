@@ -2,11 +2,14 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import {FormattedNumber, FormattedDate} from 'react-intl';
 import classNames from 'classnames/bind';
+import styles from '../css/status.scss';
+
+let cx = classNames.bind(styles);
 
 class Invoice extends Component {
   render() {
     let a = this.props.attributes;
-    let statusClass = classNames({
+    let statusClass = cx({
       'status': true,
       'status--green': a.status == 'Paid',
       'status--yellow': a.status != 'Paid' && !pastDue(a.due),
