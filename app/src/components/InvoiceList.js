@@ -5,7 +5,7 @@ import { receiveData } from '../actions'
 
 const InvoiceList = ({ isFetching, invoices }) => (
   <div>
-    <table class="table table-bordered">
+    <table className="table table-bordered">
       <thead>
       <tr>
         <th>ID</th>
