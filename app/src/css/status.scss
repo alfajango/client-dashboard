@@ -1,0 +1,33 @@
+$green: #78b347;
+$yellow: #f5f26d;
+$red: #e47d7d;
+$lighten: 20%;
+
+@function statusHoverColor($color) {
+  @return lighten($color, $lighten)
+}
+
+.status--green {
+  background-color: $green;
+}
+
+.status--yellow {
+  background-color: $yellow;
+}
+
+.status--red {
+  background-color: $red;
+}
+
+tr:hover {
+  .status--green {
+    background-color: statusHoverColor($green) !important;
+  }
+  .status--yellow {
+    background-color: statusHoverColor($yellow) !important;
+  }
+  .status--red {
+    background-color: statusHoverColor($red) !important;
+  }
+}
+

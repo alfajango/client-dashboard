@@ -109,6 +109,9 @@ var compiler = webpack({
       test: /\.js$/,
       //include: './app/containers',
       loaders: ['babel']
+    }, {
+      test: /\.scss$/,
+      loaders: ["style", "css", "sass"]
     }]
   }
 });
