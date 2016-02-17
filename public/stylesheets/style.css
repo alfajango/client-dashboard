@@ -403,6 +403,9 @@ table .alert {
   right: -1px;
   color: #999;
 }
+.in-period .cashboard-billable-total:after {
+  bottom: -31px;
+}
 .profit .cashboard-billable-total,
 .loss .cashboard-billable-total {
   background: #aaa;
