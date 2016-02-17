@@ -107,8 +107,10 @@ var compiler = webpack({
   module: {
     loaders: [{
       test: /\.js$/,
-      //include: './app/containers',
-      loaders: ['babel']
+      loader: 'babel',
+      query: {
+        presets: ['es2015', 'stage-1', 'react']
+      }
     }, {
       test: /\.scss$/,
       loaders: ["style", "css", "sass"]

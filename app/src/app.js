@@ -22,7 +22,7 @@ socket.on('serviceResponse', function(response) {
 render(
   <Provider store={store}>
     <IntlProvider locale="en">
-      <Dashboard locales={['en-US']} />
+      <Dashboard />
     </IntlProvider>
   </Provider>,
   document.getElementById('dashboard')
