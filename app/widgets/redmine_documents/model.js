@@ -5,8 +5,10 @@ var http = require('http'),
 exports.proxies = {
   image: function(service, req, res) {
     var path = decodeURIComponent(req.query.path).replace(/ /g, "%20");
+    var config = JSON.parse(service.config);
     var options = {
       host: service.url,
+      port: config.port || 80,
       path: path,
       headers: {
         'Accept': 'application/json',
@@ -29,7 +31,8 @@ exports.proxies = {
       }
     };
 
-    https.request(options, callback).end();
+    var reqLib = options.port == 80 ? http : https;
+    reqLib.request(options, callback).end();
   }
 };
 
@@ -53,18 +56,21 @@ exports.fetch = function(service, callback) {
 // Fetch issues from service endpoint
 exports.fetchAPI = function(name, path, service, jsonData, done) {
   var redmine = this;
+  var config = JSON.parse(service.config);
 
   var options = {
     host: service.url,
-    port: 80,
+    port: config.port || 80,
     path: path,
     headers: {
       'Accept': 'application/json',
       'X-Redmine-API-Key': service.token
-    }
+    },
+    method: "GET"
   };
 
-  var req = http.get(options, function(res) {
+  var reqLib = options.port == 80 ? http : https;
+  var req = reqLib.get(options, function(res) {
     if (res.statusCode == 200) {
       var data = "";
       res.on('data', function(chunk) {
