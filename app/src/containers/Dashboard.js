@@ -22,9 +22,14 @@ function widgetToComponent(widget) {
 }
 
 function createComponents() {
-  return window.services.map(function(s) {
-    return React.createElement(widgetToComponent(s.widget), {id: s.id, key: s.id})
+  var components = []
+  window.services.forEach(function(s) {
+    var component = widgetToComponent(s.widget);
+    if (component) {
+      components.push(React.createElement(widgetToComponent(s.widget), {id: s.id, key: s.id}))
+    }
   })
+  return components;
 }
 
 export default Dashboard
