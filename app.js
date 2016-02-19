@@ -58,7 +58,7 @@ var active_widgets = [
   'redmine_documents',
   'invoices',
   'payments',
-  'invoices_and_payments'
+  'cashboard_global_invoices_and_payments'
 ];
 // Start using ES6 syntax, CommonJS no longer works after this point
 require("babel-core/register");
