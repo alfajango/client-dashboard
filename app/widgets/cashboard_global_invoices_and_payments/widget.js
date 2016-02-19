@@ -12,7 +12,7 @@ var Widget = React.createClass({
 
   selectClient(value) {
     console.log(value);
-    this.setState({selectValue:value});
+    this.setState({selectValue: value});
   },
 
   render() {
@@ -22,23 +22,23 @@ var Widget = React.createClass({
       <div>
         <h2>Invoices and Payments</h2>
         {isFetching &&
-          React.createElement('div', {className: 'loading large'},
-            status,
-            ' ',
-            React.createElement('img', {src: '/images/ajax-loader.gif'}))
+        React.createElement('div', {className: 'loading large'},
+          status,
+          ' ',
+          React.createElement('img', {src: '/images/ajax-loader.gif'}))
         }
         {!isFetching &&
         <Select
           autofocus
-          value = {this.state.selectValue}
-          options = {this.props.data}
-          onChange = {this.selectClient}
+          value={this.state.selectValue}
+          options={this.props.data.map(i => ({value:i.id,label:i.attributes.name}))}
+          onChange={this.selectClient}
         />
         }
       </div>
     )
   }
-})
+});
 
 Widget.propTypes = {
   isFetching: PropTypes.bool,
@@ -49,18 +49,13 @@ Widget.propTypes = {
 function mapStateToProps(state, ownProps) {
   const {
     isFetching,
-    status
+    status,
+    data
     } = state.dataByService[ownProps.id] || {
     isFetching: true,
-    status: 'Loading'
+    status: 'Loading',
+    data: []
   };
-
-  var data;
-  if(state.dataByService[ownProps.id]) {
-    data = state.dataByService[ownProps.id].data.map(i => ({value:i.id,label:i.attributes.name}))
-  } else {
-    data = []
-  }
 
   return {
     isFetching,
