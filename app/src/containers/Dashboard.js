@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Invoices from '../../widgets/invoices/widget'
 import Payments from '../../widgets/payments/widget'
+import InvoicesAndPayments from '../../widgets/cashboard_global_invoices_and_payments/widget'
 
 class Dashboard extends Component {
   render() {
@@ -18,6 +19,8 @@ function widgetToComponent(widget) {
       return Invoices;
     case 'payments':
       return Payments;
+    case 'cashboard_global_invoices_and_payments':
+      return InvoicesAndPayments;
   }
 }
 
