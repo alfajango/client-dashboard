@@ -8,7 +8,6 @@ var Widget = React.createClass({
     return {
       selectValue: ""
     }
-
   },
 
   selectClient(value) {
@@ -30,7 +29,7 @@ var Widget = React.createClass({
         }
         {!isFetching &&
         <Select
-          value = {this.selectValue}
+          value = {this.state.selectValue}
           options = {this.props.data}
           onChange = {this.selectClient}
         />
