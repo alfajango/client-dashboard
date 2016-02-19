@@ -29,6 +29,7 @@ var Widget = React.createClass({
         }
         {!isFetching &&
         <Select
+          autofocus
           value = {this.state.selectValue}
           options = {this.props.data}
           onChange = {this.selectClient}
