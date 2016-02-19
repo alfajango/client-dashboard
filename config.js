@@ -8,7 +8,8 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   methodOverride = require('method-override'),
   session = require('express-session'),
-  middleware = require(__dirname + '/lib/middleware');
+  middleware = require(__dirname + '/lib/middleware'),
+  path = require('path');
 
 exports = module.exports = passport = require('passport');
 exports = module.exports = passwordHash = require('password-hash');
@@ -108,6 +109,10 @@ var compiler = webpack({
     loaders: [{
       test: /\.js$/,
       loader: 'babel',
+      include: [
+        path.resolve(__dirname, 'app/src'),
+        path.resolve(__dirname, 'app/widgets')
+      ],
       query: {
         presets: ['es2015', 'stage-1', 'react']
       }
