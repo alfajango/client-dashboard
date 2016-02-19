@@ -57,7 +57,8 @@ var active_widgets = [
   'semaphore_build_status',
   'redmine_documents',
   'invoices',
-  'payments'
+  'payments',
+  'invoices_and_payments'
 ];
 // Start using ES6 syntax, CommonJS no longer works after this point
 require("babel-core/register");
