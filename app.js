@@ -64,9 +64,11 @@ require("babel-core/register");
 widgets = require(__dirname + '/app/widgets')(active_widgets);
 
 app.get('/widgets/:widget', function(req, res) {
-  var widget = widgets[req.params.widget];
+  var widgetName = req.params.widget;
+  var widget = widgets[widgetName];
+
   if (widget && widget.update) {
-    res.sendFile(__dirname + '/app/widgets/' + widget + '/' + widgets[widget].update);
+    res.sendFile(__dirname + '/app/widgets/' + widgetName + '/' + widget.update);
   } else {
     res.send('')
   }
