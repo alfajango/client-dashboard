@@ -38,6 +38,7 @@
     "react-grid-layout": "^0.10.7",
     "react-intl": "^2.0.0-beta-2",
     "react-redux": "^4.4.0",
+    "react-select": "^1.0.0-beta9",
     "redux": "^3.3.1",
     "serve-favicon": "^2.3.0",
     "socket.io": "^1.4.4",

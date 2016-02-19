@@ -1,10 +1,24 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import Dropdown from '../../src/components/Dropdown'
+import Select from 'react-select'
+import 'style!react-select/scss/default.scss'
 
-class Widget extends Component {
+var Widget = React.createClass({
+  getInitialState() {
+    return {
+      selectValue: ""
+    }
+
+  },
+
+  selectClient(value) {
+    console.log(value);
+    this.setState({selectValue:value});
+  },
+
   render() {
     const { data, status, isFetching } = this.props;
+
     return (
       <div>
         <h2>Invoices and Payments</h2>
@@ -15,12 +29,16 @@ class Widget extends Component {
             React.createElement('img', {src: '/images/ajax-loader.gif'}))
         }
         {!isFetching &&
-        <Dropdown>{data}</Dropdown>
+        <Select
+          value = {this.selectValue}
+          options = {this.props.data}
+          onChange = {this.selectClient}
+        />
         }
       </div>
     )
   }
-}
+})
 
 Widget.propTypes = {
   isFetching: PropTypes.bool,
@@ -31,13 +49,18 @@ Widget.propTypes = {
 function mapStateToProps(state, ownProps) {
   const {
     isFetching,
-    status,
-    data,
+    status
     } = state.dataByService[ownProps.id] || {
     isFetching: true,
-    status: 'Loading',
-    data: []
+    status: 'Loading'
   };
+
+  var data;
+  if(state.dataByService[ownProps.id]) {
+    data = state.dataByService[ownProps.id].data.map(i => ({value:i.id,label:i.attributes.name}))
+  } else {
+    data = []
+  }
 
   return {
     isFetching,
