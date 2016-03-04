@@ -106,9 +106,8 @@ exports.fetchAPI = function(name, service, path, jsonData, done) {
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
-  return data.map(function(payment) {
+  data = data.map(function(payment) {
     return {
-      type: 'payment',
       id: JSON.stringify(payment.id),
       attributes: {
         id: payment.assigned_id,
@@ -118,6 +117,10 @@ exports.translate = function(data) {
       }
     }
   });
+  return {
+    type: 'payment',
+    data
+  }
 };
 
 // Write fetched results to db

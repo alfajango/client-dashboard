@@ -40,12 +40,18 @@ function data(state = {
         isFetching: false,
         didInvalidate: false,
         status: '',
-        data: action.data,
+        data: filterDataByType(state.data, action.data),
         lastUpdated: action.receivedAt
       });
     default:
       return state
   }
+}
+
+function filterDataByType(stateData, json) {
+  var key = {};
+  key[json.type] = json.data;
+  return Object.assign({}, stateData, key);
 }
 
 function dataByService(state = {}, action) {
