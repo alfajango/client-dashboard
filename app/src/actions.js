@@ -1,5 +1,3 @@
-import fetch from 'isomorphic-fetch'
-
 export const INVALIDATE_DATA = 'INVALIDATE_DATA';
 
 export function invalidateInvoices(service) {
