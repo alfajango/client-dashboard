@@ -106,9 +106,8 @@ exports.fetchAPI = function(name, service, path, jsonData, done) {
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
-  return data.map(function(invoice) {
+  data = data.map(function(invoice) {
     return {
-      type: 'invoice',
       id: JSON.stringify(invoice.id),
       attributes: {
         id: invoice.assigned_id,
@@ -119,6 +118,11 @@ exports.translate = function(data) {
       }
     }
   });
+
+  return {
+    type: 'invoice',
+    data
+  };
 
   function status(invoice) {
     if (invoice.has_been_paid) {

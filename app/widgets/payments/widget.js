@@ -32,12 +32,14 @@ function mapStateToProps(state, ownProps) {
   const {
     isFetching,
     status,
-    data,
     } = state.dataByService[ownProps.id] || {
     isFetching: true,
-    status: 'Loading',
-    data: []
+    status: 'Loading'
   };
+  var data = [];
+  if (state.dataByService[ownProps.id]) {
+    data = state.dataByService[ownProps.id].data.payment
+  }
 
   return {
     isFetching,
