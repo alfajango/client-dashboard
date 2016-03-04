@@ -57,10 +57,10 @@ Widget.propTypes = {
 const mapDispatchToProps = (dispatch) => {
   return {
     selectClient: (serviceName, serviceId, clientId) => {
-      dispatch(selectClient(serviceName, serviceId, clientId));
+      dispatch(selectClient(serviceName, serviceId, {clientId, invoice: null, payment: null}));
     },
-    clearClient: (serviceId, data) => {
-      dispatch(invalidateData(serviceId, data));
+    clearClient: (serviceId) => {
+      dispatch(invalidateData(serviceId, {clientId: null}));
     }
   }
 };
