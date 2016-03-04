@@ -48,7 +48,6 @@ exports.fetch = function(service, callback, settings) {
     var data = {};
     utils.when(
       function(done) {
-        updateStatus('Loading invoices');
         var path = '/invoices.json?client_type=Company&client_id=' + clientId;
         widget.fetchAPI('invoices', service, path, data, done);
       }
@@ -61,7 +60,6 @@ exports.fetch = function(service, callback, settings) {
     });
     utils.when(
       function(done) {
-        updateStatus('Loading payments');
         var path = '/payments.json?client_type=Company&client_id=' + clientId;
         widget.fetchAPI('payments', service, path, data, done);
       }
