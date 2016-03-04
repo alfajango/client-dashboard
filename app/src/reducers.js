@@ -16,7 +16,8 @@ function data(state = {
   switch (action.type) {
     case INVALIDATE_DATA:
       return Object.assign({}, state, {
-        didInvalidate: true
+        didInvalidate: true,
+        data: Object.assign({}, state.data, action.data)
       });
     case REQUEST_DATA:
       return Object.assign({}, state, {
