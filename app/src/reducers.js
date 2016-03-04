@@ -21,7 +21,8 @@ function data(state = {
     case REQUEST_DATA:
       return Object.assign({}, state, {
         isFetching: true,
-        didInvalidate: false
+        didInvalidate: false,
+        data: Object.assign({}, state.data, action.data)
       });
     case RECEIVE_ERROR:
       return Object.assign({}, state, {

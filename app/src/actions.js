@@ -9,10 +9,11 @@ export function invalidateInvoices(service) {
 
 export const REQUEST_DATA = 'REQUEST_DATA';
 
-export function requestData(service) {
+export function requestData(serviceId, data) {
   return {
     type: REQUEST_DATA,
-    service
+    serviceId,
+    data
   }
 }
 
