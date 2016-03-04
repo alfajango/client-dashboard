@@ -36,7 +36,7 @@ function data(state = {
         lastUpdated: action.receivedAt
       });
     case RECEIVE_DATA:
-      return Object.assign({}, state.data, {
+      return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
         status: '',
