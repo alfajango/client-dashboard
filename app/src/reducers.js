@@ -11,7 +11,7 @@ function data(state = {
   isFetching: true,
   didInvalidate: false,
   status: 'Loading',
-  data: []
+  data: {}
 }, action) {
   switch (action.type) {
     case INVALIDATE_DATA:

@@ -21,7 +21,7 @@ exports.fetch = function(service, callback, settings) {
     clientData = {};
 
   if (settings.clientId) {
-    getData(settings.clientId);
+    getInvoicesPayments(settings.clientId);
   } else {
     getClients();
   }
@@ -44,21 +44,34 @@ exports.fetch = function(service, callback, settings) {
     }));
   }
 
-  function getData(clientId) {
-    var projectData = {};
+  function getInvoicesPayments(clientId) {
+    var data = {};
     utils.when(
       function(done) {
-        updateStatus('Retrieving projects');
-        var path = '/projects?client_id=' + clientId;
-        widget.fetchAPI('project list', service, path, projectData, done);
+        updateStatus('Loading invoices');
+        var path = '/invoices.json?client_type=Company&client_id=' + clientId;
+        widget.fetchAPI('invoices', service, path, data, done);
       }
     ).then(function() {
-      if (projectData.error) {
-        updateError('Project list could not be retrieved')
+      if (data.error) {
+        updateError(data.error);
       } else {
-        updateData(widget.translateProjects(projectData.data));
+        updateData(widget.translateInvoices(data.data));
       }
-    })
+    });
+    utils.when(
+      function(done) {
+        updateStatus('Loading payments');
+        var path = '/payments.json?client_type=Company&client_id=' + clientId;
+        widget.fetchAPI('payments', service, path, data, done);
+      }
+    ).then(function() {
+      if (data.error) {
+        updateError(data.error);
+      } else {
+        updateData(widget.translatePayments(data.data));
+      }
+    });
   }
 
   function getClients() {
@@ -114,27 +127,66 @@ exports.fetchAPI = function(name, service, path, jsonData, done) {
 
 // Translate fetched response to db store format
 exports.translate = function(data) {
-  return data.map(function(client) {
+  data = data.map(function(client) {
     return {
-      type: 'client',
       id: JSON.stringify(client.id),
       attributes: {
         name: client.name
       }
     }
   });
+  return {
+    type: 'client',
+    data
+  }
 };
 
-exports.translateProjects = function(data) {
-  return data.map(function(project) {
+exports.translateInvoices = function(data) {
+  data = data.map(function(invoice) {
     return {
-      type: 'project',
-      id: JSON.stringify(project.id),
+      id: JSON.stringify(invoice.id),
       attributes: {
-        name: project.name
+        id: invoice.assigned_id,
+        date: invoice.invoice_date,
+        amount: Number(invoice.total),
+        due: invoice.due_date,
+        status: status(invoice)
       }
     }
   });
+
+  return {
+    type: 'invoice',
+    data
+  };
+
+  function status(invoice) {
+    if (invoice.has_been_paid) {
+      return 'Paid'
+    } else if (invoice.has_been_sent) {
+      return 'Sent'
+    } else {
+      return 'New'
+    }
+  }
+};
+
+exports.translatePayments = function(data) {
+  data = data.map(function(payment) {
+    return {
+      id: JSON.stringify(payment.id),
+      attributes: {
+        id: payment.assigned_id,
+        date: payment.created_on,
+        amount: Number(payment.amount),
+        notes: payment.notes
+      }
+    }
+  });
+  return {
+    type: 'payment',
+    data
+  }
 };
 
 // Write fetched results to db
