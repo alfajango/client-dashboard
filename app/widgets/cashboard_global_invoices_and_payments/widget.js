@@ -28,6 +28,7 @@ var Widget = React.createClass({
           options={data['client'].map(i => ({value:i.id,label:i.attributes.name}))}
           onChange={this.selectClient}
           isLoading={!data.client}
+          style={{ marginBottom: 14 }}
         />
         }
         {!didInvalidate && data.clientId &&
