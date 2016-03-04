@@ -1,27 +1,47 @@
 import React, { PropTypes } from 'react'
 import Payment from './Payment'
+import {FormattedNumber} from 'react-intl';
 import { connect } from 'react-redux'
 import { receiveData } from '../actions'
 
-const PaymentList = ({ payments }) => (
-  <div>
-    <table className="table table-bordered">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Notes</th>
-      </tr>
-      </thead>
-      <tbody>
-      {payments.map(function(payment) {
-        return <Payment key={payment.id}>{payment}</Payment>;
-      })}
-      </tbody>
-    </table>
-  </div>
-);
+const PaymentList = React.createClass({
+  totalAmount() {
+    let sum = 0;
+    for (var i in this.props.payments) {
+      sum += this.props.payments[i].attributes.amount
+    }
+    return sum.toString()
+  },
+
+  render() {
+    const {payments} = this.props;
+    return (
+      <div>
+        <table className="table table-bordered">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Notes</th>
+          </tr>
+          </thead>
+          <tbody>
+          {payments.map(function(payment) {
+            return <Payment key={payment.id}>{payment}</Payment>;
+          })}
+          <tr>
+            <td>TOTAL</td>
+            <td colSpan="4">
+              <FormattedNumber value={this.totalAmount()} style="currency" currency="USD" />
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+});
 
 function mapStateToProps(state, ownProps) {
   return {
