@@ -73,12 +73,14 @@ block head
 
   each service in project.services
     script.
-      emitters["#{service.name}-#{service.id}"] = function() {
+      // TODO: maybe insecure to set these variables in an inline script
+      emitters["#{service.name}-#{service.id}"] = function(moreSettings) {
         var settings = {
             client: "#{theClient.id}",
             project: "#{project.id}",
             service: "#{service.name}",
-            id: "#{service.id}"
+            id: "#{service.id}",
+            settings: {}
           },
           $form = $("#widget-#{service.id} form");
 
@@ -87,9 +89,9 @@ block head
           $.each($($form).serializeArray(), function(_, kv) {
             settingsObj[kv.name] = kv.value;
           });
-          settings.settings = settingsObj;
+          $.extend(settings.settings, settingsObj)
         }
-
+        $.extend(settings.settings, moreSettings)
         prom.then(function() {
           socket.emit('service', settings);
         });

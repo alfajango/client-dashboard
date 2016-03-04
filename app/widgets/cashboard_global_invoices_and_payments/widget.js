@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import Select from 'react-select'
 import 'style!react-select/scss/default.scss'
+import { selectClient } from './actions'
 
 var Widget = React.createClass({
   getInitialState() {
@@ -10,9 +11,8 @@ var Widget = React.createClass({
     }
   },
 
-  selectClient(value) {
-    console.log(value);
-    this.setState({selectValue: value});
+  selectClient(client) {
+    this.props.selectClient(this.props.name, this.props.id, client.value);
   },
 
   render() {
@@ -31,7 +31,7 @@ var Widget = React.createClass({
         <Select
           autofocus
           value={this.state.selectValue}
-          options={this.props.data.map(i => ({value:i.id,label:i.attributes.name}))}
+          options={data['client'].map(i => ({value:i.id,label:i.attributes.name}))}
           onChange={this.selectClient}
         />
         }
@@ -43,25 +43,41 @@ var Widget = React.createClass({
 Widget.propTypes = {
   isFetching: PropTypes.bool,
   status: PropTypes.string,
-  data: PropTypes.array
+  data: PropTypes.array,
+  selectClient: PropTypes.func
 };
 
-function mapStateToProps(state, ownProps) {
+const mapDispatchToProps = (dispatch) => {
+  return {
+    selectClient: (serviceName, serviceId, clientId) => {
+      dispatch(selectClient(serviceName, serviceId, clientId));
+    }
+  }
+};
+
+const mapStateToProps = (state, ownProps) => {
   const {
     isFetching,
-    status,
-    data
+    status
     } = state.dataByService[ownProps.id] || {
     isFetching: true,
-    status: 'Loading',
-    data: []
+    status: 'Loading'
   };
+  const id = ownProps.id;
+  const data = {};
+  if (state.dataByService[ownProps.id]) {
+    state.dataByService[ownProps.id].data.forEach(function(i) {
+      if (!data.hasOwnProperty(i.type)) data[i.type] = [];
+      data[i.type].push(i);
+    });
+  }
 
   return {
     isFetching,
     status,
-    data
+    data,
+    id
   }
-}
+};
 
-export default connect(mapStateToProps)(Widget)
+export default connect(mapStateToProps, mapDispatchToProps)(Widget)

@@ -29,7 +29,7 @@ function createComponents() {
   window.services.forEach(function(s) {
     var component = widgetToComponent(s.widget);
     if (component) {
-      components.push(React.createElement(widgetToComponent(s.widget), {id: s.id, key: s.id}))
+      components.push(React.createElement(widgetToComponent(s.widget), {id: s.id, key: s.id, name: s.widget}))
     }
   })
   return components;

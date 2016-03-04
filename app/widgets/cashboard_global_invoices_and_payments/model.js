@@ -13,26 +13,18 @@ exports.options = function(service, path) {
   };
 };
 
-exports.fetch = function(service, callback) {
+exports.fetch = function(service, callback, settings) {
   var widget = this,
     response = {
       serviceId: service.id
     },
     clientData = {};
 
-  utils.when(
-    function(done) {
-      updateStatus('Looking up client list');
-      var path = '/client_companies';
-      widget.fetchAPI('client list', service, path, clientData, done);
-    }
-  ).then(function() {
-    if (clientData.error) {
-      updateError('Client list could not be retrieved')
-    } else {
-      updateData(widget.translate(clientData.data));
-    }
-  })
+  if (settings.clientId) {
+    getData(settings.clientId);
+  } else {
+    getClients();
+  }
 
   function updateData(data) {
     callback(Object.assign({}, response, {
@@ -50,6 +42,40 @@ exports.fetch = function(service, callback) {
     callback(Object.assign({}, response, {
       status: msg
     }));
+  }
+
+  function getData(clientId) {
+    var projectData = {};
+    utils.when(
+      function(done) {
+        updateStatus('Retrieving projects');
+        var path = '/projects?client_id=' + clientId;
+        widget.fetchAPI('project list', service, path, projectData, done);
+      }
+    ).then(function() {
+      if (projectData.error) {
+        updateError('Project list could not be retrieved')
+      } else {
+        updateData(widget.translateProjects(projectData.data));
+      }
+    })
+  }
+
+  function getClients() {
+    var clientData = {};
+    utils.when(
+      function(done) {
+        updateStatus('Looking up client list');
+        var path = '/client_companies';
+        widget.fetchAPI('client list', service, path, clientData, done);
+      }
+    ).then(function() {
+      if (clientData.error) {
+        updateError('Client list could not be retrieved')
+      } else {
+        updateData(widget.translate(clientData.data));
+      }
+    })
   }
 };
 
@@ -94,6 +120,18 @@ exports.translate = function(data) {
       id: JSON.stringify(client.id),
       attributes: {
         name: client.name
+      }
+    }
+  });
+};
+
+exports.translateProjects = function(data) {
+  return data.map(function(project) {
+    return {
+      type: 'project',
+      id: JSON.stringify(project.id),
+      attributes: {
+        name: project.name
       }
     }
   });

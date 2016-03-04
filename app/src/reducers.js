@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux'
 import {
-  INVALIDATE_DATA, REQUEST_DATA, RECEIVE_DATA, RECEIVE_STATUS, RECEIVE_ERROR
+  INVALIDATE_DATA,
+  REQUEST_DATA,
+  RECEIVE_DATA,
+  RECEIVE_STATUS,
+  RECEIVE_ERROR
 } from './actions'
 
 function data(state = {
@@ -53,6 +57,8 @@ function dataByService(state = {}, action) {
       return Object.assign({}, state, {
         [action.serviceId]: data(state[action.serviceId], action)
       });
+    case SELECT_CLIENT:
+
     default:
       return state
   }
