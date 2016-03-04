@@ -57,8 +57,6 @@ function dataByService(state = {}, action) {
       return Object.assign({}, state, {
         [action.serviceId]: data(state[action.serviceId], action)
       });
-    case SELECT_CLIENT:
-
     default:
       return state
   }
