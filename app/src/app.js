@@ -1,12 +1,16 @@
 import React from 'react'
-import { createStore } from 'redux'
+import { createStore, compose, applyMiddleware } from 'redux'
 import rootReducer from './reducers'
 import {receiveData, receiveError, receiveStatus} from './actions'
 import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import Dashboard from './containers/Dashboard'
 import {IntlProvider} from 'react-intl';
-const store = (window.devToolsExtension ? window.devToolsExtension()(createStore) : createStore)(rootReducer);
+import thunk from 'redux-thunk';
+const store = createStore(rootReducer, {}, compose(
+  applyMiddleware(thunk),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
 
 socket.on('serviceResponse', function(response) {
   console.info(response);
