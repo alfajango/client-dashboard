@@ -25,7 +25,7 @@ class Widget extends Component {
 Widget.propTypes = {
   isFetching: PropTypes.bool,
   status: PropTypes.string,
-  data: PropTypes.array
+  data: PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {

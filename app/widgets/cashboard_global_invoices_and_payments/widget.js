@@ -3,21 +3,24 @@ import { connect } from 'react-redux'
 import Select from 'react-select'
 import 'style!react-select/scss/default.scss'
 import { selectClient } from './actions'
+import InvoiceList from '../../src/components/InvoiceList'
+import PaymentList from '../../src/components/PaymentList'
 
 var Widget = React.createClass({
   getInitialState() {
+    // TODO: track these in state
     return {
-      selectValue: ""
+      clientId: ""
     }
   },
 
   selectClient(client) {
+    this.state.clientId = client.value;
     this.props.selectClient(this.props.name, this.props.id, client.value);
   },
 
   render() {
     const { data, status, isFetching } = this.props;
-
     return (
       <div>
         <h2>Invoices and Payments</h2>
@@ -30,10 +33,16 @@ var Widget = React.createClass({
         {!isFetching &&
         <Select
           autofocus
-          value={this.state.selectValue}
+          value={this.state.clientId}
           options={data['client'].map(i => ({value:i.id,label:i.attributes.name}))}
           onChange={this.selectClient}
         />
+        }
+        {this.state.clientId && data.invoice &&
+        <InvoiceList>{data['invoice']}</InvoiceList>
+        }
+        {this.state.clientId && data.payment &&
+        <PaymentList>{data['payment']}</PaymentList>
         }
       </div>
     )
@@ -43,7 +52,7 @@ var Widget = React.createClass({
 Widget.propTypes = {
   isFetching: PropTypes.bool,
   status: PropTypes.string,
-  data: PropTypes.array,
+  data: PropTypes.object,
   selectClient: PropTypes.func
 };
 
@@ -56,21 +65,17 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const id = ownProps.id;
+
   const {
     isFetching,
-    status
+    status,
+    data
     } = state.dataByService[ownProps.id] || {
     isFetching: true,
-    status: 'Loading'
+    status: 'Loading',
+    data: {}
   };
-  const id = ownProps.id;
-  const data = {};
-  if (state.dataByService[ownProps.id]) {
-    state.dataByService[ownProps.id].data.forEach(function(i) {
-      if (!data.hasOwnProperty(i.type)) data[i.type] = [];
-      data[i.type].push(i);
-    });
-  }
 
   return {
     isFetching,
