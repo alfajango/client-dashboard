@@ -30,17 +30,27 @@ var Widget = React.createClass({
           isLoading={!data.client}
         />
         }
-        {isFetching &&
-        React.createElement('div', {className: 'loading large'},
-          status,
-          ' ',
-          React.createElement('img', {src: '/images/ajax-loader.gif'}))
-        }
-        {!didInvalidate && data.clientId && data.invoice &&
-        <InvoiceList>{data['invoice']}</InvoiceList>
-        }
-        {!didInvalidate && data.clientId && data.payment &&
-        <PaymentList>{data['payment']}</PaymentList>
+        {!didInvalidate && data.clientId &&
+        <div>
+          <h3>Invoices</h3>
+          {data.invoice &&
+            <InvoiceList>{data.invoice}</InvoiceList>
+          }
+          {!data.invoice &&
+          React.createElement('div', {className: 'loading large'},
+            'Loading invoices ',
+            React.createElement('img', {src: '/images/ajax-loader.gif'}))
+          }
+          <h3>Payments</h3>
+          {data.payment &&
+          <PaymentList>{data.payment}</PaymentList>
+          }
+          {!data.payment &&
+          React.createElement('div', {className: 'loading large'},
+            'Loading payments ',
+            React.createElement('img', {src: '/images/ajax-loader.gif'}))
+          }
+        </div>
         }
       </div>
     )
