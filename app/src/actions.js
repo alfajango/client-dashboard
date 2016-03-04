@@ -1,9 +1,9 @@
 export const INVALIDATE_DATA = 'INVALIDATE_DATA';
 
-export function invalidateInvoices(service) {
+export function invalidateData(serviceId) {
   return {
     type: INVALIDATE_DATA,
-    service
+    serviceId
   }
 }
 
