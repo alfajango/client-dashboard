@@ -4,16 +4,16 @@ import {FormattedNumber, FormattedDate} from 'react-intl';
 
 const Payment = ({ attributes }) => (
   <tr>
-    <td>{attributes.id}</td>
-    <td>
-      <FormattedNumber value={attributes.amount} style="currency" currency="USD" />
-    </td>
     <td>
       <FormattedDate
         value={attributes.date}
         day="numeric"
-        month="long"
+        month="numeric"
         year="numeric" />
+    </td>
+    <td style={{whiteSpace: 'nowrap'}}>{attributes.id}</td>
+    <td style={{textAlign: 'right'}}>
+      <FormattedNumber value={attributes.amount} style="currency" currency="USD" />
     </td>
     <td>{attributes.notes}</td>
   </tr>
