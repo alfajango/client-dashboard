@@ -20,9 +20,9 @@ const InvoiceList = React.createClass({
         <table className="table table-bordered">
           <thead>
           <tr>
-            <th>ID</th>
-            <th>Amount</th>
             <th>Date</th>
+            <th>Invoice No.</th>
+            <th>Amount</th>
             <th>Due</th>
             <th>Status</th>
           </tr>
@@ -32,10 +32,11 @@ const InvoiceList = React.createClass({
             return <Invoice key={invoice.id}>{invoice}</Invoice>;
           })}
           <tr>
-            <td>TOTAL</td>
-            <td colSpan="4">
+            <td colSpan="2">TOTAL</td>
+            <td style={{textAlign: 'right'}}>
               <FormattedNumber value={this.totalAmount()} style="currency" currency="USD" />
             </td>
+            <td colSpan="3"></td>
           </tr>
           </tbody>
         </table>

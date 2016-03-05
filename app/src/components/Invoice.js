@@ -17,22 +17,22 @@ class Invoice extends Component {
     });
     return (
       <tr>
-        <td>{a.id}</td>
-        <td>
-          <FormattedNumber value={a.amount} style="currency" currency="USD" />
-        </td>
         <td>
           <FormattedDate
             value={a.date}
             day="numeric"
-            month="long"
+            month="numeric"
             year="numeric" />
+        </td>
+        <td style={{whiteSpace: 'nowrap'}}>{a.id}</td>
+        <td style={{textAlign: 'right'}}>
+          <FormattedNumber value={a.amount} style="currency" currency="USD" />
         </td>
         <td>
           <FormattedDate
             value={a.due}
             day="numeric"
-            month="long"
+            month="numeric"
             year="numeric" />
         </td>
         <td className={statusClass}>{a.status}</td>
