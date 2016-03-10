@@ -3,6 +3,7 @@ var translatePayments = require('../payments/model').translate;
 var ioutils = require ('../ioutils');
 
 exports.fetch = function(service, callback, settings) {
+  var widget = this;
   var fetchAPI = ioutils.createFetchAPI('https', options(service));
   var io = ioutils.updates(service.id, callback);
 
@@ -52,14 +53,14 @@ exports.fetch = function(service, callback, settings) {
       if (clientData.error) {
         io.updateError('Client list could not be retrieved, callback')
       } else {
-        io.updateData(translate(clientData.data));
+        io.updateData(widget.translate(clientData.data));
       }
     })
   }
 };
 
 // Translate fetched response to db store format
-function translate(data) {
+exports.translate = function(data) {
   data = data.map(function(client) {
     return {
       id: JSON.stringify(client.id),
@@ -72,7 +73,7 @@ function translate(data) {
     type: 'client',
     data
   }
-}
+};
 
 function options(service) {
   var auth = 'Basic ' + new Buffer(service.user + ':' + service.token).toString('base64');
