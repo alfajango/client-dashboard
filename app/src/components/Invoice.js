@@ -12,8 +12,8 @@ class Invoice extends Component {
     let statusClass = cx({
       'status': true,
       'status--green': a.status == 'Paid',
-      'status--yellow': a.status != 'Paid' && !pastDue(a.due),
-      'status--red': a.status != 'Paid' && pastDue(a.due)
+      'status--yellow': a.status != 'Paid' && a.status != 'Uninvoiced' && !pastDue(a.due),
+      'status--red': a.status !== 'Paid' && a.status !== 'Uninvoiced' && pastDue(a.due)
     });
     return (
       <tr>

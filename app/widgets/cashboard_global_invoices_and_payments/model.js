@@ -14,29 +14,40 @@ exports.fetch = function(service, callback, settings) {
   }
 
   function getInvoicesPayments(clientId) {
-    var data = {};
+    var invoiceData = {},
+      projectData = {};
     utils.when(
       function(done) {
         var path = '/invoices.json?client_type=Company&client_id=' + clientId;
-        fetchAPI('invoices', path, data, done);
+        fetchAPI('invoices', path, invoiceData, done);
+      },
+      function(done) {
+        var path = '/projects.json?client_type=Company&client_id=' + clientId;
+        fetchAPI('projects', path, projectData, done);
       }
     ).then(function() {
-      if (data.error) {
-        io.updateError(data.error);
+      if (invoiceData.error) {
+        io.updateError(invoiceData.error);
+      } else if (projectData.error) {
+        io.updateError(projectData.error);
       } else {
-        io.updateData(translateInvoices(data.data));
+        var data = translateInvoices(invoiceData.data);
+        var uninvoiced = widget.translateUninvoicedProjectTime(projectData.data);
+        data.data.unshift(uninvoiced);
+        io.updateData(data);
       }
     });
+    var paymentData = {};
     utils.when(
       function(done) {
         var path = '/payments.json?client_type=Company&client_id=' + clientId;
-        fetchAPI('payments', path, data, done);
+        fetchAPI('payments', path, paymentData, done);
       }
     ).then(function() {
-      if (data.error) {
-        io.updateError(data.error);
+      if (paymentData.error) {
+        io.updateError(paymentData.error);
       } else {
-        io.updateData(translatePayments(data.data));
+        io.updateData(translatePayments(paymentData.data));
       }
     });
   }
@@ -72,6 +83,24 @@ exports.translate = function(data) {
   return {
     type: 'client',
     data
+  }
+};
+
+exports.translateUninvoicedProjectTime = function(data) {
+  var uninvoicedAmount = 0;
+  var date = new Date().toISOString().slice(0, 10);
+  for (var i in data) {
+    uninvoicedAmount += data[i].uninvoiced_item_cost;
+  }
+  return {
+    id: 'UNINVOICED',
+    attributes: {
+      amount: uninvoicedAmount,
+      date,
+      due: date,
+      id: 'Uninvoiced',
+      status: 'Uninvoiced'
+    }
   }
 };
 
