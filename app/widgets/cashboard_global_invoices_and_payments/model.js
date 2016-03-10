@@ -1,4 +1,6 @@
 var https = require('https');
+var translateInvoices = require('../invoices/model').translate;
+var translatePayments = require('../payments/model').translate;
 
 exports.options = function(service, path) {
   var auth = 'Basic ' + new Buffer(service.user + ':' + service.token).toString('base64');
@@ -55,7 +57,7 @@ exports.fetch = function(service, callback, settings) {
       if (data.error) {
         updateError(data.error);
       } else {
-        updateData(widget.translateInvoices(data.data));
+        updateData(translateInvoices(data.data));
       }
     });
     utils.when(
@@ -67,7 +69,7 @@ exports.fetch = function(service, callback, settings) {
       if (data.error) {
         updateError(data.error);
       } else {
-        updateData(widget.translatePayments(data.data));
+        updateData(translatePayments(data.data));
       }
     });
   }
@@ -135,54 +137,6 @@ exports.translate = function(data) {
   });
   return {
     type: 'client',
-    data
-  }
-};
-
-exports.translateInvoices = function(data) {
-  data = data.map(function(invoice) {
-    return {
-      id: JSON.stringify(invoice.id),
-      attributes: {
-        id: invoice.assigned_id,
-        date: invoice.invoice_date,
-        amount: Number(invoice.total),
-        due: invoice.due_date,
-        status: status(invoice)
-      }
-    }
-  });
-
-  return {
-    type: 'invoice',
-    data
-  };
-
-  function status(invoice) {
-    if (invoice.has_been_paid) {
-      return 'Paid'
-    } else if (invoice.has_been_sent) {
-      return 'Sent'
-    } else {
-      return 'New'
-    }
-  }
-};
-
-exports.translatePayments = function(data) {
-  data = data.map(function(payment) {
-    return {
-      id: JSON.stringify(payment.id),
-      attributes: {
-        id: payment.assigned_id,
-        date: payment.created_on,
-        amount: Number(payment.amount),
-        notes: payment.notes
-      }
-    }
-  });
-  return {
-    type: 'payment',
     data
   }
 };
