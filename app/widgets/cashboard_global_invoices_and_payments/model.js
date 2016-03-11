@@ -5,7 +5,7 @@ var ioutils = require ('../ioutils');
 exports.fetch = function(service, callback, settings) {
   var widget = this;
   var fetchAPI = ioutils.createFetchAPI('https', options(service));
-  var io = ioutils.updates(service.id, callback);
+  var io = ioutils.updates(service, callback);
 
   if (settings.clientId) {
     getInvoicesPayments(settings.clientId);

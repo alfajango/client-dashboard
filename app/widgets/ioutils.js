@@ -56,16 +56,16 @@ exports.createFetchAPI = function(proto, options) {
  * @param {Function} callback
  * @returns {{updateData: {Function} updateData, updateError: {Function} updateError, updateStatus: {Function} updateStatus}}
  */
-exports.updates = function(serviceId, callback) {
+exports.updates = function(service, callback) {
   return {
     updateData: function(data) {
-      callback({serviceId, data})
+      callback({serviceId: service.id, serviceName: service.name, data})
     },
     updateError: function(msg) {
-      callback({serviceId, error: msg})
+      callback({serviceId: service.id, serviceName: service.name, error: msg})
     },
     updateStatus: function(msg) {
-      callback({serviceId, status: msg})
+      callback({serviceId: service.id, serviceName: service.name, status: msg})
     }
   };
 };
