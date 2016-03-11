@@ -1,6 +1,6 @@
 var translateInvoices = require('../invoices/model').translate;
 var translatePayments = require('../payments/model').translate;
-var ioutils = require ('../ioutils');
+var ioutils = require('../ioutils');
 
 exports.fetch = function(service, callback, settings) {
   var widget = this;
@@ -33,7 +33,8 @@ exports.fetch = function(service, callback, settings) {
       } else {
         var data = translateInvoices(invoiceData.data);
         var uninvoiced = widget.translateUninvoicedProjectTime(projectData.data);
-        data.data.unshift(uninvoiced);
+        var unbillable = widget.translateUnbillableProjectTime(projectData.data);
+        data.data.unshift(unbillable, uninvoiced);
         io.updateData(data);
       }
     });
@@ -100,6 +101,24 @@ exports.translateUninvoicedProjectTime = function(data) {
       due: date,
       id: 'Uninvoiced',
       status: 'Uninvoiced'
+    }
+  }
+};
+
+exports.translateUnbillableProjectTime = function(data) {
+  var unbillableTime = 0;
+  var date = new Date().toISOString().slice(0, 10);
+  for (var i in data) {
+    unbillableTime += data[i].time_entry_minutes_unbillable;
+  }
+  return {
+    id: 'UNBILLABLE',
+    attributes: {
+      amount: 0,
+      date,
+      due: date,
+      id: 'Unbillable hours',
+      status: unbillableTime / 60
     }
   }
 };
