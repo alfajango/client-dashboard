@@ -128,8 +128,8 @@ exports.translateUnbillableProjectTime = function(data) {
       amount: 0,
       date,
       due: date,
-      id: 'Unbillable hours',
-      status: (unbillableTime / 60).toString()
+      id: 'Unbillable',
+      status: 'Unbillable hours: ' + (unbillableTime / 60).toString()
     }
   }
 };
