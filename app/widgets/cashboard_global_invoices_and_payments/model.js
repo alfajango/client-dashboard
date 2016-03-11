@@ -8,12 +8,12 @@ exports.fetch = function(service, callback, settings) {
   var io = ioutils.updates(service, callback);
 
   if (settings.clientId) {
-    getInvoicesPayments(settings.clientId);
+    getInvoicesPayments(settings.clientId, service.user);
   } else {
     getClients();
   }
 
-  function getInvoicesPayments(clientId) {
+  function getInvoicesPayments(clientId, serviceUser) {
     var invoiceData = {},
       projectData = {};
     utils.when(
@@ -32,7 +32,7 @@ exports.fetch = function(service, callback, settings) {
         io.updateError(projectData.error);
       } else {
         var data = translateInvoices(invoiceData.data);
-        data.data = widget.addLinks(data.data, 'https://alfajango.cashboardapp.com/provider/invoices/show/');
+        data.data = widget.addLinks(data.data, 'https://' + serviceUser + '.cashboardapp.com/provider/invoices/show/');
         var uninvoiced = widget.translateUninvoicedProjectTime(projectData.data);
         var unbillable = widget.translateUnbillableProjectTime(projectData.data);
         data.data.unshift(unbillable, uninvoiced);
@@ -50,7 +50,7 @@ exports.fetch = function(service, callback, settings) {
         io.updateError(paymentData.error);
       } else {
         var data = translatePayments(paymentData.data);
-        data.data = widget.addLinks(data.data, 'https://alfajango.cashboardapp.com/provider/payments/print_preview?id=')
+        data.data = widget.addLinks(data.data, 'https://' + serviceUser + '.cashboardapp.com/provider/payments/print_preview?id=');
         io.updateData(data);
       }
     });
