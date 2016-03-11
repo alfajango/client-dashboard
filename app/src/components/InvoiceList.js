@@ -29,7 +29,9 @@ const InvoiceList = React.createClass({
           </thead>
           <tbody>
           {invoices.map(function(invoice) {
-            return <Invoice key={invoice.id}>{invoice}</Invoice>;
+            if (!(invoice.id === 'UNBILLABLE' && invoice.attributes.status == 0)) {
+              return <Invoice key={invoice.id}>{invoice}</Invoice>;
+            }
           })}
           <tr>
             <td colSpan="2">TOTAL</td>
