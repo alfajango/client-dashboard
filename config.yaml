@@ -11,7 +11,7 @@ staging:
   analytics_account: ''
 production:
   db:
-    uri: ''
-  app_secret: ''
+    uri: process.env.DATABASE_URI
+  app_secret: process.env.APP_SECRET
   useSSL: true
   analytics_account: ''
