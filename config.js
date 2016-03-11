@@ -72,6 +72,7 @@ module.exports = function(app, options) {
       secret: config.app_secret,
       resave: false,
       saveUninitialized: false,
+      proxy: ('production' == env),
       cookie: {
         secure: ('production' == env),
         maxAge: new Date(Date.now() + 3600000)
