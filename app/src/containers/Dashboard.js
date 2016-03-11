@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import Invoices from '../../widgets/invoices/widget'
-import Payments from '../../widgets/payments/widget'
-import InvoicesAndPayments from '../../widgets/cashboard_global_invoices_and_payments/widget'
+import widgetMap from '../manifest'
 
 class Dashboard extends Component {
   render() {
@@ -11,27 +9,16 @@ class Dashboard extends Component {
       </div>
     )
   }
-};
-
-function widgetToComponent(widget) {
-  switch (widget) {
-    case 'invoices':
-      return Invoices;
-    case 'payments':
-      return Payments;
-    case 'cashboard_global_invoices_and_payments':
-      return InvoicesAndPayments;
-  }
 }
 
 function createComponents() {
-  var components = []
+  var components = [];
   window.services.forEach(function(s) {
-    var component = widgetToComponent(s.widget);
+    var component = widgetMap[s.widget];
     if (component) {
-      components.push(React.createElement(widgetToComponent(s.widget), {id: s.id, key: s.id, name: s.widget}))
+      components.push(React.createElement(widgetMap[s.widget], {id: s.id, key: s.id, name: s.widget}))
     }
-  })
+  });
   return components;
 }
 
