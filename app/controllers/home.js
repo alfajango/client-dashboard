@@ -14,30 +14,36 @@ module.exports = function(app) {
     } else {
       clientQuery = Client.findById(req.user.client);
     }
-    clientQuery.exec(function(err, client) {
-      if (err) {
-        console.log(err);
-      } else {
-        req.client = client;
-        if (client.projects.length) {
-          if (client.projects.length === 1) {
-            req.project = client.projects[0];
-          } else {
-            var projectIds = client.projects.map( function(p) { return p.id; } );
-            if (req.query.project_id && projectIds.indexOf(req.query.project_id) > -1) {
-              req.project = _.find(client.projects, function(p) { return p.id == req.query.project_id });
-            } else {
-              req.flash('info', "Choose a project");
-              res.redirect('/choose?client_id=' + client.id);
-            }
-          }
+    if (clientQuery) {
+      clientQuery.exec(function(err, client) {
+        if (err) {
+          console.log(err);
         } else {
-          req.flash('warn', "No projects found for you");
-          res.redirect('/login');
+          req.client = client;
+          if (client.projects.length) {
+            if (client.projects.length === 1) {
+              req.project = client.projects[0];
+            } else {
+              var projectIds = client.projects.map(function(p) {
+                return p.id;
+              });
+              if (req.query.project_id && projectIds.indexOf(req.query.project_id) > -1) {
+                req.project = _.find(client.projects, function(p) {
+                  return p.id == req.query.project_id
+                });
+              } else {
+                req.flash('info', "Choose a project");
+                res.redirect('/choose?client_id=' + client.id);
+              }
+            }
+          } else {
+            req.flash('warn', "No projects found for you");
+            res.redirect('/login');
+          }
         }
-      }
-      next();
-    });
+        next();
+      });
+    }
   };
 
   var getProjects = function(req, res, next) {
