@@ -34,7 +34,7 @@ module.exports = function(app, options) {
     // TODO: Figure out a way to load config.yaml through EJS,
     // so this can be added there for production environment,
     // instead of just overriding it like this.
-    config.db.uri = process.env.MONGOHQ_URL;
+    config.db.uri = process.env.DATABASE_URI;
     config.app_secret = process.env.APP_SECRET;
     config.analytics_account = process.env.ANALYTICS_ACCOUNT
   }
