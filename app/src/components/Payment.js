@@ -11,7 +11,14 @@ const Payment = ({ attributes }) => (
         month="numeric"
         year="numeric" />
     </td>
+    {!attributes.url &&
     <td style={{whiteSpace: 'nowrap'}}>{attributes.id}</td>
+    }
+    {attributes.url &&
+    <td style={{whiteSpace: 'nowrap'}}>
+      <a href={attributes.url} target="_blank">{attributes.id}</a>
+    </td>
+    }
     <td style={{textAlign: 'right'}}>
       <FormattedNumber value={attributes.amount} style="currency" currency="USD" />
     </td>
@@ -25,7 +32,8 @@ Payment.propTypes = {
     id: PropTypes.string,
     amount: PropTypes.number,
     date: PropTypes.string,
-    notes: PropTypes.string
+    notes: PropTypes.string,
+    url: PropTypes.string
   })
 };
 

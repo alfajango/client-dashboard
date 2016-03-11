@@ -8,34 +8,41 @@ let cx = classNames.bind(styles);
 
 class Invoice extends Component {
   render() {
-    let a = this.props.attributes;
+    const {attributes, user} = this.props;
     let statusClass = cx({
       'status': true,
-      'status--green': a.status == 'Paid',
-      'status--yellow': a.status != 'Paid' && a.status != 'Uninvoiced' && !pastDue(a.due),
-      'status--red': a.status !== 'Paid' && a.status !== 'Uninvoiced' && pastDue(a.due)
+      'status--green': attributes.status == 'Paid',
+      'status--yellow': attributes.status != 'Paid' && attributes.status != 'Uninvoiced' && !pastDue(attributes.due),
+      'status--red': attributes.status !== 'Paid' && attributes.status !== 'Uninvoiced' && pastDue(attributes.due)
     });
     return (
       <tr>
         <td>
           <FormattedDate
-            value={a.date}
+            value={attributes.date}
             day="numeric"
             month="numeric"
             year="numeric" />
         </td>
-        <td style={{whiteSpace: 'nowrap'}}>{a.id}</td>
+        {!attributes.url &&
+        <td style={{whiteSpace: 'nowrap'}}>{attributes.id}</td>
+        }
+        {attributes.url &&
+        <td style={{whiteSpace: 'nowrap'}}>
+          <a href={attributes.url} target="_blank">{attributes.id}</a>
+        </td>
+        }
         <td style={{textAlign: 'right'}}>
-          <FormattedNumber value={a.amount} style="currency" currency="USD" />
+          <FormattedNumber value={attributes.amount} style="currency" currency="USD" />
         </td>
         <td>
           <FormattedDate
-            value={a.due}
+            value={attributes.due}
             day="numeric"
             month="numeric"
             year="numeric" />
         </td>
-        <td className={statusClass}>{a.status}</td>
+        <td className={statusClass}>{attributes.status}</td>
       </tr>
     );
 
@@ -55,7 +62,8 @@ Invoice.propTypes = {
     amount: PropTypes.number,
     date: PropTypes.string,
     due: PropTypes.string,
-    status: PropTypes.string
+    status: PropTypes.string,
+    url: PropTypes.string
   })
 };
 

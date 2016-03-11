@@ -32,6 +32,7 @@ exports.fetch = function(service, callback, settings) {
         io.updateError(projectData.error);
       } else {
         var data = translateInvoices(invoiceData.data);
+        data.data = widget.addLinks(data.data, 'https://alfajango.cashboardapp.com/provider/invoices/show/');
         var uninvoiced = widget.translateUninvoicedProjectTime(projectData.data);
         var unbillable = widget.translateUnbillableProjectTime(projectData.data);
         data.data.unshift(unbillable, uninvoiced);
@@ -48,7 +49,9 @@ exports.fetch = function(service, callback, settings) {
       if (paymentData.error) {
         io.updateError(paymentData.error);
       } else {
-        io.updateData(translatePayments(paymentData.data));
+        var data = translatePayments(paymentData.data);
+        data.data = widget.addLinks(data.data, 'https://alfajango.cashboardapp.com/provider/payments/print_preview?id=')
+        io.updateData(data);
       }
     });
   }
@@ -85,6 +88,14 @@ exports.translate = function(data) {
     type: 'client',
     data
   }
+};
+
+exports.addLinks = function(data, url) {
+  data = data.map(function(invoice) {
+    invoice.attributes.url = url + invoice.attributes.id;
+    return invoice;
+  });
+  return data;
 };
 
 exports.translateUninvoicedProjectTime = function(data) {
