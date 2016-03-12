@@ -29,7 +29,7 @@ const InvoiceList = React.createClass({
           </thead>
           <tbody>
           {invoices.map(function(invoice) {
-            if (!(invoice.id === 'UNBILLABLE' && invoice.attributes.status.indexOf('0') != -1)) {
+            if (!(invoice.id === 'UNBILLABLE' && invoice.attributes.status.indexOf(' 0') != -1)) {
               return <Invoice key={invoice.id}>{invoice}</Invoice>;
             }
           })}
