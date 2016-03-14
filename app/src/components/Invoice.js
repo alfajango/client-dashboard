@@ -12,8 +12,9 @@ class Invoice extends Component {
     let statusClass = cx({
       'status': true,
       'status--green': attributes.status == 'Paid',
-      'status--yellow': attributes.status != 'Paid' && attributes.status != 'Uninvoiced' && !pastDue(attributes.due),
-      'status--red': attributes.status !== 'Paid' && attributes.status !== 'Uninvoiced' && pastDue(attributes.due)
+      'status--yellow': attributes.id == 'Unbillable',
+      'status--orange': attributes.status !== 'Paid' && attributes.status !== 'Uninvoiced' && attributes.id !== 'Unbillable' && !pastDue(attributes.due),
+      'status--red': attributes.status !== 'Paid' && attributes.status !== 'Uninvoiced' && attributes.id !== 'Unbillable' && pastDue(attributes.due)
     });
     return (
       <tr>
