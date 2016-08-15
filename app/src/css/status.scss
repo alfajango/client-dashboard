@@ -2,26 +2,41 @@ $green: #78b347;
 $yellow: #f5f26d;
 $red: #e47d7d;
 $orange: #f1b259;
+$grey: #f5f5f5;
+$white: #ffffff;
 $lighten: 20%;
 
 @function statusHoverColor($color) {
   @return lighten($color, $lighten)
 }
 
+@mixin background($color) {
+  background-color: $color;
+  fill: $color;
+}
+
+.status--white {
+  @include background($white);
+}
+
+.status--grey {
+  @include background($grey);
+}
+
 .status--green {
-  background-color: $green;
+  @include background($green);
 }
 
 .status--yellow {
-  background-color: $yellow;
+  @include background($yellow);
 }
 
 .status--orange {
-  background-color: $orange;
+  @include background($orange);
 }
 
 .status--red {
-  background-color: $red;
+  @include background($red);
 }
 
 tr:hover {
