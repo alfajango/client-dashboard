@@ -10,22 +10,22 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "3.0.0beta6",
+    "connect": "",
+    "connect-flash": "",
+    "connect-mongodb": "",
+    "cookie": "",
+    "express": "^3.0.6",
+    "feedparser": "",
     "jade": "*",
-    "mongodb": "1.1.0-beta",
-    "mongoose": "",
-    "underscore": "",
-    "yaml-config": "",
+    "jake": "",
+    "mongodb": "1.4.38",
+    "mongoose": "3.8.40",
     "passport": "",
     "passport-local": "",
     "password-hash": "",
-    "connect-flash": "",
-    "jake": "",
-    "connect-mongodb": "",
     "socket.io": "",
-    "feedparser": "",
-    "cookie": "",
-    "connect": "",
-    "textile-js": ""
+    "textile-js": "",
+    "underscore": "",
+    "yaml-config": ""
   }
 }

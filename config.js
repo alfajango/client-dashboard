@@ -51,7 +51,7 @@ module.exports = function(app, options) {
         secret: config.app_secret,
         maxAge: new Date(Date.now() + 3600000),
         store: new MongoStore(
-          {db:mongoose.connection.db},
+          {url:config.db.uri},
           function(err){
             if (err) { console.log(err); };
           }
