@@ -1,7 +1,7 @@
 var Client = mongoose.model('Client'),
     Project = mongoose.model('Project'),
     User = mongoose.model('User'),
-    MongoStore = require('connect-mongodb');
+    MongoStore = require('connect-mongodb-session')(express);
 
 module.exports = function(app) {
   var ensureClient = function(req, res, next) {
@@ -97,13 +97,12 @@ module.exports = function(app) {
   // so we don't get crossed messages!
   io.sockets.on('connection', function(socket) {
     // reference to my initialized sessionStore in app.js
-    var sessionStore = new MongoStore({db:mongoose.connection.db});
+    var sessionStore = new MongoStore({uri:config.db.uri, collection: 'sessions'});
     var sessionId    = socket.handshake.sessionID;
 
     sessionStore.get(sessionId, function(err, session) {
       if( ! err) {
         if(session.passport.user) {
-          console.log('Socket user id', session.passport.user);
           User.findById(session.passport.user, function(err, user) {
             if (! err) {
               socket.on('service', function(data) {
@@ -126,6 +125,8 @@ module.exports = function(app) {
                   }
                 });
               });
+              console.log("Now listening for service events");
+              socket.emit('listening', {});
             } else {
               console.log("Couldn't find user", err);
             }

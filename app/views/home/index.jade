@@ -22,6 +22,8 @@ block head
     var socket = io.connect(location.protocol + '//' + location.host);
     var emitters = {};
 
+    var dfd = $.Deferred();
+
     socket.on('error', function (reason){
       console.error('Unable to connect Socket.IO', reason);
       if (reason.location) {
@@ -51,6 +53,13 @@ block head
       console.info('successfully established a working and authorized connection');
     });
 
+    socket.on('listening', function(){
+      console.info('server is listening for events');
+      dfd.resolve('connected');
+    });
+
+    var prom = dfd.promise();
+
   each service in project.services
     script
       socket.on('serviceResponse', function(data) {
@@ -78,7 +87,9 @@ block head
           settings.settings = settingsObj;
         }
 
-        socket.emit('service', settings);
+        prom.then(function() {
+          socket.emit('service', settings);
+        });
       };
       emitters["#{service.name}-#{service.id}"]();
 

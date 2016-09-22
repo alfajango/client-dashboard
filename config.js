@@ -1,5 +1,5 @@
-var express = require('express'),
-    MongoStore = require('connect-mongodb'),
+var exports = module.exports = express = require('express'),
+    MongoStore = require('connect-mongodb-session')(express);
     flash = require('connect-flash'),
     middleware = require(__dirname + '/lib/middleware');
 
@@ -42,20 +42,20 @@ module.exports = function(app, options) {
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(express.cookieParser()); 
+    app.use(express.cookieParser());
     // Needed because otherwise, connect-mongodb won't
     // close the mongodb connection when jake script is done.
     if (!options.skipSession) {
       app.use(express.session({
         key: 'express.sid',
         secret: config.app_secret,
+        saveUninitialized: false,
+        resave: true,
         maxAge: new Date(Date.now() + 3600000),
-        store: new MongoStore(
-          {url:config.db.uri},
-          function(err){
-            if (err) { console.log(err); };
-          }
-        )
+        store: new MongoStore({
+          uri: config.db.uri,
+          collection: 'sessions'
+        })
       }));
     }
     app.use(express.static(__dirname + '/public'));
