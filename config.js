@@ -54,7 +54,7 @@ module.exports = function(app, options) {
         maxAge: new Date(Date.now() + 3600000),
         store: new MongoStore({
           uri: config.db.uri,
-          collection: 'sessions'
+          collection: 'new_sessions'
         })
       }));
     }
