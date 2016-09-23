@@ -49,8 +49,8 @@ module.exports = function(app, options) {
       app.use(express.session({
         key: 'express.sid',
         secret: config.app_secret,
-        //saveUninitialized: false,
-        //resave: true,
+        saveUninitialized: false,
+        resave: true,
         maxAge: new Date(Date.now() + 3600000),
         store: new MongoStore({
           uri: config.db.uri,
