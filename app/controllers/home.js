@@ -97,7 +97,7 @@ module.exports = function(app) {
   // so we don't get crossed messages!
   io.sockets.on('connection', function(socket) {
     // reference to my initialized sessionStore in app.js
-    var sessionStore = new MongoStore({uri:config.db.uri, collection: 'sessions'});
+    var sessionStore = new MongoStore({uri:config.db.uri, collection: 'new_sessions'});
     var sessionId    = socket.handshake.sessionID;
 
     sessionStore.get(sessionId, function(err, session) {
