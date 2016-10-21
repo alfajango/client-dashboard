@@ -125,7 +125,7 @@ module.exports = function(app) {
                   if (client) {
                     var project = client.projects.id(data.project),
                     service = project.services.id(data.id);
-
+                    Object.assign( data.settings, { user: user.email } );
                     service.fetch( function(response) {
                       socket.emit('serviceResponse', response);
                     }, data.settings);
