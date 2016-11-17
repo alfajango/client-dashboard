@@ -20,6 +20,9 @@ var Widget = React.createClass({
 
   render() {
     const { data, status, isFetching, didInvalidate } = this.props;
+
+    config.series = data.series
+
     return (
       <div>
         <h2>Logged Hours</h2>
@@ -55,7 +58,7 @@ const mapStateToProps = (state, ownProps) => {
     didInvalidate,
     status,
     data
-    } = state.dataByService[ownProps.id] || {
+  } = state.dataByService[ownProps.id] || {
     isFetching: true,
     didInvalidate: false,
     status: 'Loading',
@@ -63,10 +66,11 @@ const mapStateToProps = (state, ownProps) => {
       clientId: ''
     }
   };
+
   if (didInvalidate) {
     data.clientId = '';
   }
-  debugger
+
   return {
     isFetching,
     didInvalidate,
