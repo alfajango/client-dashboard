@@ -2,6 +2,28 @@ $(document).delegate('.redmine-subject-td', 'click', function() {
   $(this).find('.redmine-description').slideToggle(250);
 });
 
+var filterIssues = function(beginDate) {
+  $('.issue-row').each(function(i, el) {
+    var row = $(el);
+    var date = new Date(row.attr('sprint-date'));
+    if (date < beginDate) {
+      row.css("display", "none");
+    } else {
+      row.css("display", "table-row");
+    }
+  });
+
+  $('.redmine-title .badge').html(
+    $('.issue-row[style="display: table-row;"]')
+      .not('redmine-version')
+      .length
+  );
+};
+
+$(document).delegate('#begin-date', 'change', function() {
+  filterIssues(new Date($(this).val()));
+});
+
 widgets.redmine_open_issues = function(data, $) {
   var $target = $('#widget-' + data.id),
       rows = "",
@@ -13,19 +35,19 @@ widgets.redmine_open_issues = function(data, $) {
   } else if (data.results && data.results.versions && data.results.versions.length > 0) {
     totalIssues = 0;
     $.each(data.results.versions, function(i, version) {
-      if (version.status === "closed") {
+      if (version.status === "closed" || version.issues.length === 0) {
         return true;
       }
-      rows += '<tr class="redmine-version"><td colspan=4>' + version.name + '</td></tr>';
 
-      if (version.issues.length === 0) {
-        rows += '<tr><td colspan=4><div class="alert alert-success">No open tasks</div></td></tr>';
-      }
+      rows += '<tr class="redmine-version issue-row" sprint-date="' +
+        version.due_date + '"><td colspan=4>' +
+        version.name + '</td></tr>';
 
       $.each(version.issues, function(i, issue) {
         totalIssues++;
         var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
-        rows += '<tr' + (updated > yesterday ? ' class="recently-updated" rel="tooltip" title="recently active"' : '') + '>';
+        rows += '<tr' + (updated > yesterday ? ' class="issue-row recently-updated" rel="tooltip" title="recently active"' : ' class="issue-row"') +
+          ' sprint-date="' + version.due_date + '">';
         rows += '<td class="issue-number-column">' + issue.id + '</td>';
         rows += '<td class="redmine-subject-td"><div>' + issue.subject + '</div><div class="redmine-description"><hr />' + issue.description.replace(/(?:\r\n|\r|\n)/g, '<br />'); + '</div></td>';
         rows += '<td class="redmine-status-td">';
@@ -44,11 +66,12 @@ widgets.redmine_open_issues = function(data, $) {
       });
     });
   } else {
-    rows += '<tr><td colspan=4><div class="alert alert-success">No open tasks</div></td></tr>';
+    rows += '<tr class="issue-row" sprint-date="' + version.due_date + '"><td colspan=4><div class="alert alert-success">No open tasks</div></td></tr>';
   }
   $target.find('.redmine-table tbody').html(rows);
   $target.find('.redmine-table tr').tooltip({placement: 'bottom'});
   $target.find('.redmine-table td').tooltip({placement: 'bottom'});
   $target.find('.redmine-title .badge').html(totalIssues || "N/A");
   $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
+  filterIssues(new Date());
 };
