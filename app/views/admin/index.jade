@@ -14,7 +14,7 @@ block content
           .pull-right
             .btn-group
               a.btn.btn-mini.dropdown-toggle('data-toggle'='dropdown', href='#')
-                | Edit 
+                | Edit
                 span.caret
               ul.dropdown-menu
                 li
@@ -31,13 +31,13 @@ block content
               - for user in users[client.id]
                 li
                   = user.email
-                  |  
+                  |
                   if user.admin
                     span.label.label-info admin
-                    |  
+                    |
                   if user.id == currentUser.id
                     span.label.label-warning you
-                    |  
+                    |
                   a.btn.btn-mini.pull-right(href="/admin/users/#{user.id}/edit") Edit
 
         td
@@ -49,7 +49,7 @@ block content
                   .pull-right
                     .btn-group
                       a.btn.btn-mini.dropdown-toggle('data-toggle'='dropdown', href='#')
-                        | Edit 
+                        | Edit
                         span.caret
                       ul.dropdown-menu
                         li
@@ -66,6 +66,9 @@ block content
                       - for service in project.services
                         li
                           = service.name
+                          form.pull-right(action='/admin/clients/' + client.id + '/projects/' + project.id + '/services' + (service ? ('/' + service.id) : ""), method="POST")
+                            input(type="hidden", name="_method", value="DELETE")
+                            input.btn.btn-mini.pull-right(type="submit", value="Delete", onclick="return confirm('Are you sure?')")
                           a.btn.btn-mini.pull-right(href="/admin/clients/#{client.id}/projects/#{project.id}/services/#{service.id}/edit") Edit
 
   - if (users['not assigned'])
@@ -74,13 +77,13 @@ block content
       - for user in users['not assigned']
         li
           = user.email
-          |  
+          |
           if user.admin
             span.label.label-info admin
-            |  
+            |
           if user.id == currentUser.id
             span.label.label-warning you
-            |  
-          | - 
+            |
+          | -
           a.btn.btn-mini(href="/admin/users/#{user.id}/edit") Edit
 

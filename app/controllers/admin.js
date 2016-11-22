@@ -303,4 +303,28 @@ module.exports = function(app) {
       }
     });
   });
+
+  app.delete('/admin/clients/:id/projects/:project_id/services/:service_id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    for (i = 0; i < req.resource.projects.length; i++) {
+      var prj = req.resource.projects[i]
+      var p_services = prj.services;
+      var new_services = []
+      for (j = 0; j < p_services.length; j++) {
+        ser = p_services[j];
+        if (ser.id != req.service.id) {
+          new_services.push(ser);
+        }
+      }
+      prj.services = new_services;
+    }
+
+    req.resource.save(function(err) {
+      if (err) {
+        req.flash('success', "Failed to delete service!");
+      } else {
+        req.flash('success', "Successfully deleted service!");
+      }
+      res.redirect('/admin');
+    });
+  });
 };
