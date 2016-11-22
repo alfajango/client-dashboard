@@ -284,7 +284,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/admin/clients/:id/projects/:project_id/services/:service_id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+  app.put('/admin/clients/:id/projects/:project_id/services/:service_id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     for (attr in req.body.service) {
       req.service[attr] = req.body.service[attr];
     }
