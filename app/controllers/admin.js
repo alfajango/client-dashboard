@@ -307,15 +307,17 @@ module.exports = function(app) {
   app.delete('/admin/clients/:id/projects/:project_id/services/:service_id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     for (i = 0; i < req.resource.projects.length; i++) {
       var prj = req.resource.projects[i]
-      var p_services = prj.services;
-      var new_services = []
-      for (j = 0; j < p_services.length; j++) {
-        ser = p_services[j];
+      var pServices = prj.services;
+      var newServices = []
+
+      for (j = 0; j < pServices.length; j++) {
+        ser = pServices[j];
         if (ser.id != req.service.id) {
-          new_services.push(ser);
+          newServices.push(ser);
         }
       }
-      prj.services = new_services;
+
+      prj.services = newServices;
     }
 
     req.resource.save(function(err) {
