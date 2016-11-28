@@ -26,6 +26,7 @@ module.exports = function(app) {
             var projectIds = client.projects.map( function(p) { return p.id; } );
             if (req.query.project_id && projectIds.indexOf(req.query.project_id) > -1) {
               req.project = _.find(client.projects, function(p) { return p.id == req.query.project_id });
+              next();
             } else {
               req.flash('info', "Choose a project");
               res.redirect('/choose?client_id=' + client.id);
@@ -36,7 +37,6 @@ module.exports = function(app) {
           res.redirect('/login');
         }
       }
-      next();
     });
   };
 
