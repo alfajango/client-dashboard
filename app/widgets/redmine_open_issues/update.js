@@ -60,7 +60,7 @@ widgets.redmine_open_issues = function(data, $) {
         if (issue.priority > 1) {
           rows += ' <i class="icon-star-empty"></i>';
         }
-        rows += issue.priority
+        rows += issue.priorityName
         rows += '</td>';
         rows += '</tr>';
       });

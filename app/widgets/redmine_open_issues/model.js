@@ -132,7 +132,17 @@ exports.translate = function(data, service) {
         description = "<p><em>No description</em></p>";
       }
       var version = x.fixed_version && x.fixed_version.id;
-      return { id: x.id, subject: x.subject, status: x.status.name, progress: x.done_ratio, updated: new Date(x.updated_on), priority: priorityOrder[x.priority.name], description: description, version_id: version };
+      return {
+        id: x.id,
+        subject: x.subject,
+        status: x.status.name,
+        progress: x.done_ratio,
+        updated: new Date(x.updated_on),
+        priority: priorityOrder[x.priority.name],
+        priorityName: x.priority.name,
+        description: description,
+        version_id: version
+      };
     })
       .sort(function(a, b) {
         var firstOrder = b.priority - a.priority,
