@@ -17,6 +17,7 @@ module.exports = function(app) {
     clientQuery.exec(function(err, client) {
       if (err) {
         console.log(err);
+        next();
       } else {
         req.client = client;
         if (client.projects.length) {
