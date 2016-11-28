@@ -23,6 +23,7 @@ module.exports = function(app) {
         if (client.projects.length) {
           if (client.projects.length === 1) {
             req.project = client.projects[0];
+            next();
           } else {
             var projectIds = client.projects.map( function(p) { return p.id; } );
             if (req.query.project_id && projectIds.indexOf(req.query.project_id) > -1) {
