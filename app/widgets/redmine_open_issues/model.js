@@ -105,7 +105,9 @@ exports.translate = function(data, service) {
         id: s.id,
         name: s.name,
         status: s.status,
-        due_date: s.due_date
+        due_date: s.due_date,
+        ir_start_date: s.ir_start_date,
+        ir_end_date: s.ir_end_date
       }
     }).sort(function(a, b) {
       var aDueDate = a.due_date || "0",
@@ -141,20 +143,23 @@ exports.translate = function(data, service) {
         priority: priorityOrder[x.priority.name],
         priorityName: x.priority.name,
         description: description,
-        version_id: version
+        version_id: version,
+        ir_position: x.ir_position
       };
     })
       .sort(function(a, b) {
-        var firstOrder = b.priority - a.priority,
-            secondOrder = statusOrder[a.status] - statusOrder[b.status];
-        if (firstOrder === 0) {
-          if (secondOrder === 0) {
-            return a.id - b.id;
-          } else {
-            return secondOrder;
-          }
-        } else {
+        var firstOrder = a.ir_position - b.ir_position,
+            secondOrder = b.priority - a.priority,
+            thirdOrder = statusOrder[a.status] - statusOrder[b.status];
+
+        if (firstOrder !== 0) {
           return firstOrder;
+        } else if (secondOrder !== 0) {
+          return secondOrder;
+        } else if (thirdOrder !== 0) {
+          return thirdOrder;
+        } else {
+          return a.id - b.id;
         }
       });
   }

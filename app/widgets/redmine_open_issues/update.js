@@ -39,9 +39,17 @@ widgets.redmine_open_issues = function(data, $) {
         return true;
       }
 
+      rowTitle = version.name
+      if (version.ir_start_date != undefined) {
+        rowTitle += " - Start: " + version.ir_start_date + " "
+        rowTitle += "/ End: " + version.ir_end_date
+      } else {
+        if (version.due_date != undefined) {
+          rowTitle += " - End: " + version.due_date
+        }
+      }
       rows += '<tr class="redmine-version issue-row" sprint-date="' +
-        version.due_date + '"><td colspan=4>' +
-        version.name + '</td></tr>';
+        version.due_date + '"><td colspan=4>' + rowTitle + '</td></tr>';
 
       $.each(version.issues, function(i, issue) {
         totalIssues++;
