@@ -120,6 +120,9 @@ var compiler = webpack({
     }, {
       test: /\.scss$/,
       loaders: ["style", "css", "sass"]
+    }, {
+      test: /\.css$/,
+      loaders: ["style", "css"]
     }]
   }
 });
