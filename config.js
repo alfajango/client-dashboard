@@ -101,18 +101,16 @@ var webpack = require("webpack");
 
 // returns a Compiler instance
 var compiler = webpack({
-  debug: true,
-  noInfo: false,
   entry: './app/src/app',
   output: {
-    path: 'public/javascripts',
+    path: path.resolve(__dirname, 'public/javascripts'),
     publicPath: '',
     filename: 'app.js'
   },
   module: {
     loaders: [{
       test: /\.js$/,
-      loader: 'babel',
+      loader: 'babel-loader',
       include: [
         path.resolve(__dirname, 'app/src'),
         path.resolve(__dirname, 'app/widgets')
@@ -122,10 +120,10 @@ var compiler = webpack({
       }
     }, {
       test: /\.scss$/,
-      loaders: ["style", "css", "sass"]
+      loaders: ["style-loader", "css-loader", "sass-loader"]
     }, {
       test: /\.css$/,
-      loaders: ["style", "css"]
+      loaders: ["style-loader", "css-loader"]
     }]
   }
 });

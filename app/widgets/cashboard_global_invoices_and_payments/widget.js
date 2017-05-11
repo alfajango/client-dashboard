@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import Select from 'react-select'
-import 'style!react-select/scss/default.scss'
+import 'style-loader!react-select/scss/default.scss'
 import { selectClient } from './actions'
 import { invalidateData } from '../../src/actions'
 import InvoiceList from '../../src/components/InvoiceList'

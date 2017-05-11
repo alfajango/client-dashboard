@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import 'style!react-select/scss/default.scss'
+import 'style-loader!react-select/scss/default.scss'
 import { updateDateRange } from './actions'
 import DateRangePicker from 'react-bootstrap-daterangepicker'
-import 'style!react-bootstrap-daterangepicker/css/daterangepicker.css'
-import 'style!./style.css'
+import 'style-loader!react-bootstrap-daterangepicker/css/daterangepicker.css'
+import 'style-loader!./style.css'
 import moment from 'moment'
 import cx from 'classnames'
 
