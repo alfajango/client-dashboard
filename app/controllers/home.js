@@ -1,7 +1,8 @@
 var Client = mongoose.model('Client'),
-    Project = mongoose.model('Project'),
-    User = mongoose.model('User'),
-    MongoStore = require('connect-mongodb-session')(express);
+  Project = mongoose.model('Project'),
+  User = mongoose.model('User'),
+  session = require('express-session'),
+  MongoStore = require('connect-mongo')(session);
 
 module.exports = function(app) {
   var ensureClient = function(req, res, next) {
@@ -42,9 +43,6 @@ module.exports = function(app) {
                 res.redirect('/choose?client_id=' + client.id);
               }
             }
-          } else {
-            req.flash('warn', "No projects found for you");
-            res.redirect('/login');
           }
         }
       }

@@ -1,5 +1,4 @@
 var express = require('express'),
-  MongoStore = require('connect-mongodb'),
   mongoose = require('mongoose'),
   flash = require('connect-flash'),
   errorhandler = require('errorhandler'),
@@ -8,6 +7,7 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   methodOverride = require('method-override'),
   session = require('express-session'),
+  MongoStore = require('connect-mongo')(session),
   middleware = require(__dirname + '/lib/middleware'),
   path = require('path');
 
@@ -78,7 +78,10 @@ module.exports = function(app, options) {
         maxAge: new Date(Date.now() + 3600000)
       },
       store: new MongoStore(
-        {db: mongoose.connection.db},
+        {
+          url: config.db.uri,
+          db: mongoose.connection.db
+        },
         function(err) {
           if (err) {
             console.log(err);
