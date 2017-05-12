@@ -23,6 +23,11 @@ const config = {
   plotOptions: {
     area: {
       stacking: 'normal',
+      events: {
+        legendItemClick: function () {
+          return false;
+        }
+      }
     },
     series: {
       pointInterval: 24 * 3600 * 1000 // one day
@@ -33,7 +38,17 @@ const config = {
   },
   yAxis: {
     title: {
-      text: 'Hours'
+      text: 'Billable Hours'
+    }
+  },
+  tooltip: {
+    shared: true,
+    formatter: function() {
+      let sum = 0;
+      for (let point of this.points) {
+        sum += point.y
+      }
+      return `Hours: ${sum}`
     }
   }
 };
