@@ -13,6 +13,10 @@ const ReactHighcharts = require('react-highcharts');
 
 const dateFormat = 'MM/DD/YY';
 
+function round ( value, decimals ) {
+  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
+
 const config = {
   chart: {
     type: 'area'
@@ -48,7 +52,7 @@ const config = {
       for (let point of this.points) {
         sum += point.y
       }
-      return `Hours: ${sum}`
+      return `Hours: ${round(sum, 2)}`
     }
   }
 };
@@ -176,11 +180,11 @@ class Widget extends Component {
                 <tbody>
                 <tr>
                   <th>Billable Hours</th>
-                  <td>{data.aggregate.billable}</td>
+                  <td>{round(data.aggregate.billable, 2)}</td>
                 </tr>
                 <tr>
                   <th>Unbillable Hours</th>
-                  <td>{data.aggregate.unbillable}</td>
+                  <td>{round(data.aggregate.unbillable, 2)}</td>
                 </tr>
                 <tr>
                   <th>Average Billable Hours (per member)</th>
