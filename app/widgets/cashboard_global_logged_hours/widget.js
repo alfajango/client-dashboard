@@ -37,7 +37,7 @@ const config = {
   },
   yAxis: {
     title: {
-      text: 'Billable Hours'
+      text: 'Hours'
     }
   },
   tooltip: {
