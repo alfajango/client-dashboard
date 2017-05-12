@@ -27,11 +27,6 @@ const config = {
   plotOptions: {
     area: {
       stacking: 'normal',
-      events: {
-        legendItemClick: function () {
-          return false;
-        }
-      }
     },
     series: {
       pointInterval: 24 * 3600 * 1000 // one day
@@ -48,11 +43,16 @@ const config = {
   tooltip: {
     shared: true,
     formatter: function() {
-      let sum = 0;
+      let s = '<b>' + moment(this.x).format('ddd, MMM D') + '</b>',
+        sum = 0;
+
       for (let point of this.points) {
+        s += '<br/><b>' + point.series.name + ':</b> ' + point.y;
         sum += point.y
       }
-      return `Hours: ${round(sum, 2)}`
+
+      s += `<br/><b>Total Hours:</b> ${round(sum, 2)}`;
+      return s;
     }
   }
 };
