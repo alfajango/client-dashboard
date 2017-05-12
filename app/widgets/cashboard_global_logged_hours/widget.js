@@ -113,6 +113,16 @@ class Widget extends Component {
     this.props.updateDateRange(picker.startDate, picker.endDate)
   };
 
+  setTimeZone ( timezone ) {
+    let offset = timezone == 'local' ? (new Date()).getTimezoneOffset() : 0;
+    ReactHighcharts.Highcharts.setOptions(
+      {
+        global: {
+          timezoneOffset: offset
+        }
+      });
+  };
+
   render() {
     const { data, status, isFetching, didInvalidate } = this.props;
     let avgBillableHours, avgClass;
@@ -133,6 +143,8 @@ class Widget extends Component {
       avgClass = cx({
         'status--red': data.aggregate.billable / data.aggregate.workDays / config.series.length < 4
       });
+
+      this.setTimeZone('local')
     }
 
     var start = this.state.startDate.format(dateFormat);
