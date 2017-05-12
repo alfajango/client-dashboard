@@ -48,7 +48,7 @@ const config = {
 
       for (let point of this.points) {
         s += '<br/><b>' + point.series.name + ':</b> ' + point.y;
-        sum += point.y
+        sum += round(point.y, 2)
       }
 
       s += `<br/><b>Total Hours:</b> ${round(sum, 2)}`;
