@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import 'style-loader!react-select/scss/default.scss'
 import { updateDateRange } from './actions'
@@ -54,9 +55,11 @@ const pieConfig = {
   }
 };
 
-var Widget = React.createClass({
-  getInitialState() {
-    let initialState = {
+class Widget extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       startDate: moment().subtract(1, 'weeks').startOf('isoWeek'),
       endDate: moment().subtract(1, 'weeks').endOf('isoWeek').subtract(1, 'day'),
       ranges: {
@@ -71,10 +74,12 @@ var Widget = React.createClass({
         'Last Month': [ moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month') ]
       }
     }
-    config.plotOptions.series.pointStart = initialState.startDate.valueOf();
-    this.props.updateDateRange(initialState.startDate, initialState.endDate);
-    return initialState;
-  },
+  }
+
+  componentWillMount() {
+    config.plotOptions.series.pointStart = this.state.startDate.valueOf();
+    this.props.updateDateRange(this.state.startDate, this.state.endDate);
+  }
 
   selectClient( client ) {
     if ( client ) {
@@ -82,16 +87,16 @@ var Widget = React.createClass({
     } else {
       this.props.clearClient(this.props.id, { client: this.props.data.client });
     }
-  },
+  }
 
-  setDateRange: function ( event, picker ) {
+  setDateRange = ( event, picker ) => {
     this.setState({
       startDate: picker.startDate,
       endDate: picker.endDate
     });
     config.plotOptions.series.pointStart = picker.startDate.valueOf();
     this.props.updateDateRange(picker.startDate, picker.endDate)
-  },
+  };
 
   render() {
     const { data, status, isFetching, didInvalidate } = this.props;
@@ -163,7 +168,7 @@ var Widget = React.createClass({
       </div>
     )
   }
-});
+}
 
 Widget.propTypes = {
   isFetching: PropTypes.bool,

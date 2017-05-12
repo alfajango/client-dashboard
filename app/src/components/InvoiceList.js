@@ -1,17 +1,18 @@
-import React, { PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Invoice from './Invoice'
 import {FormattedNumber} from 'react-intl';
 import { connect } from 'react-redux'
 import { receiveData } from '../actions'
 
-const InvoiceList = React.createClass({
+class InvoiceList extends Component {
   totalAmount() {
     let sum = 0;
     for (var i in this.props.invoices) {
       sum += this.props.invoices[i].attributes.amount
     }
     return sum.toString()
-  },
+  }
 
   render() {
     const {invoices} = this.props;
@@ -45,7 +46,7 @@ const InvoiceList = React.createClass({
       </div>
     )
   }
-});
+}
 
 function mapStateToProps(state, ownProps) {
   return {

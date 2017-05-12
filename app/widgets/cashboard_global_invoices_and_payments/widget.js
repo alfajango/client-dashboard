@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Select from 'react-select'
 import 'style-loader!react-select/scss/default.scss'
@@ -7,14 +8,14 @@ import { invalidateData } from '../../src/actions'
 import InvoiceList from '../../src/components/InvoiceList'
 import PaymentList from '../../src/components/PaymentList'
 
-var Widget = React.createClass({
+class Widget extends Component {
   selectClient(client) {
     if (client) {
       this.props.selectClient(this.props.name, this.props.id, client.value);
     } else {
       this.props.clearClient(this.props.id, {client: this.props.data.client});
     }
-  },
+  }
 
   render() {
     const { data, status, isFetching, didInvalidate } = this.props;
@@ -56,7 +57,7 @@ var Widget = React.createClass({
       </div>
     )
   }
-});
+}
 
 Widget.propTypes = {
   isFetching: PropTypes.bool,

@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 //import classNames from 'classnames/bind';
 //import styles from '../css/status.scss';
@@ -20,7 +21,7 @@ class Dropdown extends Component {
 }
 
 Dropdown.propTypes = {
-  data: React.PropTypes.arrayOf(React.PropTypes.shape(
+  data: PropTypes.arrayOf(PropTypes.shape(
     {
       id: PropTypes.string,
       attributes: PropTypes.shape({
