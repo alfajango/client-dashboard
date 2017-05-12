@@ -3,10 +3,6 @@
   border-bottom: 1px dotted;
 }
 
-.daterangepicker .input-mini {
+.daterangepicker * {
   box-sizing: border-box;
-}
-
-.daterangepicker .calendar th, .daterangepicker .calendar td {
-  min-width: 0;
 }
