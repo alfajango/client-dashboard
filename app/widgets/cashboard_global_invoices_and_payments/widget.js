@@ -27,7 +27,7 @@ class Widget extends Component {
           autofocus
           value={data.clientId}
           options={data['client'].map(i => ({value:i.id,label:i.attributes.name}))}
-          onChange={this.selectClient}
+          onChange={this.selectClient.bind(this)}
           isLoading={!data.client}
           style={{ marginBottom: 14 }}
         />
