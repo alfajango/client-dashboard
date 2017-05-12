@@ -2,3 +2,11 @@
   cursor: pointer;
   border-bottom: 1px dotted;
 }
+
+.daterangepicker .input-mini {
+  box-sizing: border-box;
+}
+
+.daterangepicker .calendar th, .daterangepicker .calendar td {
+  min-width: 0;
+}
