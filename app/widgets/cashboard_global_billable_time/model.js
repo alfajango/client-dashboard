@@ -85,7 +85,7 @@ exports.fetch = function(service, callback, settings) {
       cashboard.fetchAPI('payments', path, service, jsonData, done);
     }
   ).then(function() {
-    var config = JSON.parse(service.config);
+    var config = service.config === undefined ? {breakEvenAmounts: {"2012-01-01": 0}} : JSON.parse(service.config);
 
     out.results = cashboard.translate(jsonData, service, config);
     out.breakEvenDates = cashboard.breakEvenDates(startDate, endDate, config);

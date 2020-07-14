@@ -31,12 +31,12 @@ module.exports = function(app) {
               next();
             } else {
               req.flash('info', "Choose a project");
-              res.redirect('/choose?client_id=' + client.id);
+              return res.redirect('/choose?client_id=' + client.id);
             }
           }
         } else {
           req.flash('warn', "No projects found for you");
-          res.redirect('/login');
+          return res.redirect('/login');
         }
       }
     });

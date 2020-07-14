@@ -42,12 +42,10 @@ io.set('authorization', function (handshakeData, accept) {
 
 // Needed for Heroku, which does not yet support websockets,
 // must use long polling.
-io.configure(function() {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
-  app.configure('production', function(){
-    io.set('log level', 1); // reduce logging
-  });
+io.set("transports", ["xhr-polling"]);
+io.set("polling duration", 10);
+app.configure('production', function(){
+  io.set('log level', 1); // reduce logging
 });
 
 // Load models

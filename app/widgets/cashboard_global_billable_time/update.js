@@ -189,7 +189,7 @@ widgets.cashboard_global_billable_time = function(data, $) {
 
       var breakEvenAmount = breakEvenDates[formattedDay];
       var goalAmount = goalDates[formattedDay];
-      console.log("amounts", breakEvenAmount, goalAmount);
+      //console.log("amounts", breakEvenAmount, goalAmount);
       if (cumulative) {
         var data = plotSeries[0]['data'];
         if (data.length) { breakEvenAmount += data[data.length-1][1]; }
