@@ -16,7 +16,7 @@
     "connect-mongodb": "^1.1.5",
     "connect-mongodb-session": "^2.3.3",
     "cookie": "0.1.0",
-    "express": "3.0.0beta6",
+    "express": "3.0.0-beta6",
     "feedparser": "0.9.12",
     "jade": "0.26.3",
     "jake": "0.3.7",
