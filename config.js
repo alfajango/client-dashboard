@@ -45,6 +45,11 @@ module.exports = function(app, options) {
     app.use(express.cookieParser());
     // Needed because otherwise, connect-mongodb won't
     // close the mongodb connection when jake script is done.
+    if (process.env.MONGODB_URI !== 'undefined') {
+      var mongodbUri = process.env.MONGODB_URI;
+    } else {
+      var mongodbUri = config.db.uri;
+    }
     if (!options.skipSession) {
       app.use(express.session({
         key: 'express.sid',
@@ -53,7 +58,7 @@ module.exports = function(app, options) {
         resave: true,
         maxAge: new Date(Date.now() + 3600000),
         store: new MongoStore({
-          uri: config.db.uri,
+          uri: mongodbUri,
           collection: 'new_sessions'
         })
       }));
