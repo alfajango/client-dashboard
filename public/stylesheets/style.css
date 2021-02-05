@@ -122,8 +122,14 @@ td.issue-number-column {
 #project-colors-preview {
   padding: 15px;
 }
+
 .form-inline {
   display: inline;
+}
+
+.dropdown-menu {
+  overflow: scroll;
+  max-height: calc(100vh - 40px);
 }
 
 /* Dashboard styles */
