@@ -113,7 +113,7 @@ exports.translate = function(data, service) {
             .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="100%" height="400" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
             .replace(/!(\/[^\s]+)!/gm, function(match, p1) {
               var path = encodeURIComponent(p1);
-              return ("<img src='/proxy/redmine_documents?service_id=" + service.id + "&project_id=" + service.parent.id + "&client_id=" + service.parent.parent.id + "&proxy=image&path=" + path + "' />");
+              return ("<img src='/proxy/redmine_documents?service_id=" + service.id + "&project_id=" + service.parent().id + "&client_id=" + service.parent().parent().id + "&proxy=image&path=" + path + "' />");
             })
             .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
             .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
