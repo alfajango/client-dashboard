@@ -150,6 +150,32 @@ module.exports = function(app) {
     }
   });
 
+  app.get('/change_password', auth.ensureAuthenticated, function(req, res) {
+    res.render('auth/change_password', {
+      title: 'Change Password',
+      message: req.flash()
+    });
+  });
+
+  app.put('/change_password', auth.ensureAuthenticated, function(req, res) {
+    req.user.password = req.body.password;
+    req.user.save( function(err) {
+      if (err) {
+        res.render('auth/change_password', {
+          title: 'Change Password',
+          message: { error: "Password could not be updated: " + err },
+        });
+      } else {
+        req.flash('success', "Successfully updated password!");
+        if (req.user.admin) {
+          res.redirect('/admin');
+        } else {
+          res.redirect('/');
+        }
+      }
+    });
+  });
+
 
   // Clients
   //----------------------------
