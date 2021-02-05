@@ -122,6 +122,9 @@ td.issue-number-column {
 #project-colors-preview {
   padding: 15px;
 }
+.form-inline {
+  display: inline;
+}
 
 /* Dashboard styles */
 

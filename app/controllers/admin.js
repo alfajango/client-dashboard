@@ -134,6 +134,22 @@ module.exports = function(app) {
     });
   });
 
+  app.delete('/admin/users/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    if (req.resource.id == req.user.id) {
+      req.flash('error', "Can't delete yourself.");
+      res.redirect('/admin');
+    } else {
+      User.remove({_id: req.resource.id}, function(err) {
+        if (err) {
+          req.flash('error', "Failed to delete user!");
+        } else {
+          req.flash('success', "Successfully deleted user!");
+        }
+        res.redirect('/admin');
+      });
+    }
+  });
+
 
   // Clients
   //----------------------------
@@ -182,6 +198,32 @@ module.exports = function(app) {
         res.redirect('/admin');
       }
     });
+  });
+
+  app.delete('/admin/clients/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    var hasServicesWithConfig = false;
+    req.resource.projects.forEach(function(project) {
+      project.services.forEach(function(service) {
+        // Prevent accidentally deleting services with non-trivial config data
+        if (service.config && service.config.length > 20) {
+          hasServicesWithConfig = true;
+        }
+      })
+    });
+
+    if (hasServicesWithConfig) {
+      req.flash('warning', "Can't delete client with services that contain config data.");
+      res.redirect('/admin');
+    } else {
+      Client.remove({_id: req.resource.id}, function(err) {
+        if (err) {
+          req.flash('error', "Failed to delete client!");
+        } else {
+          req.flash('success', "Successfully deleted client!");
+        }
+        res.redirect('/admin');
+      });
+    }
   });
 
   // Projects
@@ -305,15 +347,21 @@ module.exports = function(app) {
   });
 
   app.delete('/admin/clients/:id/projects/:project_id/services/:service_id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
-    req.project.services.pull(req.service);
-
-    req.resource.save(function(err) {
-      if (err) {
-        req.flash('success', "Failed to delete service!");
-      } else {
-        req.flash('success', "Successfully deleted service!");
-      }
+    if (req.service.config && req.service.config.length > 20) {
+      // Prevent accidentally deleting services with non-trivial config data
+      req.flash('warning', "Can't delete service with config data.");
       res.redirect('/admin');
-    });
+    } else {
+      req.project.services.pull(req.service);
+
+      req.resource.save(function(err) {
+        if (err) {
+          req.flash('error', "Failed to delete service!");
+        } else {
+          req.flash('success', "Successfully deleted service!");
+        }
+        res.redirect('/admin');
+      });
+    }
   });
 };
