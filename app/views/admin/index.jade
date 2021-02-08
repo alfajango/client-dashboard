@@ -3,6 +3,14 @@ extends ../layouts/application
 block content
   h1 Admin
 
+  ul#admin-tabs.nav.nav-tabs
+    li.nav-item(class=(archived ? "" : "active"))
+      a.nav-link(href="/admin")
+        | Clients
+    li.nav-item(class=(archived ? "active" : ""))
+      a.nav-link(href="/admin?archived=true")
+        | Archived Clients
+
   table.table.table-bordered#admin-table
     tr
       th Client
@@ -28,6 +36,9 @@ block content
               form.pull-right(action='/admin/clients/' + client.id, method="POST")
                 input(type="hidden", name="_method", value="DELETE")
                 input.btn.btn-mini.btn-danger.pull-right(type="submit", value="Delete", onclick="return confirm('Are you sure you want to delete this client and all projects and services?')")
+              form.pull-right(action='/admin/clients/' + client.id + '/archive', method="POST")
+                input(type="hidden", name="_method", value="PUT")
+                input.btn.btn-mini.pull-right(type="submit", value=(client.archived ? "Unarchive" : "Archive"))
 
           - if (users[client.id])
             ul
@@ -69,10 +80,12 @@ block content
                       - for service in project.services
                         li
                           = service.name
-                          form.pull-right(action='/admin/clients/' + client.id + '/projects/' + project.id + '/services' + (service ? ('/' + service.id) : ""), method="POST")
-                            input(type="hidden", name="_method", value="DELETE")
-                            input.btn.btn-mini.btn-danger.pull-right(type="submit", value="Delete", onclick="return confirm('Are you sure?')")
-                          a.btn.btn-mini.pull-right(href="/admin/clients/#{client.id}/projects/#{project.id}/services/#{service.id}/edit") Edit
+                          .pull-right
+                            .btn-group
+                              form.pull-right(action='/admin/clients/' + client.id + '/projects/' + project.id + '/services' + (service ? ('/' + service.id) : ""), method="POST")
+                                input(type="hidden", name="_method", value="DELETE")
+                                input.btn.btn-mini.btn-danger.pull-right(type="submit", value="Delete", onclick="return confirm('Are you sure?')")
+                              a.btn.btn-mini.pull-right(href="/admin/clients/#{client.id}/projects/#{project.id}/services/#{service.id}/edit") Edit
 
   - if (users['not assigned'])
     h2 Unassigned Users

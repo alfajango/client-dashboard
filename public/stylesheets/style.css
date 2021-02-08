@@ -103,6 +103,10 @@ td.issue-number-column {
 
 /* Admin styles */
 
+#admin-tabs {
+  margin-top: 15px;
+}
+
 #admin-table ul.project-ul {
   margin-left: 0;
 }
@@ -112,6 +116,18 @@ td.issue-number-column {
 }
 #admin-table li {
   clear: both;
+}
+
+#admin-table form {
+  margin-bottom: 0;
+}
+
+#admin-table .btn-group .btn {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+#admin-table .btn-group .btn-danger {
+  margin-left: 10px;
 }
 
 #project-preview {

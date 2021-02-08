@@ -226,6 +226,25 @@ module.exports = function(app) {
     });
   });
 
+  app.put('/admin/clients/:id/archive', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    req.resource.archived = !req.resource.archived;
+    if (req.resource.archived) {
+      var message = "archive";
+      var redirect = "/admin";
+    } else {
+      var message = "unarchive";
+      var redirect = "/admin?archived=true";
+    }
+    req.resource.save(function(err) {
+      if (err) {
+        req.flash('error', "Could not " + message + " client");
+      } else {
+        req.flash('success', "Successfully " + message + "d client!");
+      }
+      res.redirect(redirect);
+    });
+  });
+
   app.delete('/admin/clients/:id', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     var hasServicesWithConfig = false;
     req.resource.projects.forEach(function(project) {
