@@ -39,6 +39,8 @@ block content
               form.pull-right(action='/admin/clients/' + client.id + '/archive', method="POST")
                 input(type="hidden", name="_method", value="PUT")
                 input.btn.btn-mini.pull-right(type="submit", value=(client.archived ? "Unarchive" : "Archive"))
+              form.pull-right(action='/admin/clients/' + client.id + '/copy', method="POST")
+                input.btn.btn-mini.pull-right(type="submit", value="Copy")
 
           - if (users[client.id])
             ul

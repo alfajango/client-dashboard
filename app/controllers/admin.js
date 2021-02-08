@@ -203,6 +203,34 @@ module.exports = function(app) {
     });
   });
 
+  app.post('/admin/clients/:id/copy', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
+    var newClient = req.resource.toObject();
+    delete newClient._id;
+    delete newClient.archived;
+    newClient.name = newClient.name + " copy";
+
+    newClient.projects.forEach(function(project, pindex) {
+      delete project._id;
+
+      project.services.forEach(function(service, sindex) {
+        delete service._id;
+      });
+    });
+
+    new Client(newClient).save( function(err, client) {
+      if (err) {
+        res.render('admin/client_new', {
+          title: 'Copy Client',
+          message: { error: 'Client could not be copied: ' + err },
+          theClient: newClient
+        });
+      } else {
+        req.flash('success', "Successfully copied client!");
+        res.redirect('/admin');
+      }
+    });
+  });
+
   app.get('/admin/clients/:id/edit', auth.ensureAuthenticated, auth.ensureAdmin, function(req, res) {
     res.render('admin/client_new', {
       title: 'Edit Client',
