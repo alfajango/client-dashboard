@@ -60,3 +60,15 @@ app.get('/widgets/:widget', function(req, res) {
   var widget = req.params.widget;
   res.sendfile('./app/widgets/' + widget + '/' + widgets[widget].update);
 });
+
+module.exports.commandResetPassword = function(email, password) {
+  var User = mongoose.model('User');
+  User.findOne({"email": email}, function(err, user) {
+    console.log(user);
+    user.hashedPassword = passwordHash.generate(password);
+    user.save(function(err, savedUser) {
+      console.log("Saved!");
+      return true;
+    });
+  });
+};
