@@ -5,6 +5,8 @@ var ClientSchema = new Schema({
   projects:         [ProjectSchema],
   invoiceAmount:    Number,
   archived:         Boolean
+},{
+  usePushEach: true
 });
 
 mongoose.model('Client', ClientSchema);
