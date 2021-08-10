@@ -34,7 +34,16 @@ widgets.redmine_open_issues = function(data, $) {
       renderIssueRow = function(issue, version) {
         totalIssues++;
         var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
-        rows += '<tr' + (updated > yesterday ? ' class="issue-row recently-updated" rel="tooltip" title="recently active"' : ' class="issue-row"') +
+        let issueDone = issue.progress === 100 || ["Pushed to Production", "Accepted", "Done"].includes(issue.status);
+        let issueRowClass = "";
+        if (updated > yesterday) {
+          issueRowClass += " recently-updated";
+        }
+        if (issueDone) {
+          issueRowClass += " done";
+        }
+        rows += '<tr class="issue-row' + issueRowClass + '"' +
+          (updated > yesterday ? ' rel="tooltip" title="recently active"' : '') +
           ' sprint-date="' + version.due_date + '">';
         rows += '<td class="issue-number-column">' + issue.id + '</td>';
         rows += '<td class="redmine-subject-td">'
@@ -54,8 +63,13 @@ widgets.redmine_open_issues = function(data, $) {
         rows += '</td>';
         rows += '<td class="redmine-status-td">';
         rows += issue.status;
-        if (issue.progress > 0) {
-          rows += '<div class="progress progress-striped"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
+        // Only show this progress bar if it's a child issue, otherwise show larger progress row
+        if (issue.parentId && issue.progress > 0) {
+          let progressClass = "progress progress-striped"
+          if (issueDone) {
+            progressClass += " progress-success";
+          }
+          rows += '<div class="' + progressClass + '"><div class="bar" style="width: ' + issue.progress + '%;"></div>'
         }
         rows += '</td>';
         rows += '<td class="redmine-priority-td"' + (issue.priority > 1 ? ' rel="tooltip" title="high priority"' : '') + '>';
@@ -65,6 +79,10 @@ widgets.redmine_open_issues = function(data, $) {
         rows += issue.priorityName
         rows += '</td>';
         rows += '</tr>';
+        // Only show this progress row if it's a top-level issue, otherwise show smaller progress bar
+        if (!issue.parentId) {
+          rows += '<tr class="issue-progress' + issueRowClass + '"><td colspan=4><progress rel="tooltip" title="' + issue.progress + '% done" class="issue-progress-bar" max="100" value="' + issue.progress + '"></progress></td></tr>';
+        }
       };
 
   if (data.error) {
@@ -77,16 +95,16 @@ widgets.redmine_open_issues = function(data, $) {
       }
 
       rowTitle = version.name
-      if (version.ir_start_date != undefined) {
-        rowTitle += " - Start: " + version.ir_start_date + " "
-        rowTitle += "/ End: " + version.ir_end_date
-      } else {
-        if (version.due_date != undefined) {
-          rowTitle += " - End: " + version.due_date
-        }
+      if (version.due_date != undefined) {
+        rowTitle += " - " + (new Date(version.created_on)).toLocaleDateString();
+        rowTitle += " to " + (new Date(version.due_date)).toLocaleDateString();
       }
       rows += '<tr class="redmine-version issue-row" sprint-date="' +
         version.due_date + '"><th colspan=4>' + rowTitle + '</th></tr>';
+
+      if (version.days && version.days_progress) {
+        rows += '<tr class="version-progress"><td colspan=4><progress rel="tooltip" title="' + version.days_progress + ' days in" class="version-progress-bar" max="' + version.days +'" value="' + version.days_progress + '"></progress></td></tr>';
+      }
 
       $.each(version.issues, function(i, issue) {
         renderIssueRow(issue, version);
@@ -98,6 +116,7 @@ widgets.redmine_open_issues = function(data, $) {
   $target.find('.redmine-table tbody').html(rows);
   $target.find('.redmine-table tr').tooltip({placement: 'bottom'});
   $target.find('.redmine-table td').tooltip({placement: 'bottom'});
+  $target.find('.redmine-table progress').tooltip({placement: 'bottom'});
   $target.find('.redmine-title .badge').html(totalIssues || "N/A");
   $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
   filterIssues(new Date());

@@ -280,19 +280,19 @@ i.refresh-ok {
   background-color: #f9f9f9;
 }
 .table tbody tr.recently-updated > td {
-  background: rgba(232, 247, 255, 0.5);
+  background: rgba(198, 235, 255, 0.4);
 }
 .table tbody tr.recently-updated:hover > td {
   filter: brightness(0.95);
 }
 .table tbody tr.recently-updated > td tr.recently-updated > td {
-  background: rgba(232, 247, 255, 0.65);
+  background: rgba(198, 235, 255, 0.55);
 }
 .table tbody tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td {
-  background: rgba(232, 247, 255, 0.8);
+  background: rgba(198, 235, 255, 0.7);
 }
 .table tbody tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td {
-  background: rgba(232, 247, 255, 0.95);
+  background: rgba(198, 235, 255, 0.85);
 }
 
 .redmine-ticket-td {
@@ -315,6 +315,72 @@ i.refresh-ok {
   margin-bottom: 0;
   height: 8px;
 }
+
+.issue-row.done {
+  background: #dff0d8;
+  color: #468847;
+}
+.issue-progress td,
+.version-progress td {
+  line-height: 0;
+  padding: 0;
+  border-top: solid 1px #f0f0f0;
+}
+.issue-progress-bar,
+.version-progress-bar {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  appearance: none;
+  height: 8px;
+  border: none;
+  background: transparent;
+}
+progress.version-progress-bar {
+  height: 15px;
+  background: #eee;
+}
+.recently-updated progress.issue-progress-bar {
+  background: rgba(232, 247, 255, 0.5);
+}
+/* IE10 */
+progress.version-progress-bar {
+  color: #dedede;
+}
+
+/* Firefox and Chrome */
+progress.version-progress-bar::-moz-progress-bar,
+progress.version-progress-bar::-webkit-progress-value {
+  background-color: #dedede;
+  background-image:
+    -moz-linear-gradient( 135deg,
+      transparent,
+      transparent 33%,
+      rgba(0,0,0,.1) 33%,
+      rgba(0,0,0,.1) 66%,
+    transparent 66%);
+  background-size: 45px;
+  border-radius: 2px;
+  border-right: dashed 1px #aaa;
+}
+/* IE10 */
+progress.issue-progress-bar {
+  color: rgba(0, 166, 255);
+}
+.done progress.issue-progress-bar {
+  color: #23a623;
+}
+/* Firefox and Chrome */
+progress.issue-progress-bar::-moz-progress-bar,
+progress.issue-progress-bar::-webkit-progress-value {
+  background-color: rgba(0, 166, 255);
+}
+.done progress.issue-progress-bar::-moz-progress-bar,
+.done progress.issue-progress-bar::-webkit-progress-value {
+  background-color: #23a623;
+}
+
 .table tbody tr.redmine-version th,
 .table tbody tr.redmine-sub-tickets th,
 .table tbody tr.redmine-version td,

@@ -124,14 +124,28 @@ exports.translate = function(data, service) {
 
   if (data.versions) {
     results.versions = data.versions.map(function(s) {
-      return {
+      let version = {
         id: s.id,
         name: s.name,
         status: s.status,
+        created_on: s.created_on,
         due_date: s.due_date,
         ir_start_date: s.ir_start_date,
         ir_end_date: s.ir_end_date
+      };
+
+      if (s.created_on !== undefined && s.due_date !== undefined) {
+        const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+
+        const startDate = new Date(version.created_on);
+        const endDate = new Date(version.due_date);
+        const today = new Date();
+
+        version.days = Math.round(Math.abs((endDate - startDate) / oneDay));
+        version.days_progress = Math.round(Math.abs((today - startDate) / oneDay));
       }
+
+      return version;
     }).sort(function(a, b) {
       var aDueDate = a.due_date || "0",
           bDueDate = b.due_date || "0";
@@ -145,7 +159,6 @@ exports.translate = function(data, service) {
     issues = data.issues.map(function(x) {
       // Redmine description uses > for blockquote instead of standard textile bq. formatting.
       var description;
-      console.log("ISSUE:", x.id, "VERSION:", x.fixed_version.id);
       if (x.description && x.description !== "") {
         try {
           description = textile(
