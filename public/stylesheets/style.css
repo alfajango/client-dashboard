@@ -175,9 +175,6 @@ h2 .badge {
   background: #e8f7ff;
   text-align: center;
 }
-.recently-updated td {
-  background: #e8f7ff;
-}
 
 .time-entry-warning {
   font-weight: bold;
@@ -276,11 +273,36 @@ i.refresh-ok {
   margin: 0;
 }
 
+.table tbody tr:hover td {
+  background-color: unset;
+}
+.table tbody tr:hover > td {
+  background-color: #f9f9f9;
+}
+.table tbody tr.recently-updated > td {
+  background: rgba(232, 247, 255, 0.5);
+}
+.table tbody tr.recently-updated:hover > td {
+  filter: brightness(0.95);
+}
+.table tbody tr.recently-updated > td tr.recently-updated > td {
+  background: rgba(232, 247, 255, 0.65);
+}
+.table tbody tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td {
+  background: rgba(232, 247, 255, 0.8);
+}
+.table tbody tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td {
+  background: rgba(232, 247, 255, 0.95);
+}
+
 .redmine-ticket-td {
   width: 50px;
 }
 .redmine-subject-td:hover {
   cursor: pointer;
+}
+.redmine-subject-td small {
+  font-size: 11px;
 }
 .redmine-description {
   display: none;
@@ -293,12 +315,13 @@ i.refresh-ok {
   margin-bottom: 0;
   height: 8px;
 }
-.redmine-version {
+.table tbody tr.redmine-version th,
+.table tbody tr.redmine-sub-tickets th,
+.table tbody tr.redmine-version td,
+.table tbody tr.redmine-sub-tickets td {
+  text-align: center;
   background: #eee;
   font-weight: bold;
-}
-.redmine-version td {
-  text-align: center;
 }
 
 .redmine-title-td:hover {

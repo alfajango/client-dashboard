@@ -127,6 +127,7 @@ module.exports = function(app) {
                     service = project.services.id(data.id);
 
                     service.fetch( function(response) {
+                      console.log("EMITTING SERVICE RESPONSE:", data.service);
                       socket.emit('serviceResponse', response);
                     }, data.settings);
                   }

@@ -1,6 +1,7 @@
 var http = require('http'),
     https = require('https'),
-    textile = require('textile-js');
+    textile = require('textile-js'),
+    querystring = require('querystring');
 
 var statusOrder = {
   'Estimate Needed': 0,
@@ -54,12 +55,24 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
   var options = {
     host: service.url,
     port: config.port || 80,
-    path: path,
     headers: {
       'Accept': 'application/json',
       'X-Redmine-API-Key': service.token
     }
   };
+
+  // Namespaced query parameters by endpoint, e.g.:
+  // {"issues": {"fixed_version_id": 256}}
+  var queryFilters = config.query;
+  var queryFilterString = null;
+  if (queryFilters && queryFilters[name]) {
+    var queryFilterString = querystring.stringify(queryFilters[name]);
+    if (! path.includes(queryFilterString)) {
+      path = path + "&" + queryFilterString;
+    }
+    console.log("ADDED QUERY OPTIONS TO PATH", path);
+  }
+  options.path = path;
 
   var reqLib = options.port == 80 ? http : https;
   var req = reqLib.get(options, function(res) {
@@ -70,8 +83,18 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
       });
       res.on('end', function(){
         try {
-        var resData = JSON.parse(data);
-        jsonData[name] = resData[name];
+          var resData = JSON.parse(data);
+          var offset = resData.offset || 0;
+          if (jsonData[name]) {
+            jsonData[name] = jsonData[name].concat(resData[name]);
+          } else {
+            jsonData[name] = resData[name];
+          }
+          if (resData.limit && resData.total_count && resData.total_count > (offset + resData.limit)) {
+            console.log("THERE'S MORE, REQUESTING NEXT PAGE", "OFFSET: " + offset);
+            path = path.replace(/&offset=[\d]+/, '') + "&offset=" + ((resData.offset || 0) + resData.limit)
+            return redmine.fetchAPI(name, path, service, jsonData, done);
+          }
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
           jsonData.error = err.message;
@@ -118,26 +141,35 @@ exports.translate = function(data, service) {
   results.versions.push( {id: undefined, name: "Backlog", status: "open", due_date: null} );
 
   if (data.issues) {
+    var ind = 0;
     issues = data.issues.map(function(x) {
       // Redmine description uses > for blockquote instead of standard textile bq. formatting.
       var description;
+      console.log("ISSUE:", x.id, "VERSION:", x.fixed_version.id);
       if (x.description && x.description !== "") {
-        description = textile(
-          x.description
-          .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
-          .replace(/!(\/[^\s]+)!/gm, "!http://" + service.url + "$1!")
-          .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
-          .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
-          .replace(/^(<blockquote>)?>/gm, "$1")
-        );
+        try {
+          description = textile(
+            x.description
+            .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
+            .replace(/!(\/[^\s]+)!/gm, "!http://" + service.url + "$1!")
+            .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
+            .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
+            .replace(/^(<blockquote>)?>/gm, "$1")
+          );
+        } catch (err) {
+          console.log("ERROR PARSING DESCRIPTION FOR ISSUE", x.id);
+          description = x.description;
+        }
       } else {
         description = "<p><em>No description</em></p>";
       }
       var version = x.fixed_version && x.fixed_version.id;
+      var parent = x.parent && x.parent.id;
       return {
         id: x.id,
         subject: x.subject,
         status: x.status.name,
+        parentId: parent,
         progress: x.done_ratio,
         updated: new Date(x.updated_on),
         priority: priorityOrder[x.priority.name],
@@ -162,6 +194,12 @@ exports.translate = function(data, service) {
           return a.id - b.id;
         }
       });
+
+
+    var topIssues = issues.filter(function(issue) {
+      return !issue.parentId;
+    });
+    issues = assignDescendents(topIssues, issues);
   }
 
   results.versions.forEach(function(version) {
@@ -175,3 +213,18 @@ exports.translate = function(data, service) {
 // Write fetched results to db
 exports.write = function() {
 };
+
+function assignDescendents(theseIssues, allIssues) {
+  theseIssues.forEach(function(issue) {
+    var index = allIssues.indexOf(issue);
+    allIssues.splice(index, 1);
+
+    issue.issues = allIssues.filter(function(otherIssue) {
+      return otherIssue.parentId && otherIssue.parentId === issue.id;
+    });
+
+    assignDescendents(issue.issues, allIssues);
+  });
+
+  return theseIssues;
+}
