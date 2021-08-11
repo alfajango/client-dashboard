@@ -9,6 +9,8 @@ var UserSchema = new Schema({
     index: { unique: true }
   },
   hashedPassword: String,
+  apiUser: String,
+  apiToken: String,
   admin: Boolean,
   client: {
     type: ObjectId,

@@ -62,54 +62,55 @@ html
         script(src="/widgets/#{service.name}")
 
   body
-    div.navbar.navbar-fixed-top
-      div.navbar-inner
-        div.container
-          a.brand(href=(currentUser.admin ? "/admin" : "/")) Tech Dashboard by Alfa Jango
-          a.btn.btn-navbar('data-toggle'='collapse', 'data-target'='.nav-collapse')
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          .nav-collapse
-            ul.nav.pull-right
-              if currentUser.admin
-                li.dropdown
-                  a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
-                    | Select Client
-                    b.caret
-                  ul.dropdown-menu
-                    each client in clients
-                      - if (client.projects && client.projects[0])
-                        li(style="background: #{client.projects[0].headerBG};")
-                          a(href="/?client_id=#{client.id}", style="color: #{client.projects[0].headerColor};")
-                            = client.name
-                li.dropdown
-                  a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
-                    | Admin
-                    b.caret
-                  ul.dropdown-menu
-                    li
-                      a(href="/admin")
-                        i.icon-wrench
-                        |  Manage / Settings
-                    li
-                      a(href="/admin/clients/new")
-                        i.icon-plus
-                        |  Create Client
-                    li
-                      a(href="/admin/users/new")
-                        i.icon-plus
-                        |  Create User
-              if currentUser.id
-                li
-                  a(href='/change_password') Change Password
-                li
-                  a(href='/logout') Logout
-          block menu
+    - if (typeof(iframe) === 'undefined' || !iframe)
+      div.navbar.navbar-fixed-top
+        div.navbar-inner
+          div.container
+            a.brand(href=(currentUser.admin ? "/admin" : "/")) Tech Dashboard by Alfa Jango
+            a.btn.btn-navbar('data-toggle'='collapse', 'data-target'='.nav-collapse')
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            .nav-collapse
+              ul.nav.pull-right
+                if currentUser.admin
+                  li.dropdown
+                    a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
+                      | Select Client
+                      b.caret
+                    ul.dropdown-menu
+                      each client in clients
+                        - if (client.projects && client.projects[0])
+                          li(style="background: #{client.projects[0].headerBG};")
+                            a(href="/?client_id=#{client.id}", style="color: #{client.projects[0].headerColor};")
+                              = client.name
+                  li.dropdown
+                    a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
+                      | Admin
+                      b.caret
+                    ul.dropdown-menu
+                      li
+                        a(href="/admin")
+                          i.icon-wrench
+                          |  Manage / Settings
+                      li
+                        a(href="/admin/clients/new")
+                          i.icon-plus
+                          |  Create Client
+                      li
+                        a(href="/admin/users/new")
+                          i.icon-plus
+                          |  Create User
+                if currentUser.id
+                  li
+                    a(href='/change_password') Change Password
+                  li
+                    a(href='/logout') Logout
+            block menu
 
-    .header
-      .container
-        block header
+      .header
+        .container
+          block header
 
     .main-content
       div.container

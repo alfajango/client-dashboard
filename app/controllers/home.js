@@ -67,12 +67,13 @@ module.exports = function(app) {
    * GET home page.
    */
 
-  app.get('/', auth.ensureAuthenticated, ensureClient, function(req, res){
+  app.get('/', auth.authenticateApiToken, auth.ensureAuthenticated, ensureClient, function(req, res){
     res.render('home/index', {
       title: req.project.name + ' Status',
       message: req.flash(),
       theClient: req.client,
       project: req.project,
+      iframe: req.query.iframe,
       serviceData: {}
     });
   });

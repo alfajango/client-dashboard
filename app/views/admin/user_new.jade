@@ -16,6 +16,14 @@ block content
         .controls
           input(type="password", name="user[password]", value=(user ? user.password : ""))
       .control-group
+        label.control-label API User
+        .controls
+          input(type="text", name="user[apiUser]", value=(user ? user.apiUser : ""))
+      .control-group
+        label.control-label API Token
+        .controls
+          input(type="text", name="user[apiToken]", value=(user ? user.apiToken : ""))
+      .control-group
         label.control-label Client
         .controls
           select(name="user[client]")
