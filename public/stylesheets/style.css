@@ -276,23 +276,22 @@ i.refresh-ok {
 .table tbody tr:hover td {
   background-color: unset;
 }
-.table tbody tr:hover > td {
-  background-color: #f9f9f9;
+.table tbody tr.recently-updated:hover > td,
+.table tbody tr.done:hover > td {
+  filter: brightness(0.95);
 }
+
 .table tbody tr.recently-updated > td {
   background: rgba(198, 235, 255, 0.4);
 }
-.table tbody tr.recently-updated:hover > td {
-  filter: brightness(0.95);
+
+.table tbody tr.done > td {
+  background: rgba(98, 196, 98, 0.15);
+  color: rgb(80, 145, 80);
 }
-.table tbody tr.recently-updated > td tr.recently-updated > td {
-  background: rgba(198, 235, 255, 0.55);
-}
-.table tbody tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td {
-  background: rgba(198, 235, 255, 0.7);
-}
-.table tbody tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td tr.recently-updated > td {
-  background: rgba(198, 235, 255, 0.85);
+
+.recently-updated .redmine-issue-subject {
+  font-weight: bold;
 }
 
 .redmine-ticket-td {
@@ -304,8 +303,22 @@ i.refresh-ok {
 .redmine-subject-td small {
   font-size: 11px;
 }
-.redmine-description {
+.redmine-subject-td small span {
+  text-decoration: underline;
+}
+.redmine-description,
+.redmine-sub-ticket-row,
+.redmine-sub-ticket-container {
   display: none;
+}
+.redmine-subject-td .sub-ticket-down-arrow {
+  display: none;
+}
+.redmine-subject-td.expanded .sub-ticket-right-arrow {
+  display: none;
+}
+.redmine-subject-td.expanded .sub-ticket-down-arrow {
+  display: unset;
 }
 
 .redmine-status-td {
@@ -316,10 +329,6 @@ i.refresh-ok {
   height: 8px;
 }
 
-.issue-row.done {
-  background: #dff0d8;
-  color: #468847;
-}
 .issue-progress td,
 .version-progress td {
   line-height: 0;
@@ -337,24 +346,30 @@ i.refresh-ok {
   border: none;
   background: transparent;
 }
+
+/* Version progress bar background color */
+/* IE10 */
+/* Firefox */
 progress.version-progress-bar {
   height: 15px;
   background: #eee;
 }
-.recently-updated progress.issue-progress-bar {
-  background: rgba(232, 247, 255, 0.5);
+/* Chrome and Safari */
+progress.version-progress-bar::-webkit-progress-bar {
+  height: 15px;
+  background: #eee;
 }
+
+/* Version progress bar color */
 /* IE10 */
 progress.version-progress-bar {
   color: #dedede;
 }
-
-/* Firefox and Chrome */
-progress.version-progress-bar::-moz-progress-bar,
-progress.version-progress-bar::-webkit-progress-value {
+/* Firefox */
+progress.version-progress-bar::-moz-progress-bar {
   background-color: #dedede;
   background-image:
-    -moz-linear-gradient( 135deg,
+    linear-gradient( 135deg,
       transparent,
       transparent 33%,
       rgba(0,0,0,.1) 33%,
@@ -364,19 +379,67 @@ progress.version-progress-bar::-webkit-progress-value {
   border-radius: 2px;
   border-right: dashed 1px #aaa;
 }
+/* Chrome and Safari */
+progress.version-progress-bar::-webkit-progress-value {
+  background-color: #dedede;
+  background-image:
+    linear-gradient( 135deg,
+      transparent,
+      transparent 33%,
+      rgba(0,0,0,.1) 33%,
+      rgba(0,0,0,.1) 66%,
+    transparent 66%);
+  background-size: 45px;
+  border-radius: 2px;
+  border-right: dashed 1px #aaa;
+}
+
+/* Issue progress bar background color */
+/* IE10 */
+/* Firefox */
+progress.issue-progress-bar {
+  background: #fff;
+}
+/* Chrome and Safari */
+progress.issue-progress-bar::-webkit-progress-bar {
+  background: #fff;
+}
+
+/* Issue progress bar color */
 /* IE10 */
 progress.issue-progress-bar {
   color: rgba(0, 166, 255);
 }
-.done progress.issue-progress-bar {
-  color: #23a623;
+/* Firefox */
+progress.issue-progress-bar::-moz-progress-bar {
+  background-color: rgba(0, 166, 255);
 }
-/* Firefox and Chrome */
-progress.issue-progress-bar::-moz-progress-bar,
+/* Chrome and Safari */
 progress.issue-progress-bar::-webkit-progress-value {
   background-color: rgba(0, 166, 255);
 }
-.done progress.issue-progress-bar::-moz-progress-bar,
+
+/* Issue recently-updated progress bar background color */
+/* IE10 */
+/* Firefox */
+.recently-updated progress.issue-progress-bar {
+  background: rgba(232, 247, 255, 0.5);
+}
+/* Chrome and Safari */
+.recently-updated progress.issue-progress-bar::-webkit-progress-bar {
+  background: rgba(232, 247, 255, 0.5);
+}
+
+/* Issue done progress bar color */
+/* IE10 */
+.done progress.issue-progress-bar {
+  color: #23a623;
+}
+/* Firefox */
+.done progress.issue-progress-bar::-moz-progress-bar {
+  background-color: #23a623;
+}
+/* Chrome and Safari */
 .done progress.issue-progress-bar::-webkit-progress-value {
   background-color: #23a623;
 }

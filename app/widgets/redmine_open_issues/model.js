@@ -193,9 +193,9 @@ exports.translate = function(data, service) {
       };
     })
       .sort(function(a, b) {
-        var firstOrder = a.ir_position - b.ir_position,
-            secondOrder = b.priority - a.priority,
-            thirdOrder = statusOrder[a.status] - statusOrder[b.status];
+        var firstOrder = b.priority - a.priority,
+            secondOrder = statusOrder[b.status] - statusOrder[a.status],
+            thirdOrder = b.progress - a.progress;
 
         if (firstOrder !== 0) {
           return firstOrder;

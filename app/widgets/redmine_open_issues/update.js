@@ -1,6 +1,21 @@
 $(document).delegate('.redmine-subject-td', 'click', function(e) {
   e.stopPropagation();
-  $(this).find('> .redmine-description').slideToggle(250);
+  let $this = $(this);
+  let $description = $this.find('.redmine-description');
+  let subTicketRowSelector = '#' + $this.parent('.issue-row').data('sub-ticket-row');
+  let $subTicketRow = $(subTicketRowSelector);
+  if ($description.is(':visible')) {
+    $this.removeClass('expanded');
+    $description.slideUp(250);
+    $subTicketRow.find('> td > .redmine-sub-ticket-container').slideUp(250);
+    setTimeout(function() {
+      $subTicketRow.hide();
+    }, 250);
+  } else {
+    $this.addClass('expanded');
+    $description.slideDown(250);
+    $subTicketRow.show().find('> td > .redmine-sub-ticket-container').slideDown(250);
+  }
 });
 
 var filterIssues = function(beginDate) {
@@ -34,32 +49,26 @@ widgets.redmine_open_issues = function(data, $) {
       renderIssueRow = function(issue, version) {
         totalIssues++;
         var updated = +(new Date(issue.updated)); // Make sure both dates are compared as integers
-        let issueDone = issue.progress === 100 || ["Pushed to Production", "Accepted", "Done"].includes(issue.status);
+        const recentlyUpdated = updated > yesterday;
+        const issueDone = issue.progress === 100 || ["Pushed to Production", "Accepted", "Done"].includes(issue.status);
         let issueRowClass = "";
-        if (updated > yesterday) {
+        const subTicketRowId = "redmine-sub-ticket-row-" + issue.id;
+        if (recentlyUpdated) {
           issueRowClass += " recently-updated";
         }
         if (issueDone) {
           issueRowClass += " done";
         }
         rows += '<tr class="issue-row' + issueRowClass + '"' +
-          (updated > yesterday ? ' rel="tooltip" title="recently active"' : '') +
-          ' sprint-date="' + version.due_date + '">';
+          (recentlyUpdated ? ' rel="tooltip" title="recently active"' : '') +
+          ' sprint-date="' + version.due_date + '" data-sub-ticket-row="' + subTicketRowId + '">';
         rows += '<td class="issue-number-column">' + issue.id + '</td>';
         rows += '<td class="redmine-subject-td">'
-        rows += '<div>' + issue.subject;
+        rows += '<div><span class="redmine-issue-subject">' + (recentlyUpdated ? '&#9679; ' : '') + issue.subject + '</span>';
         if (issue.issues.length > 0) {
-          rows += ' <small>- ' + issue.issues.length + ' sub-tickets</small>';
+          rows += ' <small>- <span>' + issue.issues.length + ' sub-tickets <span class="sub-ticket-right-arrow">&rtrif;</span><span class="sub-ticket-down-arrow">&dtrif;</span></span></small>';
         }
         rows += '</div><div class="redmine-description"><hr />' + issue.description.replace(/(?:\r\n|\r|\n)/g, '<br />'); + '</div>';
-        if (issue.issues.length > 0) {
-          rows += '<table class="table table-bordered redmine-nested-issues">';
-          rows += '<tr class="redmine-sub-tickets issue-row"><th colspan=4>Sub-tickets</th></tr>';
-          issue.issues.forEach(function(childIssue) {
-            renderIssueRow(childIssue, totalIssues, yesterday, version, rows);
-          });
-          rows += '</table>';
-        }
         rows += '</td>';
         rows += '<td class="redmine-status-td">';
         rows += issue.status;
@@ -74,7 +83,7 @@ widgets.redmine_open_issues = function(data, $) {
         rows += '</td>';
         rows += '<td class="redmine-priority-td"' + (issue.priority > 1 ? ' rel="tooltip" title="high priority"' : '') + '>';
         if (issue.priority > 1) {
-          rows += ' <i class="icon-star-empty"></i>';
+          rows += '&star;';
         }
         rows += issue.priorityName
         rows += '</td>';
@@ -82,6 +91,18 @@ widgets.redmine_open_issues = function(data, $) {
         // Only show this progress row if it's a top-level issue, otherwise show smaller progress bar
         if (!issue.parentId) {
           rows += '<tr class="issue-progress' + issueRowClass + '"><td colspan=4><progress rel="tooltip" title="' + issue.progress + '% done" class="issue-progress-bar" max="100" value="' + issue.progress + '"></progress></td></tr>';
+        }
+        if (issue.issues.length > 0) {
+          rows += '<tr class="redmine-sub-ticket-row" id="' + subTicketRowId + '"><td colspan=4>';
+          rows += '<div class="redmine-sub-ticket-container">';
+          rows += '<table class="table table-bordered redmine-nested-issues">';
+          rows += '<tr class="redmine-sub-tickets issue-row"><th colspan=4>Issue ' + issue.id + ' Sub-tickets</th></tr>';
+          issue.issues.forEach(function(childIssue) {
+            renderIssueRow(childIssue, totalIssues, yesterday, version, rows);
+          });
+          rows += '</table>';
+          rows += '</div>';
+          rows += '</td></tr>';
         }
       };
 
