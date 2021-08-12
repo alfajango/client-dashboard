@@ -13,9 +13,10 @@ var statusOrder = {
   'Feedback': 6,
   'Pull Request': 7,
   'Pushed to Staging': 8,
-  'Pushed to Production': 9,
-  'Done': 10,
-  'Resolved': 11
+  'Ready for Production': 9,
+  'Pushed to Production': 10,
+  'Done': 11,
+  'Resolved': 12
 };
 
 var priorityOrder = {
