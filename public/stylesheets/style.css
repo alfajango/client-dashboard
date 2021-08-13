@@ -67,6 +67,11 @@ body {
   padding-top: 20px;
 }
 
+table {
+  /* Weirdly needed when dashboard is embedded in iframe behind proxy */
+  font-size: 13px;
+}
+
 table.table th {
   vertical-align: top;
 }
