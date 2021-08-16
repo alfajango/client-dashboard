@@ -28,7 +28,8 @@ block content
       .control-group
         label.control-label Service Token
         .controls
-          input(type="text", name="service[token]", value=(service ? service.token : ""))
+          textarea(name="service[token]")
+            = service ? service.token : ""
       .control-group
         label.control-label Config Data
         .controls

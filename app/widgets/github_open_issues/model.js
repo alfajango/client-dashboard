@@ -1,7 +1,9 @@
 var http = require('http'),
     https = require('https'),
     markdown = require('markdown').markdown,
-    querystring = require('querystring');
+    querystring = require('querystring'),
+    fs = require('fs'),
+    { createAppAuth } = require('@octokit/auth-app');
 
 var statusOrder = {
   'open': 0,
@@ -18,27 +20,53 @@ var priorityOrder = {
 
 exports.fetch = function(service, callback) {
   var redmine = this,
+      token,
       jsonData = {},
       out = {id: service.id, name: service.name};
 
-  utils.when(
-    function(done) {
-      var path = '/repos/' + service.identifier + '/issues';
-      redmine.fetchAPI('issues', path, service, jsonData, done);
-    },
-    function(done) {
-      var path = '/repos/' + service.identifier + '/milestones';
-      redmine.fetchAPI('versions', path, service, jsonData, done);
+  authApp(service, function(err, token) {
+    if (token) {
+      utils.when(
+        function(done) {
+          var path = '/repos/' + service.identifier + '/issues';
+          redmine.fetchAPI('issues', path, token, service, jsonData, done);
+        },
+        function(done) {
+          var path = '/repos/' + service.identifier + '/milestones';
+          redmine.fetchAPI('versions', path, token, service, jsonData, done);
+        }
+      ).then(function() {
+        out.results = redmine.translate(jsonData, service);
+        out.error = jsonData.error;
+        callback(out)
+      });
+    } else {
+      out.error = err.message
+      callback(out)
     }
-  ).then(function() {
-    out.results = redmine.translate(jsonData, service);
-    out.error = jsonData.error;
-    callback(out)
   });
 };
 
+function authApp(service, callback) {
+  const privatePem = service.token;
+  const config = JSON.parse(service.config);
+
+  const auth = createAppAuth({
+    appId: service.user,
+    privateKey: privatePem
+  });
+
+  // Retrieve JSON Web Token (JWT) to authenticate as app
+  auth({ type: "installation", installationId: config.installationId }).then(function(authResp) {
+    callback(null, authResp.token);
+  }).catch(function(err) {
+    console.error("GITHUB AUTH ERROR", err);
+    callback(err, null);
+  });
+}
+
 // Fetch issues from service endpoint
-exports.fetchAPI = function(name, path, service, jsonData, done) {
+exports.fetchAPI = function(name, path, token, service, jsonData, done) {
   var redmine = this;
   var config = JSON.parse(service.config);
 
@@ -47,7 +75,7 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
     port: config.port || 80,
     headers: {
       'Accept': 'application/vnd.github.v3+json',
-      'Authorization': 'token ' + service.token,
+      'Authorization': 'token ' + token,
       'User-Agent': 'NodeJS'
     }
   };
@@ -75,7 +103,6 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
       res.on('end', function(){
         try {
           var resData = JSON.parse(data);
-          console.log("GOT DATA FOR", name, resData.length);
           var offset = resData.offset || 0;
           if (jsonData[name]) {
             jsonData[name] = jsonData[name].concat(resData);
@@ -149,7 +176,6 @@ exports.translate = function(data, service) {
   }
   results.versions.push( {id: undefined, name: "Backlog", status: "open", due_date: null} );
 
-  console.log("ISSUES", data.issues.length);
   if (data.issues) {
     var ind = 0;
     issues = data.issues.map(function(x) {
