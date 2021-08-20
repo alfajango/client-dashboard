@@ -189,6 +189,18 @@ block content
 
             include ../../widgets/github_open_issues/view.jade
 
+  - if (project.hasService('github_open_cards'))
+    .row-fluid
+      .span12
+        each service in project.filteredServices('github_open_cards')
+          div.redmine-open-issues(id="widget-#{service.id}")
+            .pull-right
+              button.btn.btn-small.refresh-service('data-service'='github_open_cards', 'data-id'="#{service.id}")
+                i.icon-refresh
+              i.icon-ok.refresh-ok
+
+            include ../../widgets/github_open_cards/view.jade
+
   .row-fluid
     - if (project.hasService('errbit_unresolved_exceptions'))
       .span8
