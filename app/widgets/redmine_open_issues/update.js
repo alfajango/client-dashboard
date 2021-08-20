@@ -30,8 +30,8 @@ var filterIssues = function(beginDate) {
   });
 
   $('.redmine-title .badge').html(
-    $('.issue-row[style="display: table-row;"]')
-      .not('redmine-version')
+    $('.redmine-table .issue-row[style="display: table-row;"]')
+      .not('.redmine-version')
       .length
   );
 };

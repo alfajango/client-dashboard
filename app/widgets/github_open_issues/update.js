@@ -1,4 +1,4 @@
-$(document).delegate('.redmine-subject-td', 'click', function(e) {
+$(document).delegate('.github-issues-table .redmine-subject-td', 'click', function(e) {
   e.stopPropagation();
   let $this = $(this);
   let $description = $this.find('.redmine-description');
@@ -19,7 +19,7 @@ $(document).delegate('.redmine-subject-td', 'click', function(e) {
 });
 
 var filterIssues = function(beginDate) {
-  $('.issue-row').each(function(i, el) {
+  $('.github-issues-table .issue-row').each(function(i, el) {
     var row = $(el);
     var date = new Date(row.attr('sprint-date'));
     if (date < beginDate) {
@@ -29,9 +29,9 @@ var filterIssues = function(beginDate) {
     }
   });
 
-  $('.redmine-title .badge').html(
-    $('.issue-row[style="display: table-row;"]')
-      .not('redmine-version')
+  $('.github-issues-title .badge').html(
+    $('.github-issues-table .issue-row[style="display: table-row;"]')
+      .not('.redmine-version')
       .length
   );
 };
@@ -134,11 +134,11 @@ widgets.github_open_issues = function(data, $) {
   } else {
     rows += '<tr class="issue-row" sprint-date="' + version.due_date + '"><td colspan=4><div class="alert alert-success">No open tasks</div></td></tr>';
   }
-  $target.find('.redmine-table tbody').html(rows);
-  $target.find('.redmine-table tr').tooltip({placement: 'bottom'});
-  $target.find('.redmine-table td').tooltip({placement: 'bottom'});
-  $target.find('.redmine-table progress').tooltip({placement: 'bottom'});
-  $target.find('.redmine-title .badge').html(totalIssues || "N/A");
+  $target.find('.github-issues-table tbody').html(rows);
+  $target.find('.github-issues-table tr').tooltip({placement: 'bottom'});
+  $target.find('.github-issues-table td').tooltip({placement: 'bottom'});
+  $target.find('.github-issues-table progress').tooltip({placement: 'bottom'});
+  $target.find('.github-issues-title .badge').html(totalIssues || "N/A");
   $target.find('.refresh-service[data-service="github_open_issues"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
   filterIssues(new Date());
 };
