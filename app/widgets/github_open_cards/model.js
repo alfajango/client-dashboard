@@ -225,13 +225,22 @@ exports.translate = function(data, service) {
     issues = data.issues.map(function(x) {
       // Redmine description uses > for blockquote instead of standard textile bq. formatting.
       var description;
+      let tasks = 0;
+      let tasksDone = 0;
       if (x.body && x.body !== "") {
         try {
           description = markdown.toHTML(
             x.body
           )
-            .replace(/\[ \]/gm, '<input type="checkbox" onclick="return false;" />')
-            .replace(/\[x\]/gm, '<input type="checkbox" onclick="return false;" checked="checked" />');
+            .replace(/\[ \]/gm, function() {
+              tasks += 1;
+              return '<input type="checkbox" onclick="return false;" />';
+            })
+            .replace(/\[x\]/gm, function() {
+              tasks += 1;
+              tasksDone += 1;
+              return '<input type="checkbox" onclick="return false;" checked="checked" />';
+            });
         } catch (err) {
           console.log("ERROR PARSING DESCRIPTION FOR ISSUE", x.id, err);
           description = x.body;
@@ -251,6 +260,10 @@ exports.translate = function(data, service) {
           version = issueCard.version.id;
         }
       }
+      let progress = x.state === "closed" ? 100 : 0;
+      if (tasks > 0) {
+        progress = Math.round(tasksDone * 100 / tasks);
+      }
       //var version = x.fixed_version && x.fixed_version.id;
       //var parent = x.parent && x.parent.id;
       let label = x.labels.map(function(l) {
@@ -262,7 +275,7 @@ exports.translate = function(data, service) {
         subject: x.title,
         status: status,
         //parentId: parent,
-        progress: x.state === "closed" ? 100 : 0,
+        progress: progress,
         updated: new Date(x.updated_at),
         priority: priorityOrder[x.state],
         priorityName: label,
