@@ -179,10 +179,8 @@ exports.translate = function(data, service) {
       versionsById = {},
       statusesById = {};
 
-  console.log("JSON DATA", data);
   if (data.versions) {
     results.versions = data.versions.map(function(s) {
-      console.log("VERSION", s);
       let version = {
         id: s.number,
         name: s.name,
@@ -263,7 +261,6 @@ exports.translate = function(data, service) {
           return card.content_url == x.url;
         })[0];
         if (issueCard) {
-          console.log("ISSUE CARD", x.id, issueCard);
           status = issueCard.status.name;
           version = issueCard.version.id;
         }
@@ -277,7 +274,6 @@ exports.translate = function(data, service) {
       let label = x.labels.map(function(l) {
         return l.name;
       }).join(', ');
-      console.log("ISSUE", x.id, version, status);
       return {
         id: x.number,
         subject: x.title,
@@ -292,16 +288,13 @@ exports.translate = function(data, service) {
       };
     })
       .sort(function(a, b) {
-        var firstOrder = b.priority - a.priority,
-            secondOrder = statusOrder[b.status] - statusOrder[a.status],
-            thirdOrder = b.progress - a.progress;
+        var firstOrder = statusOrder[b.status] - statusOrder[a.status],
+            secondOrder = b.progress - a.progress;
 
         if (firstOrder !== 0) {
           return firstOrder;
         } else if (secondOrder !== 0) {
           return secondOrder;
-        } else if (thirdOrder !== 0) {
-          return thirdOrder;
         } else {
           return a.id - b.id;
         }
