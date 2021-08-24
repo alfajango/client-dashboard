@@ -6,8 +6,16 @@ var http = require('http'),
     { createAppAuth } = require('@octokit/auth-app');
 
 var statusOrder = {
-  'open': 0,
-  'closed': 1
+  'Out of scope': 0,
+  'Phase 1': 1,
+  'To do': 2,
+  'open': 3,
+  'Up next': 4,
+  'In progress': 5,
+  'Review in progress': 6,
+  'Reviewer approved': 7,
+  'Done': 8,
+  'closed': 9
 };
 
 var priorityOrder = {
