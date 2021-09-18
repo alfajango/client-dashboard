@@ -21,27 +21,27 @@ $(document).delegate('.redmine-subject-td .redmine-description a', 'click', func
   e.stopPropagation();
 });
 
-var filterIssues = function(beginDate) {
-  $('.issue-row').each(function(i, el) {
-    var row = $(el);
-    var date = new Date(row.attr('sprint-date'));
-    if (date < beginDate) {
-      row.css("display", "none");
-    } else {
-      row.css("display", "table-row");
-    }
-  });
+//var filterIssues = function(beginDate) {
+  //$('.issue-row').each(function(i, el) {
+    //var row = $(el);
+    //var date = new Date(row.attr('sprint-date'));
+    //if (date < beginDate) {
+      //row.css("display", "none");
+    //} else {
+      //row.css("display", "table-row");
+    //}
+  //});
 
-  $('.redmine-title .badge').html(
-    $('.redmine-table .issue-row[style="display: table-row;"]')
-      .not('.redmine-version')
-      .length
-  );
-};
+  //$('.redmine-title .badge').html(
+    //$('.redmine-table .issue-row[style="display: table-row;"]')
+      //.not('.redmine-version')
+      //.length
+  //);
+//};
 
-$(document).delegate('#begin-date', 'change', function() {
-  filterIssues(new Date($(this).val()));
-});
+//$(document).delegate('#begin-date', 'change', function() {
+  //filterIssues(new Date($(this).val()));
+//});
 
 widgets.redmine_open_issues = function(data, $) {
   var $target = $('#widget-' + data.id),
@@ -143,5 +143,5 @@ widgets.redmine_open_issues = function(data, $) {
   $target.find('.redmine-table progress').tooltip({placement: 'bottom'});
   $target.find('.redmine-title .badge').html(totalIssues || "N/A");
   $target.find('.refresh-service[data-service="redmine_open_issues"]').removeClass('disabled').siblings('.refresh-ok').show().delay('250').fadeOut();
-  filterIssues(new Date());
+  //filterIssues(new Date());
 };

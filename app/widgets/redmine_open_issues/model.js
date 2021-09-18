@@ -221,6 +221,9 @@ exports.translate = function(data, service) {
       return issue.version_id == version.id;
     });
   });
+  results.versions = results.versions.filter(function(version) {
+    return version.status === "open";
+  });
   return results;
 };
 
