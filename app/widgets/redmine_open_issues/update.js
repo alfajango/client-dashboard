@@ -17,6 +17,9 @@ $(document).delegate('.redmine-subject-td', 'click', function(e) {
     $subTicketRow.show().find('> td > .redmine-sub-ticket-container').slideDown(250);
   }
 });
+$(document).delegate('.redmine-subject-td .redmine-description a', 'click', function(e) {
+  e.stopPropagation();
+});
 
 var filterIssues = function(beginDate) {
   $('.issue-row').each(function(i, el) {

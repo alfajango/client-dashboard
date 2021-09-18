@@ -1,6 +1,8 @@
 var http = require('http'),
     https = require('https'),
-    markdown = require('markdown').markdown,
+    markdown = require('markdown-it')({
+      'linkify': true
+    }),
     querystring = require('querystring'),
     fs = require('fs'),
     { createAppAuth } = require('@octokit/auth-app');
@@ -183,7 +185,7 @@ exports.translate = function(data, service) {
       var description;
       if (x.body && x.body !== "") {
         try {
-          description = markdown.toHTML(
+          description = markdown.render(
             x.body
           )
             .replace(/\[ \]/gm, '<input type="checkbox" onclick="return false;" />')

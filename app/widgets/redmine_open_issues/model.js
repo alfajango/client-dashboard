@@ -1,6 +1,9 @@
 var http = require('http'),
     https = require('https'),
-    textile = require('textile-js'),
+    markdown = require('markdown-it')({
+      'linkify': true,
+      'breaks': true
+    }),
     querystring = require('querystring');
 
 var statusOrder = {
@@ -162,13 +165,10 @@ exports.translate = function(data, service) {
       var description;
       if (x.description && x.description !== "") {
         try {
-          description = textile(
+          description = markdown.render(
             x.description
             .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
             .replace(/!(\/[^\s]+)!/gm, "!http://" + service.url + "$1!")
-            .replace(/((^>.*$(\r\n)?)+)/gm, "<blockquote>$1</blockquote>")
-            .replace(/^(<blockquote>)?> +$/gm, "$1&nbsp;")
-            .replace(/^(<blockquote>)?>/gm, "$1")
           );
         } catch (err) {
           console.log("ERROR PARSING DESCRIPTION FOR ISSUE", x.id);
