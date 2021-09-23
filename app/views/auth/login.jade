@@ -1,23 +1,16 @@
 extends ../layouts/application
 
 block content
-  .row
-    .span4.offset4
-      form.well.small-form#login(action="/login", method="POST")
-        .form-header
-          h1 Login to Tech Dashboard
-        .form-fields
-          fieldset
-            .control-group
-              label.control-label Email
-              .controls
-                input(type="text", name="email")
-            .control-group
-              label.control-label Password
-              .controls
-                input(type="password", name="password")
-
-          fieldset
-            .control-group
-              .controls
-                input.btn.btn-success(type="submit", value="Login")
+  .card.mt-5
+    .card-header
+      h3.mb-0 Login to Tech Dashboard
+    .card-body
+      form#login(action="/login", method="POST")
+        .mb-3
+          label.form-label Email
+          input.form-control(type="text", name="email")
+        .mb-3
+          label.form-label Password
+          input.form-control(type="password", name="password")
+        div
+          input.btn.btn-success(type="submit", value="Login")

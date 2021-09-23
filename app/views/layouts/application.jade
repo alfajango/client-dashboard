@@ -3,9 +3,9 @@ html
   head
     title= title
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    link(rel='stylesheet', href='/vendor/bootstrap/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/vendor/datepicker/css/datepicker.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js')
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css')
+    //link(rel='stylesheet', href='/vendor/datepicker/css/datepicker.css')
     script(src='/socket.io/socket.io.js')
     script(src='/javascripts/jquery-1.7.2.min.js')
     script(src='/vendor/bootstrap/js/bootstrap.min.js')
@@ -63,50 +63,50 @@ html
 
   body
     - if (typeof(iframe) === 'undefined' || !iframe)
-      div.navbar.navbar-fixed-top
-        div.navbar-inner
-          div.container
-            a.brand(href=(currentUser.admin ? "/admin" : "/")) Tech Dashboard by Alfa Jango
-            a.btn.btn-navbar('data-toggle'='collapse', 'data-target'='.nav-collapse')
-              span.icon-bar
-              span.icon-bar
-              span.icon-bar
-            .nav-collapse
-              ul.nav.pull-right
-                if currentUser.admin
-                  li.dropdown
-                    a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
-                      | Select Client
-                      b.caret
-                    ul.dropdown-menu
-                      each client in clients
-                        - if (client.projects && client.projects[0])
-                          li(style="background: #{client.projects[0].headerBG};")
-                            a(href="/?client_id=#{client.id}", style="color: #{client.projects[0].headerColor};")
-                              = client.name
-                  li.dropdown
-                    a.dropdown-toggle(href="#", 'data-toggle'='dropdown')
-                      | Admin
-                      b.caret
-                    ul.dropdown-menu
-                      li
-                        a(href="/admin")
-                          i.icon-wrench
-                          |  Manage / Settings
-                      li
-                        a(href="/admin/clients/new")
-                          i.icon-plus
-                          |  Create Client
-                      li
-                        a(href="/admin/users/new")
-                          i.icon-plus
-                          |  Create User
-                if currentUser.id
-                  li
-                    a(href='/change_password') Change Password
-                  li
-                    a(href='/logout') Logout
-            block menu
+      .navbar.navbar-expand-md.navbar-dark.sticky-top.bg-dark
+        .container
+          .d-flex.flex-grow-1
+            a.navbar-brand(href=(currentUser.admin ? "/admin" : "/")) Tech Dashboard by Alfa Jango
+            .w-100.text-right.justify-content-end
+              button.navbar-toggler('data-bs-toggle'='collapse','data-bs-target'='#nav-menu-collapsible', 'aria-controls'='nav-menu-collapsible')
+                span.navbar-toggler-icon
+          #nav-menu-collapsible.collapse.navbar-collapse.me-auto.flex-grow-1.justify-content-end
+            ul.navbar-nav
+              if currentUser.admin
+                li.nav-item.dropdown
+                  a.nav-link.text-white.dropdown-toggle#dropdown-select-client(href="#", 'data-bs-toggle'='dropdown')
+                    | Select Client
+                  ul.dropdown-menu('aria-labelledby'='dropdown-select-client')
+                    each client in clients
+                      - if (client.projects && client.projects[0])
+                        - bgColor = client.projects[0].headerBG
+                        - hdColor = client.projects[0].headerColor
+
+                        li(style="background: #{bgColor};")
+                          a.dropdown-item(href="/?client_id=#{client.id}", style="color: #{hdColor};")
+                            = client.name
+                li.nav-item.dropdown
+                  a.nav-link.text-white.dropdown-toggle#dropdown-admin(href="#", 'data-bs-toggle'='dropdown')
+                    | Admin
+                  ul.dropdown-menu('aria-labelledby'='dropdown-admin')
+                    li
+                      a.dropdown-item(href="/admin")
+                        i.icon-wrench
+                        |  Manage / Settings
+                    li
+                      a.dropdown-item(href="/admin/clients/new")
+                        i.icon-plus
+                        |  Create Client
+                    li
+                      a.dropdown-item(href="/admin/users/new")
+                        i.icon-plus
+                        |  Create User
+              if currentUser.id
+                li.nav-item
+                  a.nav-link.text-white(href='/change_password') Change Password
+                li.nav-item
+                  a.nav-link.text-white(href='/logout') Logout
+          block menu
 
       .header
         .container

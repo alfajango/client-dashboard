@@ -1,6 +1,6 @@
 development:
   db:
-    uri: "mongodb://localhost/client_dashboard_restore"
+    uri: "mongodb://localhost/client_dashboard_dev"
   app_secret: 'my app secret'
   useSSL: false
 staging:
