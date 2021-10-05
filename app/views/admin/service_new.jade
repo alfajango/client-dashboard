@@ -1,40 +1,41 @@
 extends ../layouts/application
 
 block content
-  h1 #{theClient.name} / #{project.name} / #{service ? "Update" : "Create"} Service
-
-  form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services' + (service ? ('/' + service.id) : ""), method="POST")
-    fieldset
-      if service
-        input(type="hidden", name="_method", value="PUT")
-      .control-group
-        label.control-label Name
-        .controls
-          select(name="service[name]")
-            - for (var serviceOption in widgets)
-              option(value="#{serviceOption}", selected=(service && service.name == serviceOption ? "selected" : false))= widgets[serviceOption]['name']
-      .control-group
-        label.control-label Endpoint URL
-        .controls
-          input(type="text", name="service[url]", value=(service ? service.url : ""))
-      .control-group
-        label.control-label Project Identifier
-        .controls
-          input(type="text", name="service[identifier]", value=(service ? service.identifier : ""))
-      .control-group
-        label.control-label Service User
-        .controls
-          input(type="text", name="service[user]", value=(service ? service.user : ""))
-      .control-group
-        label.control-label Service Token
-        .controls
-          textarea(name="service[token]")
-            = service ? service.token : ""
-      .control-group
-        label.control-label Config Data
-        .controls
-          textarea(name="service[config]")= service && service.config ? service.config : "{}"
-
-      .control-group
-        .controls
-          input.btn(type="submit", value=(service ? "Update" : "Create"))
+  .d-flex.flex-wrap.py-2.border-bottom.mb-4
+    h1 #{theClient.name} / #{project.name} / #{service ? "Update" : "Create"} Service
+  .card.bg-light.border-0
+    .card-body
+      form(action='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services' + (service ? ('/' + service.id) : ""), method="POST")
+        if service
+          input(type="hidden", name="_method", value="PUT")
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Name
+          .col-sm-9
+            select(name="service[name]")
+              - for (var serviceOption in widgets)
+                option(value="#{serviceOption}", selected=(service && service.name == serviceOption ? "selected" : false))= widgets[serviceOption]['name']
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Endpoint URL
+          .col-sm-9
+            input.form-control(type="text", name="service[url]", value=(service ? service.url : ""))
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Project Identifier
+          .col-sm-9
+            input.form-control(type="text", name="service[identifier]", value=(service ? service.identifier : ""))
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Service User
+          .col-sm-9
+            input.form-control(type="text", name="service[user]", value=(service ? service.user : ""))
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Service Token
+          .col-sm-9
+            textarea.form-control(name="service[token]")
+              = service ? service.token : ""
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Config Data
+          .col-sm-9
+            textarea.form-control(name="service[config]", rows="10", style="height: 100%;")= (service && service.config) ? service.config : "{}"
+        .row.mb-3
+          .col-sm-3
+          .col-sm-9
+            input.btn.btn-light(type="submit", value=(service ? "Update" : "Create"))

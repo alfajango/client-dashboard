@@ -9,16 +9,18 @@ block head
           color = $('input[name="project[headerColor]"]').val(),
           navbarBG = $('input[name="project[navbarBG]"]').val(),
           image = $('input[name="project[imageURL]"]').val(),
-          $navbar = $('#project-preview .navbar-inner');
+          $header = $('#project-preview .header-bg')
+          $navbar = $('#project-preview .navbar-bg');
           $brand = $('#project-preview a.brand');
 
       $target
-        .css({'background-color': bgColor, 'color': color})
-        .html('<img class="pull-right" src="' + image + '" /><h1>' + name + ' Status</h1><p>Welcome to awesomeness</p>');
+        .html('<img class="float-end" src="' + image + '" /><h1>' + name + ' Status</h1><p>Welcome to awesomeness</p>');
       $brand
         .css({'color': bgColor});
       $navbar
         .css({'background-color': navbarBG});
+      $header
+        .css({'background-color': bgColor, 'color': color})
     };
 
     $(document).ready( function() {
@@ -27,59 +29,63 @@ block head
 
     $(document).delegate('input', 'change, keyup', updateProjectColorsPreview);
 
-block content
-  h1 #{theClient.name} / #{project ? "Update" : "Create"} Project
-
-  .row
-    .span6
-       form.well.form-horizontal(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
-         fieldset
-           if project
-             input(type="hidden", name="_method", value="PUT")
-
-           .control-group
-             label.control-label Name
-             .controls
-               input(type="text", name="project[name]", value=(project ? project.name : ""))
-
-           .control-group
-             label.control-label URL
-             .controls
-               input(type="text", name="project[url]", value=(project ? project.url : ""))
-
-           .control-group
-             label.control-label Header Background (CSS value)
-             .controls
-               input(type="text", name="project[headerBG]", value=(project ? project.headerBG : ""))
-
-           .control-group
-             label.control-label Header Text Color (CSS value)
-             .controls
-               input(type="text", name="project[headerColor]", value=(project ? project.headerColor : ""))
-
-           .control-group
-             label.control-label Navbar Background (CSS value)
-             .controls
-               input(type="text", name="project[navbarBG]", value=(project ? project.navbarBG : ""))
-
-           .control-group
-             label.control-label Image URL
-             .controls
-               input(type="text", name="project[imageURL]", value=(project ? project.imageURL : ""))
-
-           .control-group
-             .controls
-               input.btn(type="submit", value=(project ? "Update" : "Create"))
-
-    .span6
-      #project-preview
-        div.navbar
-          div.navbar-inner
-            div.container
-              a.brand(href='#') Tech Dashboard by Alfa Jango
-        #project-colors-preview
-
+block sidebar
+  h3 #{theClient.name}
   if project
-    a.btn(href='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services/new')
-      i.icon-plus
-      |  Add Service
+    ul.nav.flex-column
+      li.nav-item
+        a.btn(href='/admin/clients/' + theClient.id + '/projects/' + project.id + '/services/new')
+          i.icon-plus
+          |  Add Service
+block content
+  .d-flex.flex-wrap.py-2.border-bottom.mb-4
+    h1 #{project ? "Update" : "Create"} Project
+  .container.g-0
+    .row
+      .col
+        .card.bg-light.border-0
+          .card-body
+            form(action='/admin/clients/' + theClient.id + '/projects' + (project ? ('/' + project.id) : ""), method="POST")
+              if project
+               input.form-control(type="hidden", name="_method", value="PUT")
+
+              .row.mb-3
+                label.col-sm-4.col-form-label.text-end.col-form-label-sm Name
+                .col-sm-8
+                  input.form-control(type="text", name="project[name]", value=(project ? project.name : ""))
+
+              .row.mb-3
+                label.col-sm-4.col-form-label.text-end.col-form-label-sm URL
+                .col-sm-8
+                  input.form-control(type="text", name="project[url]", value=(project ? project.url : ""))
+
+              .row.mb-3
+                label.col-sm-4.col-form-label.text-end.col-form-label-sm Header Background (CSS value)
+                .col-sm-8
+                  input.form-control(type="text", name="project[headerBG]", value=(project ? project.headerBG : ""))
+
+              .row.mb-3
+                label.col-sm-4.col-form-label.text-end.col-form-label-sm Header Text Color (CSS value)
+                .col-sm-8
+                  input.form-control(type="text", name="project[headerColor]", value=(project ? project.headerColor : ""))
+
+              .row.mb-3
+                label.col-sm-4.col-form-label.text-end.col-form-label-sm Navbar Background (CSS value)
+                .col-sm-8
+                  input.form-control(type="text", name="project[navbarBG]", value=(project ? project.navbarBG : ""))
+
+              .row.mb-3
+                label.col-sm-4.col-form-label.text-end.col-form-label-sm Image URL
+                .col-sm-8
+                  input.form-control(type="text", name="project[imageURL]", value=(project ? project.imageURL : ""))
+
+              .row.mb-3
+                .col-sm-4
+                .col-sm-8
+                  input.btn.btn-light(type="submit", value=(project ? "Update" : "Create"))
+      .col
+        #project-preview.card
+          .card-header.navbar-bg
+            a.brand(href='#') Tech Dashboard by Alfa Jango
+          .card-body.header-bg
+            #project-colors-preview

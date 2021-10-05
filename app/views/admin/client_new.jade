@@ -1,21 +1,21 @@
 extends ../layouts/application
 
 block content
-  h1 #{theClient ? "Update" : "Create"} Client
-
-  form.well.form-horizontal(action="/admin/clients" + (theClient ? ('/' + theClient.id) : ""), method="POST")
-    fieldset
-      if theClient
-        input(type="hidden", name="_method", value="PUT")
-
-      .control-group
-        label.control-label Name
-        .controls
-          input(type="text", name="client[name]", value=(theClient ? theClient.name : ""))
-
-      .control-group
-        .controls
-          input.btn(type="submit", value=(theClient ? "Update" : "Create"))
+  .d-flex.flex-wrap.py-2.border-bottom.mb-4
+    h1 #{theClient ? "Update" : "Create"} Client
+  .card.bg-light.border-0.aj-mw-xl
+    .card-body
+      form(action="/admin/clients" + (theClient ? ('/' + theClient.id) : ""), method="POST")
+        if theClient
+          input(type="hidden", name="_method", value="PUT")
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Name
+          .col-sm-9
+            input.form-control(type="text", name="client[name]", value=(theClient ? theClient.name : ""))
+        .row
+          .col-sm-3
+          .col-sm-9
+            input.btn.btn-light(type="submit", value=(theClient ? "Update" : "Create"))
 
   if theClient
     a.btn(href='/admin/clients/' + theClient.id + '/projects/new')

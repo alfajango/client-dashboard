@@ -1,42 +1,46 @@
 extends ../layouts/application
 
 block content
-  h1 #{user ? "Edit" : "Create"} User
-
-  form.well.form-horizontal(action="/admin/users" + (user ? ('/' + user.id) : ""), method="POST")
-    fieldset
-      if user
-        input(type="hidden", name="_method", value="PUT")
-      .control-group
-        label.control-label Email
-        .controls
-          input(type="text", name="user[email]", value=(user ? user.email : ""))
-      .control-group
-        label.control-label Password
-        .controls
-          input(type="password", name="user[password]", value=(user ? user.password : ""))
-      .control-group
-        label.control-label API User
-        .controls
-          input(type="text", name="user[apiUser]", value=(user ? user.apiUser : ""))
-      .control-group
-        label.control-label API Token
-        .controls
-          input(type="text", name="user[apiToken]", value=(user ? user.apiToken : ""))
-      .control-group
-        label.control-label Client
-        .controls
-          select(name="user[client]")
-            option(value="")
-            each client in clients
-              option(value=client.id, selected=(user && user.client == client.id ? "selected" : false))= client.name
-      .control-group
-        label.control-label
-        .controls
-          label.checkbox Admin
+  .d-flex.flex-wrap.py-2.border-bottom.mb-4
+    - editTitle = user ? `Edit ${user.email}` : "Create User"
+    h1= editTitle
+  .card.bg-light.border-0.aj-mw-xl
+    .card-body
+      form(action="/admin/users" + (user ? ('/' + user.id) : ""), method="POST")
+        if user
+          input(type="hidden", name="_method", value="PUT")
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Email
+          .col-sm-9
+            input.form-control(type="text", name="user[email]", value=(user ? user.email : ""))
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Password
+          .col-sm-9
+            input.form-control(type="password", name="user[password]", value=(user ? user.password : ""))
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end API User
+          .col-sm-9
+            input.form-control(type="text", name="user[apiUser]", value=(user ? user.apiUser : ""))
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end API Token
+          .col-sm-9
+            input.form-control(type="text", name="user[apiToken]", value=(user ? user.apiToken : ""))
+        .row.mb-3
+          label.col-sm-3.col-form-label.text-end Client
+          .col-sm-9
+            select.form-control(name="user[client]")
+              option(value="")
+              each client in clients
+                option(value=client.id, selected=(user && user.client == client.id ? "selected" : false))= client.name
+        .row.mb-3
+          .col-sm-3
+          .col-sm-9
             input(type="hidden", name="user[admin]", value=false)
             input(type="checkbox", name="user[admin]", checked=((user && user.admin) ? "checked" : false))
-
-      .control-group
-        .controls
-          input.btn(type="submit", value=(user ? "Update" : "Create"))
+            | &nbsp;
+            label.checkbox Admin
+        .row
+          .col-sm-3
+          .col-sm-9
+            input.btn.btn-light(type="submit", value=(user ? "Update" : "Create"))
+              
