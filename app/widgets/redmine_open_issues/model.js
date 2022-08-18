@@ -236,14 +236,43 @@ exports.translate = function(data, service) {
       });
 
 
+    var allIssueIds = issues.map(function(issue) { return issue.id });
     var topIssues = issues.filter(function(issue) {
       return !issue.parentId;
     });
-    issues = assignDescendents(topIssues, issues);
+    var missingParentIssues = issues.filter(function(issue) {
+      return issue.parentId && allIssueIds.indexOf(issue.parentId) < 0;
+    });
+
+    var assignedIssues = assignDescendents(topIssues, issues);
+
+    if (missingParentIssues.length) {
+      var catchAllIssue = {
+        _catchAll: true,
+        id: '-',
+        subject: "Unassigned",
+        description: "<p><em>These issues are assigned to parents most likely in a different version than the selected filter</em></p>",
+        version_id: missingParentIssues[0].version_id,
+        status: '-',
+        priorityName: '-',
+        progress: parseInt(
+          missingParentIssues
+            .map(function(issue) { return issue.progress || 0 })
+            .reduce(function(total, progress) { return total + progress }) /
+            parseFloat(missingParentIssues.length)
+        )
+      };
+      if (config.link_tickets) {
+        catchAllIssue.link = '-';
+      }
+      catchAllIssue.issues = assignDescendents(missingParentIssues, issues);
+
+      assignedIssues.push(catchAllIssue);
+    }
   }
 
   results.versions.forEach(function(version) {
-    version.issues = issues.filter(function(issue) {
+    version.issues = assignedIssues.filter(function(issue) {
       return issue.version_id == version.id;
     });
   });
