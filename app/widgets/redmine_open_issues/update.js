@@ -71,9 +71,13 @@ widgets.redmine_open_issues = function(data, $) {
         if (issue.issues.length > 0) {
           rows += ' <small>- <span>' + issue.issues.length + ' sub-tickets <span class="sub-ticket-right-arrow">&rtrif;</span><span class="sub-ticket-down-arrow">&dtrif;</span></span></small>';
         }
-        rows += '</div><div class="redmine-description"><hr />' + issue.description.replace(/(?:\r\n|\r|\n)/g, '<br />'); + '</div>';
+        rows += '</div><div class="redmine-description"><hr />' + issue.description + '</div>';
         rows += '</td>';
-        rows += '<td class="redmine-status-td">';
+        let statusClass = "redmine-status-td";
+        if (issue.parentId && issue.progress > 0) {
+          statusClass += " has-progress";
+        }
+        rows += '<td class="' + statusClass + '">';
         rows += issue.status;
         // Only show this progress bar if it's a child issue, otherwise show larger progress row
         if (issue.parentId && issue.progress > 0) {

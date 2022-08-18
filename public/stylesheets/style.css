@@ -291,7 +291,7 @@ i.refresh-ok {
 }
 
 .table tbody tr.done > td {
-  background: rgba(98, 196, 98, 0.15);
+  background: rgba(98, 196, 98, 0.1);
   color: rgb(80, 145, 80);
 }
 
@@ -299,16 +299,17 @@ i.refresh-ok {
   font-weight: bold;
 }
 
-.redmine-ticket-td {
+td.redmine-ticket-td {
   width: 50px;
+  text-align: center;
 }
-.redmine-subject-td:hover {
+td.redmine-subject-td:hover {
   cursor: pointer;
 }
-.redmine-subject-td small {
+td.redmine-subject-td small {
   font-size: 11px;
 }
-.redmine-subject-td small span {
+td.redmine-subject-td small span {
   text-decoration: underline;
 }
 .redmine-description,
@@ -316,22 +317,33 @@ i.refresh-ok {
 .redmine-sub-ticket-container {
   display: none;
 }
-.redmine-subject-td .sub-ticket-down-arrow {
+.redmine-description hr {
+  margin: 9px 0;
+}
+td.redmine-subject-td .sub-ticket-down-arrow {
   display: none;
 }
-.redmine-subject-td.expanded .sub-ticket-right-arrow {
+td.redmine-subject-td.expanded .sub-ticket-right-arrow {
   display: none;
 }
-.redmine-subject-td.expanded .sub-ticket-down-arrow {
+td.redmine-subject-td.expanded .sub-ticket-down-arrow {
   display: unset;
 }
 
-.redmine-status-td {
+td.redmine-status-td {
   width: 150px;
 }
-.redmine-status-td .progress {
+td.redmine-status-td.has-progress {
+  line-height: 12px;
+}
+td.redmine-status-td .progress {
   margin-bottom: 0;
   height: 8px;
+}
+
+td.redmine-priority-td {
+  width: 50px;
+  text-align: center;
 }
 
 .issue-progress td,
@@ -456,6 +468,30 @@ progress.issue-progress-bar::-webkit-progress-value {
   text-align: center;
   background: #eee;
   font-weight: bold;
+}
+
+.table tbody tr.redmine-sub-tickets th,
+.table tbody tr.redmine-sub-tickets td {
+  background: #daf1ff;
+  padding: 3px 16px;
+  font-weight: normal;
+  text-align: left;
+}
+
+.table tbody td.redmine-has-sub-tickets {
+  background: #f0f0f0;
+  padding-right: 0;
+  padding-top: 0;
+}
+
+.table tbody table.redmine-nested-issues {
+  border-left: solid 5px lightskyblue;
+  border-top: none;
+  border-right: none;
+  margin-bottom: 0;
+  border-radius: 0 0 0 4px;
+  background: white;
+  box-shadow: -3px 3px 4px rgba(0,0,0,0.1);
 }
 
 .redmine-title-td:hover {
