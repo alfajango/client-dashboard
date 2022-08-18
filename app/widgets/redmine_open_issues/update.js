@@ -1,24 +1,46 @@
-$(document).delegate('.redmine-subject-td', 'click', function(e) {
-  e.stopPropagation();
-  let $this = $(this);
+const slideDuration = 100;
+
+function toggle(el, collapseAll) {
+  let $this = $(el);
   let $description = $this.find('.redmine-description');
   let subTicketRowSelector = '#' + $this.parent('.issue-row').data('sub-ticket-row');
   let $subTicketRow = $(subTicketRowSelector);
-  if ($description.is(':visible')) {
+  if ($description.is(':visible') || collapseAll) {
     $this.removeClass('expanded');
-    $description.slideUp(250);
-    $subTicketRow.find('> td > .redmine-sub-ticket-container').slideUp(250);
+    $description.slideUp(slideDuration);
+    $subTicketRow.find('> td > .redmine-sub-ticket-container').slideUp(slideDuration);
     setTimeout(function() {
       $subTicketRow.hide();
-    }, 250);
+    }, slideDuration);
   } else {
     $this.addClass('expanded');
-    $description.slideDown(250);
-    $subTicketRow.show().find('> td > .redmine-sub-ticket-container').slideDown(250);
+    $description.slideDown(slideDuration);
+    $subTicketRow.show().find('> td > .redmine-sub-ticket-container').slideDown(slideDuration);
   }
+}
+
+var selectedVersion;
+
+$(document).delegate('.redmine-subject-td', 'click', function(e) {
+  e.stopPropagation();
+  toggle(this);
 });
 $(document).delegate('.redmine-subject-td .redmine-description a', 'click', function(e) {
   e.stopPropagation();
+});
+$(document).delegate('.redmine-collapse-all', 'click', function(e) {
+  e.preventDefault();
+  $(document).find('.redmine-subject-td.expanded').each(function(i, el) {
+    toggle(el, true);
+  })
+});
+$(document).delegate('.redmine-target-version', 'change', function(e) {
+  var $this = $(this);
+  selectedVersion = $this.val();
+  $this.closest('.redmine-open-issues').find('.refresh-service').click();
+});
+$(document).delegate('.redmine-include-closed', 'change', function(e) {
+  $(this).closest('.redmine-open-issues').find('.refresh-service').click();
 });
 
 //var filterIssues = function(beginDate) {
@@ -45,6 +67,7 @@ $(document).delegate('.redmine-subject-td .redmine-description a', 'click', func
 
 widgets.redmine_open_issues = function(data, $) {
   var $target = $('#widget-' + data.id),
+      versionOptionsHtml = '<option></option>',
       rows = "",
       now = new Date(),
       yesterday = now - (1000 * 60 * 60 * 24),
@@ -65,7 +88,7 @@ widgets.redmine_open_issues = function(data, $) {
         rows += '<tr class="issue-row' + issueRowClass + '"' +
           (recentlyUpdated ? ' rel="tooltip" title="recently active"' : '') +
           ' sprint-date="' + version.due_date + '" data-sub-ticket-row="' + subTicketRowId + '">';
-        rows += '<td class="issue-number-column">' + issue.id + '</td>';
+        rows += '<td class="redmine-ticket-td">' + issue.link || '#' + issue.id + '</td>';
         rows += '<td class="redmine-subject-td">'
         rows += '<div><span class="redmine-issue-subject">' + (recentlyUpdated ? '&#9679; ' : '') + issue.subject + '</span>';
         if (issue.issues.length > 0) {
@@ -100,10 +123,11 @@ widgets.redmine_open_issues = function(data, $) {
           rows += '<tr class="issue-progress' + issueRowClass + '"><td colspan=4><progress rel="tooltip" title="' + issue.progress + '% done" class="issue-progress-bar" max="100" value="' + issue.progress + '"></progress></td></tr>';
         }
         if (issue.issues.length > 0) {
-          rows += '<tr class="redmine-sub-ticket-row" id="' + subTicketRowId + '"><td colspan=4>';
+          let title = issue._catchAll ? "Sub-tickets with parent outside of filter" : '↳  Sub-tickets for <em>#' + issue.id + ': ' + issue.subject + '</em>';
+          rows += '<tr class="redmine-sub-ticket-row" id="' + subTicketRowId + '"><td colspan=4 class="redmine-has-sub-tickets">';
           rows += '<div class="redmine-sub-ticket-container">';
           rows += '<table class="table table-bordered redmine-nested-issues">';
-          rows += '<tr class="redmine-sub-tickets issue-row"><th colspan=4>Issue ' + issue.id + ' Sub-tickets</th></tr>';
+          rows += '<tr class="redmine-sub-tickets issue-row"><th colspan=4>' + title + '</th></tr>';
           issue.issues.forEach(function(childIssue) {
             renderIssueRow(childIssue, totalIssues, yesterday, version, rows);
           });
@@ -117,6 +141,8 @@ widgets.redmine_open_issues = function(data, $) {
     rows += '<tr><td colspan=4><div class="alert alert-error" title="' + data.error + '">There was a problem retrieving tasks</div></td></tr>'
   } else if (data.results && data.results.versions && data.results.versions.length > 0) {
     totalIssues = 0;
+    let versionsWithIssues = [];
+
     $.each(data.results.versions, function(i, version) {
       if (version.status === "closed" || version.issues.length === 0) {
         return true;
@@ -134,13 +160,31 @@ widgets.redmine_open_issues = function(data, $) {
         rows += '<tr class="version-progress"><td colspan=4><progress rel="tooltip" title="' + version.days_progress + ' days in" class="version-progress-bar" max="' + version.days +'" value="' + version.days_progress + '"></progress></td></tr>';
       }
 
-      $.each(version.issues, function(i, issue) {
-        renderIssueRow(issue, version);
-      });
+      if (version.issues.length) {
+        versionsWithIssues.push(version);
+        $.each(version.issues, function(i, issue) {
+          renderIssueRow(issue, version);
+        });
+      }
     });
+
+    $.each(data.results.versions, function(i, version) {
+      versionOptionsHtml += '<option value="' + version.id + '"';
+
+      if (selectedVersion && selectedVersion == version.id) {
+        versionOptionsHtml += ' selected="selected"';
+      } else if (versionsWithIssues.length === 1 && versionsWithIssues[0].id === version.id) {
+        versionOptionsHtml += ' selected="selected"';
+      }
+
+      versionOptionsHtml += '>' + version.name + '</option>';
+    });
+
   } else {
     rows += '<tr class="issue-row" sprint-date="' + version.due_date + '"><td colspan=4><div class="alert alert-success">No open tasks</div></td></tr>';
   }
+
+  $target.find('.redmine-target-version').html(versionOptionsHtml);
   $target.find('.redmine-table tbody').html(rows);
   $target.find('.redmine-table tr').tooltip({placement: 'bottom'});
   $target.find('.redmine-table td').tooltip({placement: 'bottom'});

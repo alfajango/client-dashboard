@@ -30,7 +30,7 @@ var priorityOrder = {
   'Immediate': 4
 };
 
-exports.fetch = function(service, callback) {
+exports.fetch = function(service, callback, settings) {
   var redmine = this,
       jsonData = {},
       out = {id: service.id, name: service.name};
@@ -38,11 +38,11 @@ exports.fetch = function(service, callback) {
   utils.when(
     function(done) {
       var path = '/projects/' + service.identifier + '/issues.json?status_id=open&limit=100';
-      redmine.fetchAPI('issues', path, service, jsonData, done);
+      redmine.fetchAPI('issues', path, service, settings, jsonData, done);
     },
     function(done) {
       var path = '/projects/' + service.identifier + '/versions.json';
-      redmine.fetchAPI('versions', path, service, jsonData, done);
+      redmine.fetchAPI('versions', path, service, settings, jsonData, done);
     }
   ).then(function() {
     out.results = redmine.translate(jsonData, service);
@@ -52,7 +52,7 @@ exports.fetch = function(service, callback) {
 };
 
 // Fetch issues from service endpoint
-exports.fetchAPI = function(name, path, service, jsonData, done) {
+exports.fetchAPI = function(name, path, service, settings, jsonData, done, skipDefaultOptions) {
   var redmine = this;
   var config = JSON.parse(service.config);
 
@@ -69,16 +69,30 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
   // {"issues": {"fixed_version_id": 256}}
   var queryFilters = config.query;
   var queryFilterString = null;
-  if (queryFilters && queryFilters[name]) {
+  if (queryFilters && queryFilters[name] && !skipDefaultOptions) {
     var queryFilterString = querystring.stringify(queryFilters[name]);
     if (! path.includes(queryFilterString)) {
       path = path + "&" + queryFilterString;
     }
     console.log("ADDED QUERY OPTIONS TO PATH", path);
   }
+
+  if (name === 'issues' && settings) {
+    if (settings.target_version) {
+      path = path.replace(/&?fixed_version_id=\d+/g, '')
+      path = path + "&fixed_version_id=" + settings.target_version;
+    }
+    if (settings.include_closed) {
+      path = path.replace(/&?status_id=[^&]+/g, '')
+      path = path + "&status_id=*";
+    }
+    console.log("SETTING FILTERS FROM INPUT", path);
+  }
+
   options.path = path;
 
   var reqLib = options.port == 80 ? http : https;
+  console.log('requesting', options.path)
   var req = reqLib.get(options, function(res) {
     if (res.statusCode == 200) {
       var data = "";
@@ -88,6 +102,9 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
       res.on('end', function(){
         try {
           var resData = JSON.parse(data);
+          if (name === 'issues') {
+            console.log('data', resData[name].length)
+          }
           var offset = resData.offset || 0;
           if (jsonData[name]) {
             jsonData[name] = jsonData[name].concat(resData[name]);
@@ -97,7 +114,7 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
           if (resData.limit && resData.total_count && resData.total_count > (offset + resData.limit)) {
             console.log("THERE'S MORE, REQUESTING NEXT PAGE", "OFFSET: " + offset);
             path = path.replace(/&offset=[\d]+/, '') + "&offset=" + ((resData.offset || 0) + resData.limit)
-            return redmine.fetchAPI(name, path, service, jsonData, done);
+            return redmine.fetchAPI(name, path, service, settings, jsonData, done, true);
           }
         } catch (err) {
           console.log("Got a parsing error: " + err.message);
@@ -120,6 +137,8 @@ exports.fetchAPI = function(name, path, service, jsonData, done) {
 
 // Translate fetched response to db store format
 exports.translate = function(data, service) {
+  var config = JSON.parse(service.config);
+
   if (data.total_amount > data.limit) { console.log('WARNING: Total issues is greater than returned.'); }
   var results = {
         versions: []
@@ -168,7 +187,7 @@ exports.translate = function(data, service) {
           description = markdown.render(
             x.description
             .replace(/{{video\(https?:\/\/(www\.)?youtu(be\.com|\.be)\/(watch\?.*v=)?([-\d\w]+)[^}]*}}/, '<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/$4?rel=0" frameborder="0" allowfullscreen></iframe>')
-            .replace(/!(\/[^\s]+)!/gm, "!http://" + service.url + "$1!")
+            .replace(/!(\/[^\s]+)!/gm, "![$1](https://" + service.url + "$1)")
           );
         } catch (err) {
           console.log("ERROR PARSING DESCRIPTION FOR ISSUE", x.id);
@@ -179,7 +198,8 @@ exports.translate = function(data, service) {
       }
       var version = x.fixed_version && x.fixed_version.id;
       var parent = x.parent && x.parent.id;
-      return {
+
+      record = {
         id: x.id,
         subject: x.subject,
         status: x.status.name,
@@ -192,6 +212,12 @@ exports.translate = function(data, service) {
         version_id: version,
         ir_position: x.ir_position
       };
+
+      if (config.link_tickets) {
+        record.link = '<a href="https://' + service.url + '/issues/' + x.id + '" target="_blank">#' + x.id + '</a>';
+      }
+
+      return record;
     })
       .sort(function(a, b) {
         var firstOrder = b.priority - a.priority,

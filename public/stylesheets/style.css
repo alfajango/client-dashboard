@@ -148,6 +148,10 @@ td.issue-number-column {
   display: inline;
 }
 
+.form-inline label {
+  margin-right: 10px;
+}
+
 .dropdown-menu {
   overflow: scroll;
   max-height: calc(100vh - 40px);
@@ -276,6 +280,21 @@ i.refresh-ok {
 .errbit-description {
   overflow: auto;
   margin: 0;
+}
+
+.redmine-collapse-all {
+  line-height: 28px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+form.settings label,
+form.settings select {
+  cursor: pointer;
+}
+
+.redmine-include-closed {
+  vertical-align: unset;
 }
 
 .table tbody tr:hover td {

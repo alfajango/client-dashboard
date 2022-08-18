@@ -2,9 +2,14 @@ h2.redmine-title(style="display: inline-block;")
   | Open Tasks
   span.badge
 
-//-#filters(style="display: inline-block; margin-left: 50px;")
-  //-label(for="begin-date", style="display: inline-block; vertical-align: middle") Begin Date
-  //-input#begin-date(type="date", style="margin-left: 10px", value="#{new Date().toISOString().split("T")[0]}")
+form.settings.form-inline.pull-right
+  a.redmine-collapse-all(href="#") Collapse All
+  label
+    | Version: 
+    select.redmine-target-version(name="target_version")
+  label
+    | Include closed: 
+    input.redmine-include-closed(name="include_closed", type="checkbox")
 
 table.table.table-bordered.redmine-table
   thead
