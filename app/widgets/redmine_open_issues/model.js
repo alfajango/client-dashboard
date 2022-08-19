@@ -217,6 +217,10 @@ exports.translate = function(data, service) {
         record.link = '<a href="https://' + service.url + '/issues/' + x.id + '" target="_blank">#' + x.id + '</a>';
       }
 
+      if (config.custom_link) {
+        record.custom_link = '<a href="' + config.custom_link.url.replace('{issue_id}', x.id) + '" title="' + config.custom_link.title + '" target="_blank">' + config.custom_link.label + '</a>';
+      }
+
       return record;
     })
       .sort(function(a, b) {

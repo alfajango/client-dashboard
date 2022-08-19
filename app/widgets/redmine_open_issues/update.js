@@ -88,7 +88,7 @@ widgets.redmine_open_issues = function(data, $) {
         rows += '<tr class="issue-row' + issueRowClass + '"' +
           (recentlyUpdated ? ' rel="tooltip" title="recently active"' : '') +
           ' sprint-date="' + version.due_date + '" data-sub-ticket-row="' + subTicketRowId + '">';
-        rows += '<td class="redmine-ticket-td">' + issue.link || '#' + issue.id + '</td>';
+        rows += '<td class="redmine-ticket-td">' + [issue.link || '#' + issue.id, issue.custom_link].filter(function(value) { return !!value }).join(' ') + '</td>';
         rows += '<td class="redmine-subject-td">'
         rows += '<div><span class="redmine-issue-subject">' + (recentlyUpdated ? '&#9679; ' : '') + issue.subject + '</span>';
         if (issue.issues.length > 0) {
